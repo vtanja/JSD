@@ -1,1 +1,57 @@
-# JSD
+# JSD za generisanje web aplikacija
+
+Jezik bi generisao web aplikacije i to: Spring Boot + Angular. Dodatno proširenje može biti generisanje koda za razne vrste framework-a. Jezik je inspirisan [raml](https://github.com/raml-org/raml-spec) jezikom, koji je jsd za modelovanje RESTful API-ja. 
+
+## Ideja
+
+Osnovna ideja je da se na pocetku definiše model aplikacije koji bi se mogao referencirati iz ostatka jezika. Iduća sekcija je definisanje putanja, a unutar putanja se definišu zahtjevi koji se koriste na toj putanji.
+
+## Generisanje
+
+Na osnovu modela se generiše hibernate sloj sa klasama modela, kao i JPA repozitorijumi za svaku klasu. Dodatno se definišu i svi DTO objekti koji se koriste, kao i interfejsi na frontend strani koji bi odgovarali DTO objektima.
+
+Na osnovu putanja se generišu kontroleri na backend strani, za svaki kontroler se generiše i servis kome se delegira izvršavanje zahtjeva. Na frontend strani se generišu servisi koji šalju zahtjeve ka kontrolerima na bekendu. Pomoću putanja se kreira routing module. Za svaku putanju se definiše Angualr komponenta koja je zadužena za iscrtavanje. U zavisnosti od tipa podatka koji vraća get zahtjev za datu komponentu može se generisati i prikaz entiteta (za pojedinačne entitete se prikazuju njegovi atributi, dok za kolekcije se može prikazati ili tabela ili kartice za svaki od elemenata kolekcije). Ukoliko je pak u pitanju post zahtjev, moguće je na osnovu tipa podatka koji se šalje izgenerisati formu sa svim potrebnim poljima.
+
+## Primjer
+
+Sitaksa jezika nije definitivna, biće izmjenjena po potrebi.
+
+```
+model Knjiga:
+   naziv: string;
+   autor: Autor;
+
+model Autor:
+   ime: string;
+   prezime: string;
+
+config:
+   api: www.example.com
+
+/knjige
+   get:
+      200:
+         tip: Knjiga[]
+      404:
+         tip: string("Knjiga nije pronadjena")
+   /{id}
+      get:
+         200:
+            tip: Knjiga
+
+/autori
+   get:
+      200:
+         tip: Autor[]
+   /{id}
+      get:
+         200:
+            tip: Autor
+         404:
+            tip: string("Autor nije pronadjen")
+      /knjige
+         get:
+            200: tip: Knjige[]
+         post:
+            200: body: Knjiga
+```

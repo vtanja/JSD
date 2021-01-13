@@ -31,27 +31,27 @@ config:
 /knjige
    get:
       200:
-         tip: Knjiga[]
+         type: Knjiga[]
       404:
-         tip: string("Knjiga nije pronadjena")
+         type: string("Knjiga nije pronadjena")
    /{id}
       get:
          200:
-            tip: Knjiga
+            type: Knjiga
 
 /autori
    get:
       200:
-         tip: Autor[]
+         type: Autor[]
    /{id}
       get:
          200:
-            tip: Autor
+            type: Autor
          404:
-            tip: string("Autor nije pronadjen")
+            type: string("Autor nije pronadjen")
       /knjige
          get:
-            200: tip: Knjige[]
+            200: type: Knjige[]
          post:
             200: body: Knjiga
 ```

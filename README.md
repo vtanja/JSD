@@ -8,17 +8,15 @@ Osnovna ideja je da se na pocetku definiše model aplikacije koji bi se mogao re
 
 ## Generisanje
 
-Na osnovu modela se na bekendu generiše:
+Na osnovu modela se generiše:
  - hibernate sloj sa klasama modela
  - JPA repozitorijumi za svaku klasu
- - DTO objekti
- 
- Dodatno se na frontendu definišu:
  - DTO objekti
 
 Na osnovu putanja se na backendu generišu:
 - kontroleri
-- za svaki kontroler se generiše i servis kome se delegira izvršavanje zahtjeva 
+- za svaki kontroler se generiše i servis kome se delegira izvršavanje zahtjeva
+- na osnovu modela koji se koristi na putanji se generiše servisna logika
 
 Na frontend strani se generišu:
 - servisi koji šalju zahtjeve ka kontrolerima na bekendu 

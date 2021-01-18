@@ -19,6 +19,7 @@ Na osnovu modela se na bekendu generiše:
 Na osnovu putanja se na backendu generišu:
 - kontroleri
 - za svaki kontroler se generiše i servis kome se delegira izvršavanje zahtjeva 
+
 Na frontend strani se generišu:
 - servisi koji šalju zahtjeve ka kontrolerima na bekendu 
 - kreira se routing module

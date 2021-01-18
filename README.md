@@ -34,8 +34,6 @@ config:
       get:
          200:
             type: Knjiga
-      patch:
-         200: string("Usesna izmena")
       delete:
          200: string("Uspesno obrisan")
 

@@ -10,12 +10,21 @@ Osnovna ideja je da se na pocetku definiše model aplikacije koji bi se mogao re
 
 Na osnovu modela se na bekendu generiše:
  - hibernate sloj sa klasama modela
- - JPA repozitorijumi za svaku klasu. 
+ - JPA repozitorijumi za svaku klasu
+ - DTO objekti
  
  Dodatno se na frontendu definišu:
- - DTO objekti koji se koriste
+ - DTO objekti
 
-Na osnovu putanja se generišu kontroleri na backend strani, za svaki kontroler se generiše i servis kome se delegira izvršavanje zahtjeva. Na frontend strani se generišu servisi koji šalju zahtjeve ka kontrolerima na bekendu. Pomoću putanja se kreira routing module. Za svaku putanju se definiše Angualr komponenta koja je zadužena za iscrtavanje. U zavisnosti od tipa podatka koji vraća get zahtjev za datu komponentu može se generisati i prikaz entiteta (za pojedinačne entitete se prikazuju njegovi atributi, dok za kolekcije se može prikazati ili tabela ili kartice za svaki od elemenata kolekcije). Ukoliko je pak u pitanju post zahtjev, moguće je na osnovu tipa podatka koji se šalje izgenerisati formu sa svim potrebnim poljima.
+Na osnovu putanja se na backendu generišu:
+- kontroleri
+- za svaki kontroler se generiše i servis kome se delegira izvršavanje zahtjeva 
+Na frontend strani se generišu:
+- servisi koji šalju zahtjeve ka kontrolerima na bekendu 
+- kreira se routing module
+- za svaku putanju se definiše Angualr komponenta koja je zadužena za iscrtavanje
+- u zavisnosti od tipa podatka koji vraća get zahtjev za datu komponentu može se generisati i prikaz entiteta (za pojedinačne entitete se prikazuju njegovi atributi, dok za kolekcije se može prikazati ili tabela ili kartice za svaki od elemenata kolekcije). 
+- ukoliko je pak u pitanju post zahtjev, moguće je na osnovu tipa podatka koji se šalje izgenerisati formu sa svim potrebnim poljima.
 
 ## Primjer
 

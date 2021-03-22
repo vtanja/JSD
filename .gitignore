@@ -1,1 +1,5 @@
 venv/
+
+*.dot
+*.png
+sbag/*.sbag

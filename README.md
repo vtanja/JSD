@@ -72,3 +72,7 @@ Na frontend strani se generišu:
 - za svaku putanju se definiše Angualr komponenta koja je zadužena za iscrtavanje
 - u zavisnosti od tipa podatka koji vraća get zahtjev za datu komponentu može se generisati i prikaz entiteta (za pojedinačne entitete se prikazuju njegovi atributi, dok za kolekcije se može prikazati ili tabela ili kartice za svaki od elemenata kolekcije). 
 - ukoliko je pak u pitanju post zahtjev, moguće je na osnovu tipa podatka koji se šalje izgenerisati formu sa svim potrebnim poljima.
+
+# Credits
+
+Initial project layout generated with `textx startproject`.

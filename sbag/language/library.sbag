@@ -1,0 +1,9 @@
+entity Knjiga:
+    naziv: string;
+    godinaIzdavanja: int;
+    zanr: string;
+    autor: Autor;
+
+entity Autor:
+    ime: string;
+    prezime: string;

@@ -4,7 +4,7 @@ venv/
 # Files used for testing
 *.dot
 *.png
-sbag/**/*.sbag
+sbag/language/*.sbag
 
 # Projects and folders used for testing
 demo/

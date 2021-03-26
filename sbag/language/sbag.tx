@@ -1,0 +1,22 @@
+
+SbagModel:
+    simple_types *= SimpleType
+    entities+=Entity
+;
+
+Entity:
+    'entity' name=ID ':'
+    properties+=Property
+;
+
+Property:
+    name=ID ':' type=[Type] ';'
+;
+
+Type:
+    SimpleType | Entity
+;
+
+SimpleType:
+    'type' name=ID
+;

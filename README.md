@@ -11,13 +11,13 @@ Osnovna ideja je da se na pocetku definiše model aplikacije koji bi se mogao re
 Sitaksa jezika nije definitivna, biće izmjenjena po potrebi.
 
 ```
-model Knjiga:
+entity Knjiga:
    naziv: string;
    godinaIzdavanja: int;
    zanr: string;
    autor: Autor;
 
-model Autor:
+entity Autor:
    ime: string;
    prezime: string;
 

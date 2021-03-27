@@ -1,0 +1,16 @@
+// package dto
+
+class {{ entity.name }} {
+    {% for property in entity.properties %}
+    private {{ property.type }} {{ property.name }};
+    {% endfor %}
+
+    {% for property in entity.properties %}
+    public {{ property.type }} get{{ property.name }}() {
+        return {{ property.name }};
+    }
+    public void set{{ property.name }}({{ property.type }} {{ property.name }}) {
+        this.{{property.name}} = {{property.name}};
+    }
+    {% endfor %}
+}

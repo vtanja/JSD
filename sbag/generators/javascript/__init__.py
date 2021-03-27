@@ -1,17 +1,11 @@
-import os
-from functools import partial
-from textx import generator, gen_file, get_output_filename
+
+from textx import generator
 
 
 @generator('sbag', 'javascript')
-def sbag_generate_java(metamodel, model, output_path, overwrite, debug, **custom_args):
+def sbag_generate_javascript(metamodel, model, output_path, overwrite, debug, **custom_args):
     "Generator for generating java from sbag descriptions"
-
-    output_file = get_output_filename(model.file_name, output_path, '*.sbag')
-    gen_file(model.file_name, output_file,
-             partial(generator_callback, model, output_file),
-             overwrite,
-             success_message='To start this angular application run: ng serve')
+    pass
 
 
 def generator_callback(model, output_file):

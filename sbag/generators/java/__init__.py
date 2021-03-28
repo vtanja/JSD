@@ -1,4 +1,4 @@
-from os import mkdir
+from os import mkdir, getcwd
 from os.path import dirname, exists, join
 
 from textx import generator
@@ -13,10 +13,14 @@ def sbag_generate_java(metamodel, model, output_path, overwrite, debug, **custom
 
     config = {}
 
+    # If output path is not specified take the current working directory
     if output_path is None:
-        output_path = join(this_folder, 'gen', '')
-        if not exists(output_path):
-            mkdir(output_path)
+        output_path = getcwd()
+
+    # Create folder generated where output will be saved
+    output_path = join(output_path, 'generated', '')
+    if not exists(output_path):
+        mkdir(output_path)
 
     template_folder = join(this_folder, 'templates')
 
@@ -24,8 +28,5 @@ def sbag_generate_java(metamodel, model, output_path, overwrite, debug, **custom
     for entity in model.entities:
         config['entity'] = entity
         config['entity_name'] = entity.name
-        entity_path = join(output_path, entity.name, '')
-        if not exists(entity_path):
-            mkdir(entity_path)
-        textx_jinja_generator(template_folder, entity_path, config,
+        textx_jinja_generator(template_folder, output_path, config,
                               overwrite)

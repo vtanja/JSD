@@ -6,8 +6,8 @@ venv/
 *.png
 sbag/language/*.sbag
 
-# Projects and folders used for testing
-demo/
+# Generated projects
+generated/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

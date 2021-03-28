@@ -12,6 +12,7 @@ def sbag_generate_java(metamodel, model, output_path, overwrite, debug, **custom
     this_folder = dirname(__file__)
 
     config = {}
+    config['config'] = model.config
 
     # If output path is not specified take the current working directory
     if output_path is None:

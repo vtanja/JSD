@@ -27,9 +27,18 @@ def sbag_generate_java(metamodel, model, output_path, overwrite, debug, **custom
 
     template_folder = join(this_folder, 'templates')
 
+    def javatype(str):
+        return {
+            'string': 'String'
+        }.get(str.name, str.name)
+
+    filters = {
+        'javatype': javatype
+    }
+
     # Run Jinja generator
     for entity in model.entities:
         config['entity'] = entity
         config['entity_name'] = entity.name
         textx_jinja_generator(template_folder, output_path, config,
-                              overwrite)
+                              overwrite, filters)

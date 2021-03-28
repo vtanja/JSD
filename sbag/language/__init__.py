@@ -8,9 +8,24 @@ class BaseType():
     """
     Class for defining base types eg. string, double and integer...
     """
+
     def __init__(self, parent, name):
         self.parent = parent
         self.name = name
+
+    def __str__(self):
+        return self.name
+
+
+class Entity():
+    """
+    Class for defining entities
+    """
+
+    def __init__(self, name, parent, properties):
+        self.name = name
+        self.parent = parent
+        self.properties = properties
 
     def __str__(self):
         return self.name
@@ -27,7 +42,7 @@ def sbag_language():
         'boolean': BaseType(None, 'boolean')
     }
     mm = metamodel_from_file(os.path.join(current_dir, 'sbag.tx'),
-                             classes=[BaseType],
+                             classes=[BaseType, Entity],
                              builtins=builtin_types,
                              debug=True)
 

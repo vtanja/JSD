@@ -15,7 +15,8 @@ def sbag_generate_java(metamodel, model, output_path, overwrite, debug, **custom
 
     if output_path is None:
         output_path = join(this_folder, 'gen', '')
-        mkdir(output_path)
+        if not exists(output_path):
+            mkdir(output_path)
 
     template_folder = join(this_folder, 'templates')
 

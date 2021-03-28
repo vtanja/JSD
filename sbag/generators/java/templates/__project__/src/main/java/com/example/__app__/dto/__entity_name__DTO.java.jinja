@@ -1,0 +1,16 @@
+package com.example.{{ app }}.dto;
+
+class {{ entity.name | capitalize }} {
+    {% for property in entity.properties %}
+    private {{ property.type | javatype }} {{ property.name }};
+    {% endfor %}
+
+    {% for property in entity.properties %}
+    public {{ property.type | javatype }} get{{ property.name | capitalize }}() {
+        return {{ property.name }};
+    }
+    public void set{{ property.name | capitalize }}({{ property.type | javatype }} {{ property.name }}) {
+        this.{{property.name}} = {{property.name}};
+    }
+    {% endfor %}
+}

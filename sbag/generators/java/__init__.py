@@ -1,6 +1,7 @@
 from os import mkdir, getcwd
 from os.path import dirname, exists, join
 
+from sbag.language import Entity
 from textx import generator
 from textxjinja import textx_jinja_generator
 
@@ -27,13 +28,20 @@ def sbag_generate_java(metamodel, model, output_path, overwrite, debug, **custom
 
     template_folder = join(this_folder, 'templates')
 
-    def javatype(str):
-        return {
-            'string': 'String'
-        }.get(str.name, str.name)
+    def get_correct_type(property):
+        """
+        Returns correct java type if property type is BaseType or
+        returns correct entity DTO.
+        """
+        if isinstance(property.type, Entity):
+            return '{}DTO'.format(property.name.capitalize())
+        else:
+            return {
+                'string': 'String'
+            }.get(property.type.name, property.type)
 
     filters = {
-        'javatype': javatype
+        'get_correct_type': get_correct_type
     }
 
     # Run Jinja generator

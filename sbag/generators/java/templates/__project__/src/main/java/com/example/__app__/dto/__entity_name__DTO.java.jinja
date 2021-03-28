@@ -1,16 +1,20 @@
 package com.example.{{ app }}.dto;
 
-class {{ entity.name | capitalize }} {
-    {% for property in entity.properties %}
-    private {{ property.type | javatype }} {{ property.name }};
-    {% endfor %}
+import lombok.NoArgsConstructor;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
+{% for property in entity.properties %}
+{% if type(property.type) == type(entity) %}
+import com.example.{{ app }}.dto.{{ property.type }}DTO;
+{% endif %}
+{% endfor %}
 
+@Getter @Setter
+@NoArgsConstructor
+@AllArgsConstructor
+class {{ entity.name | capitalize }}DTO {
     {% for property in entity.properties %}
-    public {{ property.type | javatype }} get{{ property.name | capitalize }}() {
-        return {{ property.name }};
-    }
-    public void set{{ property.name | capitalize }}({{ property.type | javatype }} {{ property.name }}) {
-        this.{{property.name}} = {{property.name}};
-    }
+    private {{ property | get_correct_type }} {{ property.name }};
     {% endfor %}
 }

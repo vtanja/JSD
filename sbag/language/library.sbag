@@ -1,3 +1,7 @@
+project: Biblioteka
+group: "uns.ac.rs"
+description: "Aplikacija koja omogucava rad bibliotekarima"
+
 entity Knjiga:
     naziv: string;
     godinaIzdavanja: int;

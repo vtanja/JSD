@@ -1,6 +1,6 @@
 {% for property in entity.properties %}
-{% if type(property) == type(entity) %}
-import {{ property | get_correct_type }} from './{{ property | lower }}.model';
+{% if get_type(property.type) == get_type(entity) %}
+import { {{ property | get_correct_type }} } from './{{ property.name | lower }}.model';
 {% endif %}
 {% endfor %}
 

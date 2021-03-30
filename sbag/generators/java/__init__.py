@@ -16,6 +16,7 @@ def sbag_generate_java(metamodel, model, output_path, overwrite, debug, **custom
     config['config'] = model.config
     config['project'] = model.config.project.capitalize()
     config['app'] = model.config.project.lower()
+    config['type'] = type
 
     # If output path is not specified take the current working directory
     if output_path is None:

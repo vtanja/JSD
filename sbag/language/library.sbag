@@ -2,12 +2,12 @@ project: Biblioteka
 group: "uns.ac.rs"
 description: "Aplikacija koja omogucava rad bibliotekarima"
 
-entity Knjiga:
-    naziv: string;
-    godinaIzdavanja: int;
-    zanr: string;
-    autor: Autor;
+entity Book:
+    title: string;
+    publishing_year: int;
+    genre: string;
+    author: Author;
 
-entity Autor:
-    ime: string;
-    prezime: string;
+entity Author:
+    first_name: string;
+    last_name: string;

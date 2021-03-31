@@ -41,8 +41,23 @@ def sbag_generate_java(metamodel, model, output_path, overwrite, debug, **custom
                 'string': 'String'
             }.get(property.type.name, property.type)
 
+    def plural(entity: str):
+        if entity[-2 :] in ['ch', 'sh', 'ss', 'es']:
+            entity += 'es'
+        elif entity[-1] in ['s', 'x', 'z', 'o']:
+            entity += 'es'
+        elif entity[-1] == 'y':
+            if entity[-2] in ['a', 'e', 'i', 'o', 'u']:
+                entity += 's'
+            else:
+                entity = entity[: -1] + 'ies'
+        else: 
+            entity += 's'
+        return entity.capitalize()
+
     filters = {
-        'get_correct_type': get_correct_type
+        'get_correct_type': get_correct_type,
+        'plural': plural
     }
 
     # Run Jinja generator

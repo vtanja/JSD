@@ -41,8 +41,21 @@ def sbag_generate_java(metamodel, model, output_path, overwrite, debug, **custom
                 'string': 'String'
             }.get(property.type.name, property.type)
 
+    def get_correct_type_for_model(property):
+        """
+        Returns correct java type if property type is BaseType or
+        returns correct entity DTO.
+        """
+        if isinstance(property.type, Entity):
+            return property.name.capitalize()
+        else:
+            return {
+                'string': 'String'
+            }.get(property.type.name, property.type)
+
     filters = {
-        'get_correct_type': get_correct_type
+        'get_correct_type': get_correct_type,
+        'get_correct_type_for_model': get_correct_type_for_model
     }
 
     # Run Jinja generator

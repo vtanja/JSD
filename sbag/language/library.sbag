@@ -4,10 +4,10 @@ description: "Aplikacija koja omogucava rad bibliotekarima"
 
 entity Book:
     title: string;
-    publishing_year: int;
+    publishingYear: int;
     genre: string;
     author: Author;
 
 entity Author:
-    first_name: string;
-    last_name: string;
+    firstName: string;
+    lastName: string;

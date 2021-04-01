@@ -1,0 +1,11 @@
+{% for property in entity.properties %}
+{% if get_type(property.type) == get_type(entity) %}
+import { {{ property | get_correct_type }} } from './{{ property.name | lower }}.model';
+{% endif %}
+{% endfor %}
+
+export interface I{{ entity.name }} {
+    {% for property in entity.properties %}
+    {{ property.name }}: {{ property | get_correct_type }};
+    {% endfor %}
+}

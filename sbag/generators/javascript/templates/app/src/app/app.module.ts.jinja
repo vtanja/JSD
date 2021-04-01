@@ -12,6 +12,9 @@ import { SharedModule } from './shared/shared.module';
 @NgModule({
   declarations: [
     AppComponent,
+    {% for entity in entities %}
+    {{entity.name}}Component,
+    {% endfor %}
   ],
   imports: [
     BrowserModule,

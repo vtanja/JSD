@@ -47,7 +47,7 @@ def sbag_generate_java(metamodel, model, output_path, overwrite, debug, **custom
         returns correct entity DTO.
         """
         if isinstance(property.type, Entity):
-            return '{}'.format(property.name.capitalize())
+            return property.name.capitalize()
         else:
             return {
                 'string': 'String'

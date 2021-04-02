@@ -1,0 +1,54 @@
+package com.example.{{ app }}.controller;
+
+import org.springframework.web.bind.annotation.*;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import lombok.extern.slf4j.Slf4j;
+import com.example.{{ app }}.dto.{{entity.name}}DTO;
+// service import
+
+
+@CrossOrigin
+@RestController
+@Slf4j
+@RequestMapping( path = "/{{ entity.name | lower }}")
+public class {{ entity.name | capitalize }}Controller {
+    // private final Service service;
+
+    BookController(){
+        // this.Service = service;
+    }
+
+    @GetMapping(path="/get-all-{{ entity.name | lower }}")
+    public ResponseEntity<List<{{ entity.name }}DTO>> getOtherAuthorBooks() {
+
+        //List<{{ entity.name }}DTO> {{ entity.name | lower }}List = {{ entity.name | lower }}Service.get{{entity.name}}
+
+        //return new ResponseEntity<>({{ entity.name | lower }}List, HttpStatus.OK);
+    }
+
+    @GetMapping(path="/get-{{ entity.name | lower }}/{id}")
+    public ResponseEntity<{{ entity.name }}DTO> getOtherAuthorBooks(@PathVariable Int id) {
+
+        //{{ entity.name }}DTO {{ entity.name | lower }}Dto = {{ entity.name | lower }}Service.get{{entity.name}}(id)
+
+        //return new ResponseEntity<>({{ entity.name | lower }}Dto, HttpStatus.OK);
+    }
+
+    @PostMapping(path = "/create")
+    public ResponseEntity<?> Create(@RequestBody {{ entity.name }}DTO {{entity.name}}Dto) {
+        {{ entity.name | lower }}Service.create({{entity.name}}Dto);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @PostMapping(path = "/update/{id}")
+    public ResponseEntity<?> Update(@PathVariable int id, @RequestBody {{ entity.name }}DTO {{entity.name}}Dto) {
+        {{entity.name}}DTO {{entity.name}}Dto = {{ entity.name | lower }}Service.update{{ entity.name }}(id, {{entity.name}}Dto);
+    }
+
+    @DeleteMapping(path = "/delete/{id}")
+    public void Delete(@PathVariable int id) {
+        {{ entity.name | lower }}Service.delete{{ entity.name }}(id);
+    }
+
+}

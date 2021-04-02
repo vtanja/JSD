@@ -13,7 +13,7 @@ import com.example.{{ app }}.dto.{{ property.type }}DTO;
 @Getter @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-class {{ obj.name | capitalize }}DTO {
+public class {{ obj.name | capitalize }}DTO {
     {% for property in obj.properties %}
     private {{ property | get_correct_type }} {{ property.name }};
     {% endfor %}

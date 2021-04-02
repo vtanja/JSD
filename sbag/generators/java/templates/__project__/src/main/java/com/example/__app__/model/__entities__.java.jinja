@@ -4,8 +4,8 @@ import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
-{% for property in entity.properties %}
-{% if type(property.type) == type(entity) %}
+{% for property in obj.properties %}
+{% if type(property.type) == type(obj) %}
 import com.example.{{ app }}.model.{{ property.type }};
 {% endif %}
 {% endfor %}
@@ -13,8 +13,8 @@ import com.example.{{ app }}.model.{{ property.type }};
 @Getter @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class {{ entity.name | capitalize }} {
-    {% for property in entity.properties %}
+public class {{ obj.name | capitalize }} {
+    {% for property in obj.properties %}
     private {{ property | get_correct_type_for_model }} {{ property.name }};
     {% endfor %}
 }

@@ -5,20 +5,16 @@ import { HttpClientModule } from '@angular/common/http';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { ComponentsModule } from './components/components.module';
 import { CoreModule } from './core/core.module';
 import { SharedModule } from './shared/shared.module';
 
 {% for entity in entities%}
-import { {{entity.name}}Component } from './components/{{entity.name|lower}}/{{entity.name|lower}}.component';
+import { {{entity.name}}Module } from './modules/{{entity.name|lower}}/{{entity.name|lower}}.module';
 {% endfor %}
 
 @NgModule({
   declarations: [
     AppComponent,
-    {% for entity in entities %}
-    {{entity.name}}Component,
-    {% endfor %}
   ],
   imports: [
     BrowserModule,
@@ -26,8 +22,10 @@ import { {{entity.name}}Component } from './components/{{entity.name|lower}}/{{e
     HttpClientModule,
     CoreModule,
     SharedModule,
-    ComponentsModule,
-    AppRoutingModule
+    AppRoutingModule,
+    {%for entity in entities%}
+    {{entity.name}}Module,
+    {% endfor %}
   ],
   providers: [],
   bootstrap: [AppComponent]

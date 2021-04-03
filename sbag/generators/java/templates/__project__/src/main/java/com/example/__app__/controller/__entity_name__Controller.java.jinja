@@ -3,6 +3,7 @@ package com.example.{{ app }}.controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.beans.factory.annotation.Autowired;
 import lombok.extern.slf4j.Slf4j;
 import com.example.{{ app }}.dto.{{entity.name}}DTO;
 import com.example.{{ app }}.service.{{entity.name}}Service;
@@ -15,7 +16,8 @@ import com.example.{{ app }}.service.{{entity.name}}Service;
 public class {{ entity.name | capitalize }}Controller {
     private final {{ entity.name }}Service {{ entity.name | lower }}Service;
 
-    BookController({{ entity.name }}Service service){
+    @Autowired
+    public {{ entity.name | capitalize }}Controller({{ entity.name }}Service service){
         this.{{ entity.name | lower }}Service = service;
     }
 

@@ -43,6 +43,8 @@ def sbag_generate_javascript(metamodel, model, output_path, overwrite, debug, **
         'get_correct_type': get_correct_type
     }
 
+    config['entities'] = model.entities
+
     for entity in model.entities:
         config['entity'] = entity
         config['entity_name'] = entity.name.lower()

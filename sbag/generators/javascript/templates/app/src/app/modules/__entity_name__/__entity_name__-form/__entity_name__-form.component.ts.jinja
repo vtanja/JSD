@@ -1,0 +1,12 @@
+import { Component } from '@angular/core';
+
+@Component({
+	selector: 'app-{{entity.name|lower}}-form',
+	templateUrl: './{{entity.name|lower}}-form.component.html',
+	styleUrls: ['./{{entity.name|lower}}-form.component.css'],
+})
+
+export class {{entity.name}}FormComponent {
+	
+    constructor(){}
+}

@@ -1,0 +1,17 @@
+import { NgModule } from '@angular/core';
+
+import { {{entity.name}}ListComponent } from './{{entity.name|lower}}-list/{{entity.name|lower}}-list.component';
+import { {{entity.name}}DetailComponent } from './{{entity.name|lower}}-detail/{{entity.name|lower}}-detail.component';
+import { {{entity.name}}FormComponent } from './{{entity.name|lower}}-form/{{entity.name|lower}}-form.component';
+
+@NgModule({
+  imports: [],
+  declarations: 
+    [
+        {{entity.name}}ListComponent,
+        {{entity.name}}DetailComponent,
+        {{entity.name}}FormComponent,
+    ],
+  providers: []
+})
+export class {{entity.name}}Module {}

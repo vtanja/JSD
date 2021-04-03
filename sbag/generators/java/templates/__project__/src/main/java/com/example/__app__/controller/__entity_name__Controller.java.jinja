@@ -9,44 +9,49 @@ import java.util.List;
 import com.example.{{ app }}.dto.{{entity.name}}DTO;
 import com.example.{{ app }}.service.{{entity.name}}Service;
 
+{% set controllerName = (entity.name | capitalize) + 'Controller' %}
+{% set DtoType = entity.name + 'DTO' %}
+{% set entityDto = (entity.name | lower) + 'Dto' %}
+{% set entityService = (entity.name | lower) + 'Service' %}
+{% set entities = (entity.name | plural) %}
 
 @CrossOrigin
 @RestController
 @Slf4j
 @RequestMapping( path = "/{{ entity.name | lower }}")
-public class {{ entity.name | capitalize }}Controller {
-    private final {{ entity.name }}Service {{ entity.name | lower }}Service;
+public class {{ controllerName }} {
+    private final {{ entity.name }}Service {{ entityService }};
 
     @Autowired
-    public {{ entity.name | capitalize }}Controller({{ entity.name }}Service service){
-        this.{{ entity.name | lower }}Service = service;
+    public {{ controllerName }}({{ entity.name }}Service service){
+        this.{{ entityService }} = service;
     }
 
     @GetMapping()
-    public ResponseEntity<List<{{ entity.name }}DTO>> getAll{{ entity.name | plural }}() {
+    public ResponseEntity<List<{{ DtoType }}>> getAll{{ entities }}() {
 
-        return {{ entity.name | lower }}Service.get{{entity.name | plural}}();
+        return {{ entityService }}.get{{entity.name | plural}}();
     }
 
     @GetMapping(path="/{id}")
-    public ResponseEntity<{{ entity.name }}DTO> get{{ entity.name }}(@PathVariable Long id) {
+    public ResponseEntity<{{ DtoType }}> get{{ entity.name }}(@PathVariable Long id) {
 
-        return {{ entity.name | lower }}Service.get{{entity.name}}(id);
+        return {{ entityService }}.get{{entity.name}}(id);
     }
 
     @PostMapping()
-    public ResponseEntity<{{ entity.name }}DTO> create(@RequestBody {{ entity.name }}DTO {{entity.name | lower}}Dto) {
-        return {{ entity.name | lower }}Service.create({{entity.name | lower}}Dto);
+    public ResponseEntity<{{ DtoType }}> create(@RequestBody {{ DtoType }} {{ entityDto }}) {
+        return {{ entityService }}.create({{ entityDto }});
     }
 
     @PutMapping(path = "/{id}")
-    public ResponseEntity<{{ entity.name }}DTO> update(@PathVariable Long id, @RequestBody {{ entity.name }}DTO {{entity.name | lower }}Dto) {
-        return {{ entity.name | lower }}Service.update{{ entity.name }}(id, {{ entity.name | lower }}Dto);
+    public ResponseEntity<{{ DtoType }}> update(@PathVariable Long id, @RequestBody {{ DtoType }} {{ entityDto }}) {
+        return {{ entityService }}.update{{ entity.name }}(id, {{ entityDto }});
     }
 
     @DeleteMapping(path = "/{id}")
     public ResponseEntity<?> delete(@PathVariable Long id) {
-        return {{ entity.name | lower }}Service.delete{{ entity.name }}(id);
+        return {{ entityService }}.delete{{ entity.name }}(id);
     }
 
 }

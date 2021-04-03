@@ -1,14 +1,17 @@
 package com.example.{{ app }}.service;
 
 import org.springframework.stereotype.Service;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import com.example.{{ app }}.dto.{{entity.name}}DTO;
+import com.example.{{ app }}.repository.{{ entity.name | capitalize }}Repository;
 
 import java.util.List;
 
 @Service
 public class {{entity.name}}Service {
-    // here should be added repository
+    @Autowired
+    private {{ entity.name | capitalize }}Repository {{entity.name | lower}}Repository;
 
     // here should be added constructor
 

@@ -5,6 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import lombok.extern.slf4j.Slf4j;
+import java.util.List;
 import com.example.{{ app }}.dto.{{entity.name}}DTO;
 import com.example.{{ app }}.service.{{entity.name}}Service;
 
@@ -30,7 +31,7 @@ public class {{ entity.name | capitalize }}Controller {
     }
 
     @GetMapping(path="/get-{{ entity.name | lower }}/{id}")
-    public ResponseEntity<{{ entity.name }}DTO> Get{{ entity.name }}(@PathVariable Int id) {
+    public ResponseEntity<{{ entity.name }}DTO> Get{{ entity.name }}(@PathVariable int id) {
 
         {{ entity.name }}DTO {{ entity.name }}Dto = {{ entity.name | lower }}Service.get{{entity.name}}(id);
 
@@ -38,19 +39,21 @@ public class {{ entity.name | capitalize }}Controller {
     }
 
     @PostMapping(path = "/create")
-    public ResponseEntity<?> Create(@RequestBody {{ entity.name }}DTO {{entity.name}}Dto) {
-        {{ entity.name | lower }}Service.create({{entity.name}}Dto);
+    public ResponseEntity<?> Create(@RequestBody {{ entity.name }}DTO {{entity.name | lower}}Dto) {
+        {{ entity.name | lower }}Service.create({{entity.name | lower}}Dto);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @PostMapping(path = "/update/{id}")
-    public ResponseEntity<?> Update(@PathVariable int id, @RequestBody {{ entity.name }}DTO {{entity.name}}Dto) {
-        {{entity.name}}DTO {{entity.name}}Dto = {{ entity.name | lower }}Service.update{{ entity.name }}(id, {{entity.name}}Dto);
+    public ResponseEntity<?> Update(@PathVariable int id, @RequestBody {{ entity.name }}DTO {{entity.name | lower }}Dto) {
+        {{entity.name}}DTO updated{{entity.name}} = {{ entity.name | lower }}Service.update{{ entity.name }}(id, {{ entity.name | lower }}Dto);
+        return new ResponseEntity<>(updated{{ entity.name }}, HttpStatus.OK);
     }
 
-    @DeleteMapping(path = "/delete/{id}")
-    public ResponseEntity<?> Delete(@PathVariable int id) {
-        {{ entity.name | lower }}Service.delete{{ entity.name }}(id);
+    @DeleteMapping(path = "/delete")
+    public ResponseEntity<?> Delete(@RequestBody {{ entity.name }}DTO {{entity.name | lower }}Dto) {
+        {{ entity.name | lower }}Service.delete{{ entity.name }}({{entity.name | lower }}Dto);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
 }

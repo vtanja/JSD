@@ -2,6 +2,8 @@ package com.example.{{ app }}.service;
 
 import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 
 import com.example.{{ app }}.dto.{{entity.name}}DTO;
 import com.example.{{ app }}.repository.{{ entity.name | capitalize }}Repository;
@@ -13,23 +15,23 @@ public class {{entity.name}}Service {
     @Autowired
     private {{ entity.name | capitalize }}Repository {{entity.name | lower}}Repository;
 
-    public List<{{entity.name}}DTO> get{{entity.name|plural}}(){
-        return null; 
+    public ResponseEntity<List<{{ entity.name }}DTO>> get{{entity.name|plural}}(){
+        return new ResponseEntity<>(HttpStatus.OK); 
     }
 
-    public {{entity.name}}DTO get{{entity.name}}(int id){
-        return null;
+    public ResponseEntity<{{ entity.name }}DTO> get{{entity.name}}(Long id){
+        return new ResponseEntity<>(HttpStatus.OK); 
     }
 
-    public {{entity.name}}DTO update{{entity.name}}(int id, {{entity.name}}DTO {{entity.name|lower}}){
-        return null;
+    public ResponseEntity<{{ entity.name }}DTO> update{{entity.name}}(Long id, {{entity.name}}DTO {{entity.name|lower}}){
+        return new ResponseEntity<>(HttpStatus.OK); 
     }
 
-    public void create({{entity.name}}DTO {{entity.name|lower}}){
-
+    public ResponseEntity<{{ entity.name }}DTO> create({{entity.name}}DTO {{entity.name|lower}}){
+        return new ResponseEntity<>(HttpStatus.OK); 
     }
 
-    public void delete{{entity.name}}(int id){
-
+    public ResponseEntity<?> delete{{entity.name}}(Long id){
+        return new ResponseEntity<>(HttpStatus.OK); 
     }
 }

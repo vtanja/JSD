@@ -50,9 +50,9 @@ public class {{ entity.name | capitalize }}Controller {
         return new ResponseEntity<>(updated{{ entity.name }}, HttpStatus.OK);
     }
 
-    @DeleteMapping(path = "/delete")
-    public ResponseEntity<?> Delete(@RequestBody {{ entity.name }}DTO {{entity.name | lower }}Dto) {
-        {{ entity.name | lower }}Service.delete{{ entity.name }}({{entity.name | lower }}Dto);
+    @DeleteMapping(path = "/delete/{id}")
+    public ResponseEntity<?> Delete(@PathVariable int id) {
+        {{ entity.name | lower }}Service.delete{{ entity.name }}(id);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 

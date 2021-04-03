@@ -1,0 +1,34 @@
+package com.example.{{ app }}.service;
+
+import org.springframework.stereotype.Service;
+
+import com.example.{{ app }}.dto.{{entity.name}}DTO;
+
+import java.util.List;
+
+@Service
+public class {{entity.name}}Service {
+    // here should be added repository
+
+    // here should be added constructor
+
+    public List<{{entity.name}}DTO> get{{entity.name|plural}}(){
+        return null; 
+    }
+
+    public {{entity.name}}DTO get{{entity.name}}(int id){
+        return null;
+    }
+
+    public {{entity.name}}DTO update{{entity.name}}(int id, {{entity.name}}DTO {{entity.name|lower}}){
+        return null;
+    }
+
+    public void create({{entity.name}}DTO {{entity.name|lower}}){
+
+    }
+
+    public void delete{{entity.name}}({{entity.name}}DTO {{entity.name|lower}}){
+
+    }
+}

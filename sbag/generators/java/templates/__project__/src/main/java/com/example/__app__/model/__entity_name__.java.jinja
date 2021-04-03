@@ -1,4 +1,4 @@
-package com.example.{{ app }}.dto;
+package com.example.{{ app }}.model;
 
 import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
@@ -6,15 +6,15 @@ import lombok.Getter;
 import lombok.Setter;
 {% for property in entity.properties %}
 {% if type(property.type) == type(entity) %}
-import com.example.{{ app }}.dto.{{ property.type }}DTO;
+import com.example.{{ app }}.model.{{ property.type }};
 {% endif %}
 {% endfor %}
 
 @Getter @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class {{ entity.name | capitalize }}DTO {
+public class {{ entity.name | capitalize }} {
     {% for property in entity.properties %}
-    private {{ property | get_correct_type }} {{ property.name }};
+    private {{ property | get_correct_type_for_model }} {{ property.name }};
     {% endfor %}
 }

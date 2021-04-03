@@ -22,38 +22,31 @@ public class {{ entity.name | capitalize }}Controller {
         this.{{ entity.name | lower }}Service = service;
     }
 
-    @GetMapping(path="/get-all-{{ entity.name | plural | lower }}")
+    @GetMapping()
     public ResponseEntity<List<{{ entity.name }}DTO>> getAll{{ entity.name | plural }}() {
 
-        List<{{ entity.name }}DTO> {{ entity.name | lower | plural }}List = {{ entity.name | lower }}Service.get{{entity.name | plural}}();
-
-        return new ResponseEntity<>({{ entity.name | lower | plural }}List, HttpStatus.OK);
+        return {{ entity.name | lower }}Service.get{{entity.name | plural}}();
     }
 
-    @GetMapping(path="/get-{{ entity.name | lower }}/{id}")
-    public ResponseEntity<{{ entity.name }}DTO> Get{{ entity.name }}(@PathVariable int id) {
+    @GetMapping(path="/{id}")
+    public ResponseEntity<{{ entity.name }}DTO> get{{ entity.name }}(@PathVariable Long id) {
 
-        {{ entity.name }}DTO {{ entity.name }}Dto = {{ entity.name | lower }}Service.get{{entity.name}}(id);
-
-        return new ResponseEntity<>({{ entity.name }}Dto, HttpStatus.OK);
+        return {{ entity.name | lower }}Service.get{{entity.name}}(id);
     }
 
-    @PostMapping(path = "/create")
-    public ResponseEntity<?> Create(@RequestBody {{ entity.name }}DTO {{entity.name | lower}}Dto) {
-        {{ entity.name | lower }}Service.create({{entity.name | lower}}Dto);
-        return new ResponseEntity<>(HttpStatus.OK);
+    @PostMapping()
+    public ResponseEntity<{{ entity.name }}DTO> create(@RequestBody {{ entity.name }}DTO {{entity.name | lower}}Dto) {
+        return {{ entity.name | lower }}Service.create({{entity.name | lower}}Dto);
     }
 
-    @PostMapping(path = "/update/{id}")
-    public ResponseEntity<?> Update(@PathVariable int id, @RequestBody {{ entity.name }}DTO {{entity.name | lower }}Dto) {
-        {{entity.name}}DTO updated{{entity.name}} = {{ entity.name | lower }}Service.update{{ entity.name }}(id, {{ entity.name | lower }}Dto);
-        return new ResponseEntity<>(updated{{ entity.name }}, HttpStatus.OK);
+    @PutMapping(path = "/{id}")
+    public ResponseEntity<{{ entity.name }}DTO> update(@PathVariable Long id, @RequestBody {{ entity.name }}DTO {{entity.name | lower }}Dto) {
+        return {{ entity.name | lower }}Service.update{{ entity.name }}(id, {{ entity.name | lower }}Dto);
     }
 
-    @DeleteMapping(path = "/delete/{id}")
-    public ResponseEntity<?> Delete(@PathVariable int id) {
-        {{ entity.name | lower }}Service.delete{{ entity.name }}(id);
-        return new ResponseEntity<>(HttpStatus.OK);
+    @DeleteMapping(path = "/{id}")
+    public ResponseEntity<?> delete(@PathVariable Long id) {
+        return {{ entity.name | lower }}Service.delete{{ entity.name }}(id);
     }
 
 }

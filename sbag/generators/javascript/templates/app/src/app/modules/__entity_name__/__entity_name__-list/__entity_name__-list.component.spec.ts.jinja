@@ -1,0 +1,25 @@
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+
+import { {{entity.name}}ListComponent } from './{{entity.name|lower}}-list.component';
+
+describe('{{entity.name}}ListComponent', () => {
+  let component: {{entity.name}}ListComponent;
+  let fixture: ComponentFixture<{{entity.name}}ListComponent>;
+
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      declarations: [ {{entity.name}}ListComponent ]
+    })
+    .compileComponents();
+  });
+
+  beforeEach(() => {
+    fixture = TestBed.createComponent({{entity.name}}ListComponent);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
+  });
+
+  it('should create', () => {
+    expect(component).toBeTruthy();
+  });
+});

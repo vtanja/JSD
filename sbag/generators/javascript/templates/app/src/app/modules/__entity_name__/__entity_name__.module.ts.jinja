@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 
 import { {{entity.name}}ListComponent } from './{{entity.name|lower}}-list/{{entity.name|lower}}-list.component';
-import { {{entity.name}}DetailComponent } from './{{entity.name|lower}}-detail/{{entity.name|lower}}-detail.component';
+import { {{entity.name}}Component } from './{{entity.name|lower}}/{{entity.name|lower}}.component';
 import { {{entity.name}}FormComponent } from './{{entity.name|lower}}-form/{{entity.name|lower}}-form.component';
 
 @NgModule({
@@ -9,7 +9,7 @@ import { {{entity.name}}FormComponent } from './{{entity.name|lower}}-form/{{ent
   declarations: 
     [
         {{entity.name}}ListComponent,
-        {{entity.name}}DetailComponent,
+        {{entity.name}}Component,
         {{entity.name}}FormComponent,
     ],
   providers: []

@@ -2,33 +2,40 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
 
-import { I{{entity.name}} } from 'src/app/shared/model/{{entity.name|lower}}.model';
+{% set entity_name = entity.name | lower %}
+{% set interface_name = 'I' + (entity.name) %}
+{% set service_name = (entity.name) + 'Service' %}
+{% set entity_id = (entity.name | lower) + 'Id' %}
+{% set entity_plural = entity.name | plural %}
+
+import { {{interface_name}} } from 'src/app/shared/model/{{entity_name}}.model';
+
 
 @Injectable({
   providedIn: 'root'
 })
-export class {{entity.name}}Service {
+export class {{service_name}} {
  
   constructor(private http: HttpClient) { }
 
-  get{{entity.name|plural}}(){
-    return this.http.get<I{{entity.name}}>(environment.api + '/{{entity.name|lower}}/get-all-{{entity.name|plural|lower}}');
+  get{{entity_plural}}(){
+    return this.http.get<{{interface_name}}>(environment.api + '/{{entity_name}}/get-all-{{entity_plural}}');
   }
 
-  get{{entity.name}}({{entity.name|lower}}Id: number) {
-    return this.http.get<I{{entity.name}}>(environment.api + '/{{entity.name|lower}}/get-{{entity.name|lower}}/' + {{entity.name|lower}}Id);
+  get{{entity.name}}({{entity_id}}: number) {
+    return this.http.get<{{interface_name}}>(environment.api + '/{{entity_name}}/get-{{entity_name}}/' + {{entity_id}});
   }
 
-  update{{entity.name}}({{entity.name|lower}}Id: number, {{entity.name|lower}}: I{{entity.name}}) {
-    return this.http.put(environment.api + '/{{entity.name|lower}}/update/' + {{entity.name|lower}}Id, {{entity.name|lower}});
+  update{{entity.name}}({{entity_id}}: number, {{entity_name}}: {{interface_name}}) {
+    return this.http.put(environment.api + '/{{entity_name}}/update/' + {{entity_id}}, {{entity_name}});
   }
   
-  create{{entity.name}}({{entity.name|lower}}: I{{entity.name}}) {
-    return this.http.post(environment.api + '/{{entity.name|lower}}/create', {{entity.name|lower}});
+  create{{entity.name}}({{entity_name}}: {{interface_name}}) {
+    return this.http.post(environment.api + '/{{entity_name}}/create', {{entity_name}});
   }
 
-  delete{{entity.name}}({{entity.name|lower}}Id: number) {
-    return this.http.delete(environment.api + '/{{entity.name|lower}}/delete/' + {{entity.name|lower}}Id);
+  delete{{entity.name}}({{entity_id}}: number) {
+    return this.http.delete(environment.api + '/{{entity_name}}/delete/' + {{entity_id}});
   }
 
 }

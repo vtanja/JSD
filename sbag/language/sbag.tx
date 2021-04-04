@@ -7,11 +7,19 @@ SbagModel:
 
 Entity:
     'entity' name=ID ':'
-    properties+=Property
+    properties+=EntityProperty
+;
+
+EntityProperty:
+    Property | Association
 ;
 
 Property:
     name=ID ':' type=[Type] ';'
+;
+
+Association:
+    name=ID ':' type=[Entity] '[]' ';'
 ;
 
 Type:

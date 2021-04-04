@@ -31,9 +31,9 @@ BaseType:
 ;
 
 Config:
-    'project' ':' project=ID
-    'group' ':' group=STRING
-    'description' ':' description=STRING
+    ('project' ':' project=ID)?
+    ('group' ':' group=STRING)?
+    ('description' ':' description=STRING)?
 ;
 
 Comment:

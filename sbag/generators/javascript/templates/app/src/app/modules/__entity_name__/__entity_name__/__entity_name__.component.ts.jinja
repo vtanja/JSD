@@ -1,9 +1,9 @@
 import { Component } from '@angular/core';
-
+{% set entity_name = entity.name | lower %}
 @Component({
-	selector: 'app-{{entity.name|lower}}',
-	templateUrl: './{{entity.name|lower}}.component.html',
-	styleUrls: ['./{{entity.name|lower}}.component.css'],
+	selector: 'app-{{entity_name}}',
+	templateUrl: './{{entity_name}}.component.html',
+	styleUrls: ['./{{entity_name}}.component.css'],
 })
 
 export class {{entity.name}}Component {

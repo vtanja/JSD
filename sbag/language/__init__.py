@@ -31,6 +31,18 @@ class Entity():
         return self.name
 
 
+class Config():
+    """
+    Class for defining project configuration
+    """
+
+    def __init__(self, project, group, description, parent):
+        self.project = project
+        self.group = group
+        self.description = description
+        self.parent = parent
+
+
 @language('sbag', '*.sbag')
 def sbag_language():
     "sbag language"
@@ -42,7 +54,7 @@ def sbag_language():
         'boolean': BaseType(None, 'boolean')
     }
     mm = metamodel_from_file(os.path.join(current_dir, 'sbag.tx'),
-                             classes=[BaseType, Entity],
+                             classes=[BaseType, Entity, Config],
                              builtins=builtin_types,
                              debug=True)
 

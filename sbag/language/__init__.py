@@ -37,6 +37,7 @@ class Config():
     """
 
     def __init__(self, project, group, description, parent):
+        """Create config instance."""
         self.project = project
         self.group = group
         self.description = description

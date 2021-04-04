@@ -19,23 +19,23 @@ export class {{service_name}} {
   constructor(private http: HttpClient) { }
 
   get{{entity_plural}}(){
-    return this.http.get<{{interface_name}}>(environment.api + '/{{entity_name}}/get-all-{{entity_plural}}');
+    return this.http.get<{{interface_name}}>(environment.api + '/{{entity_name}}');
   }
 
   get{{entity.name}}({{entity_id}}: number) {
-    return this.http.get<{{interface_name}}>(environment.api + '/{{entity_name}}/get-{{entity_name}}/' + {{entity_id}});
+    return this.http.get<{{interface_name}}>(environment.api + '/{{entity_name}}/' + {{entity_id}});
   }
 
   update{{entity.name}}({{entity_id}}: number, {{entity_name}}: {{interface_name}}) {
-    return this.http.put(environment.api + '/{{entity_name}}/update/' + {{entity_id}}, {{entity_name}});
+    return this.http.put(environment.api + '/{{entity_name}}/' + {{entity_id}}, {{entity_name}});
   }
   
   create{{entity.name}}({{entity_name}}: {{interface_name}}) {
-    return this.http.post(environment.api + '/{{entity_name}}/create', {{entity_name}});
+    return this.http.post(environment.api + '/{{entity_name}}', {{entity_name}});
   }
 
   delete{{entity.name}}({{entity_id}}: number) {
-    return this.http.delete(environment.api + '/{{entity_name}}/delete/' + {{entity_id}});
+    return this.http.delete(environment.api + '/{{entity_name}}/' + {{entity_id}});
   }
 
 }

@@ -83,7 +83,6 @@ def sbag_generate_java(metamodel, model, output_path, overwrite, debug, **custom
                               overwrite, filters)
 
 def check_and_setup_config(model):
-    from pudb import set_trace; set_trace()
     if model.config is None:
         model.config = Config('demo', 'com.example', 'Describe your project here', model)
     if model.config.project == '':

@@ -1,4 +1,4 @@
-name: sonal cloud static code analysis
+name: static code analysis
 
 # Controls when the action will run. 
 on:

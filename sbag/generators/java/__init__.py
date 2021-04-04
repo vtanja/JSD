@@ -1,7 +1,7 @@
 from os import mkdir, getcwd
 from os.path import dirname, exists, join
 
-from sbag.language import Entity
+from sbag.language import Entity, Config
 from textx import generator
 from textxjinja import textx_jinja_generator
 
@@ -13,6 +13,8 @@ def sbag_generate_java(metamodel, model, output_path, overwrite, debug, **custom
     this_folder = dirname(__file__)
 
     config = {}
+    check_and_setup_config(model)
+
     config['config'] = model.config
     config['project'] = model.config.project.capitalize()
     config['app'] = model.config.project.lower()
@@ -35,7 +37,7 @@ def sbag_generate_java(metamodel, model, output_path, overwrite, debug, **custom
         returns correct entity DTO.
         """
         if isinstance(property.type, Entity):
-            return '{}DTO'.format(property.name.capitalize())
+            return '{}DTO'.format(property.type.name.capitalize())
         else:
             return {
                 'string': 'String'
@@ -61,7 +63,7 @@ def sbag_generate_java(metamodel, model, output_path, overwrite, debug, **custom
         returns correct entity DTO.
         """
         if isinstance(property.type, Entity):
-            return property.name.capitalize()
+            return property.type.name.capitalize()
         else:
             return {
                 'string': 'String'
@@ -79,3 +81,13 @@ def sbag_generate_java(metamodel, model, output_path, overwrite, debug, **custom
         config['entity_name'] = entity.name
         textx_jinja_generator(template_folder, output_path, config,
                               overwrite, filters)
+
+def check_and_setup_config(model):
+    if model.config is None:
+        model.config = Config('demo', 'com.example', 'Describe your project here')
+    if model.config.project == '':
+        model.config.project = 'demo'
+    if model.config.group == '':
+        model.config.group = 'com.example'
+    if model.config.description == '':
+        model.config.description = 'Describe your project here'

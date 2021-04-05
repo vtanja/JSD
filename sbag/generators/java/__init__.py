@@ -1,7 +1,7 @@
 from os import mkdir, getcwd
 from os.path import dirname, exists, join
 
-from sbag.language import Entity
+from sbag.language import Entity, Config
 from textx import generator
 from textxjinja import textx_jinja_generator
 
@@ -13,6 +13,8 @@ def sbag_generate_java(metamodel, model, output_path, overwrite, debug, **custom
     this_folder = dirname(__file__)
 
     config = {}
+    check_and_setup_config(model)
+
     config['config'] = model.config
     config['project'] = model.config.project.capitalize()
     config['app'] = model.config.project.lower()
@@ -29,17 +31,17 @@ def sbag_generate_java(metamodel, model, output_path, overwrite, debug, **custom
 
     template_folder = join(this_folder, 'templates')
 
-    def get_correct_type(property):
+    def get_correct_type(prop):
         """
-        Returns correct java type if property type is BaseType or
+        Returns correct java type if prop type is BaseType or
         returns correct entity DTO.
         """
-        if isinstance(property.type, Entity):
-            return '{}DTO'.format(property.name.capitalize())
+        if isinstance(prop.type, Entity):
+            return '{}DTO'.format(prop.type.name.capitalize())
         else:
             return {
                 'string': 'String'
-            }.get(property.type.name, property.type)
+            }.get(prop.type.name, prop.type)
 
     def plural(entity: str):
         if entity[-2 :] in ['ch', 'sh', 'ss', 'es']:
@@ -51,21 +53,20 @@ def sbag_generate_java(metamodel, model, output_path, overwrite, debug, **custom
                 entity += 's'
             else:
                 entity = entity[: -1] + 'ies'
-        else: 
+        else:
             entity += 's'
         return entity.capitalize()
-        
-    def get_correct_type_for_model(property):
+
+    def get_correct_type_for_model(prop):
         """
-        Returns correct java type if property type is BaseType or
-        returns correct entity DTO.
+        Returns correct java type if prop type is BaseType or returns correct entity DTO.
         """
-        if isinstance(property.type, Entity):
-            return property.name.capitalize()
+        if isinstance(prop.type, Entity):
+            return prop.type.name.capitalize()
         else:
             return {
                 'string': 'String'
-            }.get(property.type.name, property.type)
+            }.get(prop.type.name, prop.type)
 
     filters = {
         'get_correct_type': get_correct_type,
@@ -79,3 +80,13 @@ def sbag_generate_java(metamodel, model, output_path, overwrite, debug, **custom
         config['entity_name'] = entity.name
         textx_jinja_generator(template_folder, output_path, config,
                               overwrite, filters)
+
+def check_and_setup_config(model):
+    if model.config is None:
+        model.config = Config('demo', 'com.example', 'Describe your project here', model)
+    if model.config.project == '':
+        model.config.project = 'demo'
+    if model.config.group == '':
+        model.config.group = 'com.example'
+    if model.config.description == '':
+        model.config.description = 'Describe your project here'

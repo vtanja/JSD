@@ -10,6 +10,7 @@ class BaseType():
     """
 
     def __init__(self, parent, name):
+        """Constuctor for instatiating base types."""
         self.parent = parent
         self.name = name
 
@@ -19,16 +20,30 @@ class BaseType():
 
 class Entity():
     """
-    Class for defining entities
+    Class for defining entities.
     """
 
     def __init__(self, name, parent, properties):
+        """Constructor for Entities."""
         self.name = name
         self.parent = parent
         self.properties = properties
 
     def __str__(self):
         return self.name
+
+
+class Config():
+    """
+    Class for defining project configuration.
+    """
+
+    def __init__(self, project, group, description, parent):
+        """Create config instance."""
+        self.project = project
+        self.group = group
+        self.description = description
+        self.parent = parent
 
 
 @language('sbag', '*.sbag')
@@ -42,7 +57,7 @@ def sbag_language():
         'boolean': BaseType(None, 'boolean')
     }
     mm = metamodel_from_file(os.path.join(current_dir, 'sbag.tx'),
-                             classes=[BaseType, Entity],
+                             classes=[BaseType, Entity, Config],
                              builtins=builtin_types,
                              debug=True)
 

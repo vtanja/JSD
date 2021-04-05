@@ -1,13 +1,16 @@
-project: Biblioteka
-group: "uns.ac.rs"
-description: "Aplikacija koja omogucava rad bibliotekarima"
+project: Library
 
 entity Book:
     title: string;
     publishingYear: int;
-    genre: string;
+    genre: Genre[];
     author: Author;
 
 entity Author:
     firstName: string;
     lastName: string;
+    books: Book[];
+
+entity Genre:
+    name: string;
+    books: Book[];

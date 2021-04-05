@@ -9,12 +9,25 @@ import lombok.Setter;
 import com.example.{{ app }}.model.{{ property.type }};
 {% endif %}
 {% endfor %}
+import javax.persistence.*;
 
 @Getter @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Entity
 public class {{ entity.name | capitalize }} {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
     {% for property in entity.properties %}
+    {% if type(property.type) == type(entity) %}
+    @OneToOne
+    {% else %}
+    @Column
+    {% endif %}
     private {{ property | get_correct_type_for_model }} {{ property.name }};
+
     {% endfor %}
 }

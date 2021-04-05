@@ -4,19 +4,43 @@ import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.modelmapper.ModelMapper;
 
 import com.example.{{ app }}.dto.{{entity.name}}DTO;
+import com.example.{{ app }}.model.{{entity.name}};
 import com.example.{{ app }}.repository.{{ entity.name | capitalize }}Repository;
 
 import java.util.List;
+import java.util.ArrayList;
+
+{% set classType = (entity.name) %}
+{% set dtoType = (entity.name) + 'DTO' %}
+{% set field = (entity.name|lower) %}
+{% set dtoField = (entity.name|lower) + 'DTO' %}
+{% set fieldList = (entity.name|plural|lower) %}
+{% set dtoFieldList = (entity.name|lower) + 'DTOS' %}
+{% set serviceName = (entity.name) + 'Service' %}
+{% set repositoryName = (entity.name) + 'Repository' %}
+{% set repositoryFieldName = (entity.name | lower) + 'Repository' %}
 
 @Service
-public class {{entity.name}}Service {
+public class {{serviceName}} {
     @Autowired
-    private {{ entity.name | capitalize }}Repository {{entity.name | lower}}Repository;
+    private {{ repositoryName }} {{repositoryFieldName}};
+    
+    public ResponseEntity<List<{{ dtoType }}>> get{{entity.name|plural}}(){
+        ModelMapper modelMapper = new ModelMapper();
 
-    public ResponseEntity<List<{{ entity.name }}DTO>> get{{entity.name|plural}}(){
-        return new ResponseEntity<>(HttpStatus.OK); 
+        List<{{classType}}> {{fieldList}} =  this.{{repositoryFieldName}}.findAll();
+        List<{{ dtoType }}> {{ dtoFieldList}} = new ArrayList<{{ dtoType }}>();
+
+        for ({{classType}} {{field}} : {{fieldList}})
+        {
+            {{ dtoType }} {{ dtoField }} = modelMapper.map({{field}}, {{ dtoType }}.class);
+            {{ dtoFieldList }}.add({{ dtoField }});
+        }
+        
+        return new ResponseEntity<>({{ dtoFieldList}}, HttpStatus.OK);
     }
 
     public ResponseEntity<{{ entity.name }}DTO> get{{entity.name}}(Long id){

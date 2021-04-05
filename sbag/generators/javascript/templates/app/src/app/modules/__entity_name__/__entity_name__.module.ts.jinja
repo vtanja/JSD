@@ -1,15 +1,18 @@
 import { NgModule } from '@angular/core';
-
-import { {{entity.name}}ListComponent } from './{{entity.name|lower}}-list/{{entity.name|lower}}-list.component';
-import { {{entity.name}}DetailComponent } from './{{entity.name|lower}}-detail/{{entity.name|lower}}-detail.component';
-import { {{entity.name}}FormComponent } from './{{entity.name|lower}}-form/{{entity.name|lower}}-form.component';
+{% set entity_name = entity.name | lower %}
+import { {{entity.name}}ListComponent } from './{{entity_name}}-list/{{entity_name}}-list.component';
+import { {{entity.name}}Component } from './{{entity_name}}/{{entity_name}}.component';
+import { {{entity.name}}FormComponent } from './{{entity_name}}-form/{{entity_name}}-form.component';
+import { {{entity.name}}RoutingModule } from './{{  entity.name | lower}}-routing.module';
 
 @NgModule({
-  imports: [],
+  imports: [
+    {{ entity.name }}RoutingModule
+  ],
   declarations: 
     [
         {{entity.name}}ListComponent,
-        {{entity.name}}DetailComponent,
+        {{entity.name}}Component,
         {{entity.name}}FormComponent,
     ],
   providers: []

@@ -48,7 +48,7 @@ def sbag_generate_javascript(metamodel, model, output_path, overwrite, debug, **
                 entity += 's'
             else:
                 entity = entity[: -1] + 'ies'
-        else: 
+        else:
             entity += 's'
         return entity.capitalize()
 

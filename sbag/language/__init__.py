@@ -5,7 +5,9 @@ current_dir = os.path.dirname(__file__)
 
 
 class BaseType():
-    """Class for defining base types eg. string, double and integer..."""
+    """
+    Class for defining base types eg. string, double and integer...
+    """
 
     def __init__(self, parent, name):
         """Constuctor for instatiating base types."""
@@ -17,7 +19,9 @@ class BaseType():
 
 
 class Entity():
-    """Class for defining entities."""
+    """
+    Class for defining entities.
+    """
 
     def __init__(self, name, parent, properties):
         """Constructor for Entities."""
@@ -30,7 +34,9 @@ class Entity():
 
 
 class Config():
-    """Class for defining project configuration."""
+    """
+    Class for defining project configuration.
+    """
 
     def __init__(self, project, group, description, parent):
         """Create config instance."""

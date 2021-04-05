@@ -43,15 +43,15 @@ public class {{serviceName}} {
         return new ResponseEntity<>({{ dtoFieldList}}, HttpStatus.OK);
     }
 
-    public ResponseEntity<{{ entity.name }}DTO> get{{entity.name}}(Long id){
+    public ResponseEntity<{{ dtoType }}> get{{entity.name}}(Long id){
         return new ResponseEntity<>(HttpStatus.OK); 
     }
 
-    public ResponseEntity<{{ entity.name }}DTO> update{{entity.name}}(Long id, {{entity.name}}DTO {{entity.name|lower}}){
+    public ResponseEntity<{{ dtoType }}> update{{entity.name}}(Long id, {{dtoType}} {{dtoField}}){
         return new ResponseEntity<>(HttpStatus.OK); 
     }
 
-    public ResponseEntity<{{ entity.name }}DTO> create({{entity.name}}DTO {{entity.name|lower}}){
+    public ResponseEntity<{{ dtoType }}> create({{dtoType}} {{dtoField}}){
         return new ResponseEntity<>(HttpStatus.OK); 
     }
 

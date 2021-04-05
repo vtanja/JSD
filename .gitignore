@@ -4,7 +4,6 @@ venv/
 # Files used for testing
 *.dot
 *.png
-sbag/language/*.sbag
 
 # Generated projects
 generated/

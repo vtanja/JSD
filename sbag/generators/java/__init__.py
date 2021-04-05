@@ -31,17 +31,17 @@ def sbag_generate_java(metamodel, model, output_path, overwrite, debug, **custom
 
     template_folder = join(this_folder, 'templates')
 
-    def get_correct_type(property):
+    def get_correct_type(prop):
         """
-        Returns correct java type if property type is BaseType or
+        Returns correct java type if prop type is BaseType or
         returns correct entity DTO.
         """
-        if isinstance(property.type, Entity):
-            return '{}DTO'.format(property.type.name.capitalize())
+        if isinstance(prop.type, Entity):
+            return '{}DTO'.format(prop.type.name.capitalize())
         else:
             return {
                 'string': 'String'
-            }.get(property.type.name, property.type)
+            }.get(prop.type.name, prop.type)
 
     def plural(entity: str):
         if entity[-2 :] in ['ch', 'sh', 'ss', 'es']:
@@ -57,17 +57,16 @@ def sbag_generate_java(metamodel, model, output_path, overwrite, debug, **custom
             entity += 's'
         return entity.capitalize()
 
-    def get_correct_type_for_model(property):
+    def get_correct_type_for_model(prop):
         """
-        Returns correct java type if property type is BaseType or
-        returns correct entity DTO.
+        Returns correct java type if prop type is BaseType or returns correct entity DTO.
         """
-        if isinstance(property.type, Entity):
-            return property.type.name.capitalize()
+        if isinstance(prop.type, Entity):
+            return prop.type.name.capitalize()
         else:
             return {
                 'string': 'String'
-            }.get(property.type.name, property.type)
+            }.get(prop.type.name, prop.type)
 
     filters = {
         'get_correct_type': get_correct_type,

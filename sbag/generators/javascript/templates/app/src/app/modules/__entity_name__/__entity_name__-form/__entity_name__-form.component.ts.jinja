@@ -1,9 +1,9 @@
 import { Component } from '@angular/core';
-
+{% set entity_name = entity.name | lower %}
 @Component({
-	selector: 'app-{{entity.name|lower}}-form',
-	templateUrl: './{{entity.name|lower}}-form.component.html',
-	styleUrls: ['./{{entity.name|lower}}-form.component.css'],
+	selector: 'app-{{entity_name}}-form',
+	templateUrl: './{{entity_name}}-form.component.html',
+	styleUrls: ['./{{entity_name}}-form.component.css'],
 })
 
 export class {{entity.name}}FormComponent {

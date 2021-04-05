@@ -38,8 +38,23 @@ def sbag_generate_javascript(metamodel, model, output_path, overwrite, debug, **
                 'float': 'number'
             }.get(prop.type.name, prop.type.name)
 
+    def plural(entity: str):
+        if entity[-2 :] in ['ch', 'sh', 'ss', 'es']:
+            entity += 'es'
+        elif entity[-1] in ['s', 'x', 'z', 'o']:
+            entity += 'es'
+        elif entity[-1] == 'y':
+            if entity[-2] in ['a', 'e', 'i', 'o', 'u']:
+                entity += 's'
+            else:
+                entity = entity[: -1] + 'ies'
+        else:
+            entity += 's'
+        return entity.capitalize()
+
     filters = {
-        'get_correct_type': get_correct_type
+        'get_correct_type': get_correct_type,
+        'plural': plural
     }
 
     config['entities'] = model.entities

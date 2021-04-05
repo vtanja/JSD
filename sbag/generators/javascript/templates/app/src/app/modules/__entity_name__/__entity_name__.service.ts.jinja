@@ -1,0 +1,41 @@
+import { HttpClient } from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import { environment } from 'src/environments/environment';
+
+{% set entity_name = entity.name | lower %}
+{% set interface_name = 'I' + (entity.name) %}
+{% set service_name = (entity.name) + 'Service' %}
+{% set entity_id = (entity.name | lower) + 'Id' %}
+{% set entity_plural = entity.name | plural %}
+
+import { {{interface_name}} } from 'src/app/shared/model/{{entity_name}}.model';
+
+
+@Injectable({
+  providedIn: 'root'
+})
+export class {{service_name}} {
+ 
+  constructor(private http: HttpClient) { }
+
+  get{{entity_plural}}(){
+    return this.http.get<{{interface_name}}[]>(environment.api + '/{{entity_name}}');
+  }
+
+  get{{entity.name}}({{entity_id}}: number) {
+    return this.http.get<{{interface_name}}>(environment.api + '/{{entity_name}}/' + {{entity_id}});
+  }
+
+  update{{entity.name}}({{entity_id}}: number, {{entity_name}}: {{interface_name}}) {
+    return this.http.put(environment.api + '/{{entity_name}}/' + {{entity_id}}, {{entity_name}});
+  }
+  
+  create{{entity.name}}({{entity_name}}: {{interface_name}}) {
+    return this.http.post(environment.api + '/{{entity_name}}', {{entity_name}});
+  }
+
+  delete{{entity.name}}({{entity_id}}: number) {
+    return this.http.delete(environment.api + '/{{entity_name}}/' + {{entity_id}});
+  }
+
+}

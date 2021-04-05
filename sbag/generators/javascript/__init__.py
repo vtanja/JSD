@@ -26,18 +26,17 @@ def sbag_generate_javascript(metamodel, model, output_path, overwrite, debug, **
 
     template_folder = join(this_folder, 'templates')
 
-    def get_correct_type(property):
+    def get_correct_type(prop):
         """
-        Returns correct java type if property type is BaseType or
-        returns correct entity DTO.
+        Returns correct java type if prop type is BaseType or returns correct entity DTO.
         """
-        if isinstance(property.type, Entity):
-            return 'I{}'.format(property.name.capitalize())
+        if isinstance(prop.type, Entity):
+            return 'I{}'.format(prop.name.capitalize())
         else:
             return {
                 'int': 'number',
                 'float': 'number'
-            }.get(property.type.name, property.type.name)
+            }.get(prop.type.name, prop.type.name)
 
     def plural(entity: str):
         if entity[-2 :] in ['ch', 'sh', 'ss', 'es']:

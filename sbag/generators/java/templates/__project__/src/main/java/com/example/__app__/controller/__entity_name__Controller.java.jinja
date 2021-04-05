@@ -1,0 +1,57 @@
+package com.example.{{ app }}.controller;
+
+import org.springframework.web.bind.annotation.*;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.beans.factory.annotation.Autowired;
+import lombok.extern.slf4j.Slf4j;
+import java.util.List;
+import com.example.{{ app }}.dto.{{entity.name}}DTO;
+import com.example.{{ app }}.service.{{entity.name}}Service;
+
+{% set controllerName = (entity.name | capitalize) + 'Controller' %}
+{% set DtoType = entity.name + 'DTO' %}
+{% set entityDto = (entity.name | lower) + 'Dto' %}
+{% set entityService = (entity.name | lower) + 'Service' %}
+{% set entities = (entity.name | plural) %}
+
+@CrossOrigin
+@RestController
+@Slf4j
+@RequestMapping( path = "/{{ entity.name | lower }}")
+public class {{ controllerName }} {
+    private final {{ entity.name }}Service {{ entityService }};
+
+    @Autowired
+    public {{ controllerName }}({{ entity.name }}Service service){
+        this.{{ entityService }} = service;
+    }
+
+    @GetMapping()
+    public ResponseEntity<List<{{ DtoType }}>> getAll{{ entities }}() {
+
+        return {{ entityService }}.get{{entity.name | plural}}();
+    }
+
+    @GetMapping(path="/{id}")
+    public ResponseEntity<{{ DtoType }}> get{{ entity.name }}(@PathVariable Long id) {
+
+        return {{ entityService }}.get{{entity.name}}(id);
+    }
+
+    @PostMapping()
+    public ResponseEntity<{{ DtoType }}> create(@RequestBody {{ DtoType }} {{ entityDto }}) {
+        return {{ entityService }}.create({{ entityDto }});
+    }
+
+    @PutMapping(path = "/{id}")
+    public ResponseEntity<{{ DtoType }}> update(@PathVariable Long id, @RequestBody {{ DtoType }} {{ entityDto }}) {
+        return {{ entityService }}.update{{ entity.name }}(id, {{ entityDto }});
+    }
+
+    @DeleteMapping(path = "/{id}")
+    public ResponseEntity<?> delete(@PathVariable Long id) {
+        return {{ entityService }}.delete{{ entity.name }}(id);
+    }
+
+}

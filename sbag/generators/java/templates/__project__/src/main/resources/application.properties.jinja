@@ -1,0 +1,8 @@
+spring.datasource.driverClassName=org.postgresql.Driver
+spring.datasource.url= jdbc:postgresql://localhost:5432/${DB_NAME}
+spring.datasource.initialization-mode=always
+spring.datasource.platform=postgres
+spring.datasource.username=${DB_USERNAME}
+spring.datasource.password=${DB_PASSWORD}
+spring.jpa.hibernate.ddl-auto = create-drop
+spring.jpa.properties.hibernate.dialect = org.hibernate.dialect.PostgreSQL95Dialect

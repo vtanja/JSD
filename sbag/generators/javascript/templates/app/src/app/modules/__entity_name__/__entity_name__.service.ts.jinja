@@ -19,7 +19,7 @@ export class {{service_name}} {
   constructor(private http: HttpClient) { }
 
   get{{entity_plural}}(){
-    return this.http.get<{{interface_name}}>(environment.api + '/{{entity_name}}');
+    return this.http.get<{{interface_name}}[]>(environment.api + '/{{entity_name}}');
   }
 
   get{{entity.name}}({{entity_id}}: number) {

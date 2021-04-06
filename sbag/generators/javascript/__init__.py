@@ -56,10 +56,14 @@ def sbag_generate_javascript(metamodel, model, output_path, overwrite, debug, **
     def format_property(prop: str):
         return re.sub(r"(\w)([A-Z])", r"\1 \2", prop)
 
+    def first_letter_lower(string: str):
+        return string[0].lower() + string[1:]
+
     filters = {
         'get_correct_type': get_correct_type,
         'plural': plural,
-        'format_property': format_property
+        'format_property': format_property,
+        'first_letter_lower': first_letter_lower,
     }
 
     config['entities'] = model.entities

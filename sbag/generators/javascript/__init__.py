@@ -4,6 +4,7 @@ from os.path import dirname, exists, join
 from sbag.language import Entity
 from textx import generator
 from textxjinja import textx_jinja_generator
+import re
 
 
 @generator('sbag', 'javascript')
@@ -52,14 +53,19 @@ def sbag_generate_javascript(metamodel, model, output_path, overwrite, debug, **
             entity += 's'
         return entity.capitalize()
 
+    def format_property(prop: str):
+        return re.sub(r"(\w)([A-Z])", r"\1 \2", prop)
+
     filters = {
         'get_correct_type': get_correct_type,
-        'plural': plural
+        'plural': plural,
+        'format_property': format_property
     }
 
     config['entities'] = model.entities
 
     for entity in model.entities:
+        config['properties'] = entity.properties
         config['entity'] = entity
         config['entity_name'] = entity.name.lower()
         textx_jinja_generator(template_folder, output_path, config, overwrite,

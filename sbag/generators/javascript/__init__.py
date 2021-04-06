@@ -38,6 +38,20 @@ def sbag_generate_javascript(metamodel, model, output_path, overwrite, debug, **
                 'float': 'number'
             }.get(prop.type.name, prop.type.name)
 
+    def get_form_input_type(prop):
+        """
+        Returns correct input type for given property type
+        """
+        if isinstance(prop.type, Entity):
+            return 'hidden'
+        else:
+            return {
+                'int': 'number',
+                'float': 'number',
+                'string': 'text',
+                'boolean': 'checkbox'
+            }.get(prop.type.name, prop.type.name)
+
     def plural(entity: str):
         if entity[-2 :] in ['ch', 'sh', 'ss', 'es']:
             entity += 'es'
@@ -54,7 +68,8 @@ def sbag_generate_javascript(metamodel, model, output_path, overwrite, debug, **
 
     filters = {
         'get_correct_type': get_correct_type,
-        'plural': plural
+        'plural': plural,
+        'get_form_input_type': get_form_input_type
     }
 
     config['entities'] = model.entities

@@ -1,11 +1,16 @@
-<p>This is {{entity.name}} list component! </p>
-<table class="table">
+<br>
+<h4 style="text-align:center;">{{entity.name|plural}}</h4>
+<br>
+<table class="table" style="width:90%; margin:auto" >
     <tr>
+    <th>#</th>
     {% for property in properties%}
         <th scope="col"> {{property.name|format_property|capitalize}} </th>
     {% endfor %}
     </tr>
     <tr *ngFor="let {{entity.name|lower}} of {{entity.name|plural|lower}}; let i = index">
+        {% set index = '{{ i + 1 }}' %}
+        <td> {{ index }} </td>
         {% for property in properties%}
         {% set prop = '{{ ' + (entity.name|lower)+'.'+(property.name|first_letter_lower) + ' }}' %}
         <td scope="row"> {{prop}} </td>

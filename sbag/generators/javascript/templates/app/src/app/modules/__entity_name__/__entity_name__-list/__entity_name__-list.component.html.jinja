@@ -1,14 +1,14 @@
 <p>This is {{entity.name}} list component! </p>
-<table>
+<table class="table">
     <tr>
     {% for property in properties%}
-        <th> {{property.name|format_property|capitalize}} </th>
+        <th scope="col"> {{property.name|format_property|capitalize}} </th>
     {% endfor %}
     </tr>
     <tr *ngFor="let {{entity.name|lower}} of {{entity.name|plural|lower}}; let i = index">
         {% for property in properties%}
         {% set prop = '{{ ' + (entity.name|lower)+'.'+(property.name|first_letter_lower) + ' }}' %}
-        <td> {{prop}} </td>
+        <td scope="row"> {{prop}} </td>
         {% endfor %}
     </tr>
 </table>

@@ -8,7 +8,7 @@
     </div>
 </div>
 <br>
-<table class="table" style="width:90%; margin:auto" >
+<table class="table" style="width:90%; margin:auto" *ngIf="{{entity.name|plural|lower}}?.length != 0">
     <tr>
     <th>#</th>
     {% for property in properties%}
@@ -32,3 +32,6 @@
         </td>
     </tr>
 </table>
+<div *ngIf="{{entity.name|plural|lower}}?.length == 0" class="alert alert-warning" role="alert" style="text-align:center;">
+  There are no {{entity.name|plural|lower}} added!
+</div>

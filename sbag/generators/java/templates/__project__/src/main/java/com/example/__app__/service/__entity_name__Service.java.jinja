@@ -27,7 +27,12 @@ public class {{entity.name}}Service {
         return new ResponseEntity<>(HttpStatus.OK); 
     }
 
-    public ResponseEntity<{{ entity.name }}DTO> create({{entity.name}}DTO {{entity.name|lower}}){
+    public ResponseEntity<{{ entity.name }}DTO> create({{entity.name}}DTO {{entity.name|lower}}Dto){
+        {{entity.name}} {{entity.name | lower}} = new {{entity.name}}();
+        {% for property in entity.properties %}
+        {{entity.name | lower}}.setProperty("{{property.name}}", {{entity.name|lower}}Dto.getProperty("{{property.name}}"));
+	    {% endfor %}
+        {{entity.name | lower}}Repository.save({{entity.name | lower}});
         return new ResponseEntity<>(HttpStatus.OK); 
     }
 

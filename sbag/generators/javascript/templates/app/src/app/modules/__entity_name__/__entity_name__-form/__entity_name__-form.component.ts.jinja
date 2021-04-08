@@ -50,13 +50,22 @@ export class {{entity.name}}FormComponent {
 
 	Submit() {
 		{% for property in entity.properties %}
-			let {{property.name}}Value = this.form.get('{{property.name}}')?.value
+		let {{property.name}}Value = this.form.get('{{property.name}}')?.value
 		{% endfor %}
-		let dto = {
+		let dto: I{{entity.name}} = {
 			{% for property in entity.properties %}
-				{{property.name}}: {{property.name}}Value,
+			{{property.name}}: {{property.name}}Value,
 			{% endfor %}
 		}
 		console.log(dto)
+		this.service.create{{entity.name}}(dto).subscribe(
+		(res) => {
+			alert('created');
+			this.form.reset()
+		},
+		(err) => {
+			alert(err.message);
+			console.log(err);
+		});
 	}
 }

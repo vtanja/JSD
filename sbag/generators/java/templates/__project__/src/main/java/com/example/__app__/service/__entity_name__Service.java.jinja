@@ -6,7 +6,13 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import com.example.{{ app }}.dto.{{entity.name}}DTO;
+import com.example.{{ app }}.model.{{entity.name}};
 import com.example.{{ app }}.repository.{{ entity.name | capitalize }}Repository;
+{% for property in entity.properties %}
+{% if (property | is_base_type)==False %}
+import com.example.{{ app }}.model.{{property.type}};
+{% endif %}
+{% endfor %}
 
 import java.util.List;
 
@@ -29,9 +35,13 @@ public class {{entity.name}}Service {
 
     public ResponseEntity<{{ entity.name }}DTO> create({{entity.name}}DTO {{entity.name|lower}}Dto){
         {{entity.name}} {{entity.name | lower}} = new {{entity.name}}();
-        {% for property in entity.properties %}
-        {{entity.name | lower}}.setProperty("{{property.name}}", {{entity.name|lower}}Dto.getProperty("{{property.name}}"));
-	    {% endfor %}
+    {% for property in entity.properties %}
+    {% if (property | is_base_type) %}
+        {{entity.name | lower}}.set{{property.name | capitalize_first_letter}}({{entity.name|lower}}Dto.get{{property.name | capitalize_first_letter}}());
+    {% else %}
+        {{entity.name | lower}}.set{{property.name | capitalize_first_letter}}(null);
+	{% endif %}
+    {% endfor %}
         {{entity.name | lower}}Repository.save({{entity.name | lower}});
         return new ResponseEntity<>(HttpStatus.OK); 
     }

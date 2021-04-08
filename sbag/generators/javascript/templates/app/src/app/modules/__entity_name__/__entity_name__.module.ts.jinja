@@ -1,4 +1,6 @@
 import { NgModule } from '@angular/core';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common';
 {% set entity_name = entity.name | lower %}
 import { {{entity.name}}ListComponent } from './{{entity_name}}-list/{{entity_name}}-list.component';
 import { {{entity.name}}Component } from './{{entity_name}}/{{entity_name}}.component';
@@ -7,6 +9,9 @@ import { {{entity.name}}RoutingModule } from './{{  entity.name | lower}}-routin
 
 @NgModule({
   imports: [
+    FormsModule,
+    ReactiveFormsModule,
+    CommonModule,
     {{ entity.name }}RoutingModule
   ],
   declarations: 

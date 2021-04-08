@@ -18,6 +18,11 @@ export class {{entity.name}}ListComponent implements OnInit {
 	
 	{{entity_list_field}}: {{ model }}[] = []; 
 
+	totalLength: any;
+	page:number = 1;
+	elementsPerPage = 5;
+	options:number[] = [5, 10, 15];
+
     constructor(
 		private {{service_field}}: {{service_type}},
 	){}
@@ -26,8 +31,14 @@ export class {{entity.name}}ListComponent implements OnInit {
 		this.{{service_field}}.get{{entity_name_plural}}().subscribe(
 			(data: {{model}}[] ) => {
 				this.{{entity_list_field}} = data;
+				this.totalLength = this.{{entity_list_field}}.length;
 			},
 			(error) => alert(error.error)
     	);
+	}
+
+	onChange(newValue:number) {
+    	console.log(newValue);
+	    this.elementsPerPage = newValue;
 	}
 }

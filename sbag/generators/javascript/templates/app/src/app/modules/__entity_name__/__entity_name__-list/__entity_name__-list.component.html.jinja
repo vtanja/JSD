@@ -1,14 +1,18 @@
+{% set entity_name = entity.name | lower %}
+{% set entity_name_plural = entity.name | plural | lower %}
+
+
 <br>
 <div class="row">
     <div class="col">
         <h4 style="text-align:center;">{{entity.name|plural}}</h4>
     </div>
     <div class="col"  style="text-align:center;">
-        <button type="button" class="btn btn-success" [routerLink]="['/{{entity.name|lower}}/create']">Add new {{entity.name | lower }}</button>
+        <button type="button" class="btn btn-success" [routerLink]="['/{{ entity_name }}/create']">Add new {{ entity_name }}</button>
     </div>
 </div>
 <br>
-<table class="table" style="width:90%; margin:auto" *ngIf="{{entity.name|plural|lower}}?.length != 0">
+<table class="table" style="width:90%; margin:auto" *ngIf="{{ entity_name_plural }}?.length != 0">
     <tr>
     <th>#</th>
     {% for property in properties%}
@@ -17,7 +21,7 @@
     <th>&nbsp;</th>
     <th>&nbsp;</th>
     </tr>
-    <tr *ngFor="let {{entity.name|lower}} of {{entity.name|plural|lower}}; let i = index" [routerLink]="['/{{entity.name|lower}}', {{entity.name|lower}}.id]">
+    <tr *ngFor="let {{entity_name}} of {{ entity_name_plural }}; let i = index" [routerLink]="['/{{ entity_name }}', {{ entity_name }}.id]">
         {% set index = '{{ i + 1 }}' %}
         <td> {{ index }} </td>
         {% for property in properties%}
@@ -25,13 +29,13 @@
         <td scope="row"> {{prop}} </td>
         {% endfor %}
         <td style="width: 20%;">
-            <button type="button" class="btn btn-warning" [routerLink]="['/{{entity.name|lower}}', {{entity.name|lower}}.id, 'update']">Update {{entity.name | lower }}</button>
+            <button type="button" class="btn btn-warning" [routerLink]="['/{{ entity_name }}', {{ entity_name }}.id, 'update']">Update {{ entity_name }}</button>
         </td>
         <td style="width: 20%;">
-            <button type="button" class="btn btn-danger" >Delete {{entity.name | lower }}</button>
+            <button type="button" class="btn btn-danger" >Delete {{ entity_name }}</button>
         </td>
     </tr>
 </table>
 <div *ngIf="{{entity.name|plural|lower}}?.length == 0" class="alert alert-warning" role="alert" style="text-align:center;">
-  There are no {{entity.name|plural|lower}} added!
+  There are no {{ entity_name_plural }} added!
 </div>

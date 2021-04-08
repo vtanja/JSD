@@ -68,10 +68,21 @@ def sbag_generate_java(metamodel, model, output_path, overwrite, debug, **custom
                 'string': 'String'
             }.get(prop.type.name, prop.type)
 
+    def capitalize_first_letter(prop: str):
+        return prop[0].upper() + prop[1:]
+
+    def is_base_type(prop):
+        if isinstance(prop.type, Entity):
+            return False
+        else:
+            return True
+
     filters = {
         'get_correct_type': get_correct_type,
         'get_correct_type_for_model': get_correct_type_for_model,
-        'plural': plural
+        'plural': plural,
+        'capitalize_first_letter': capitalize_first_letter,
+        'is_base_type': is_base_type
     }
 
     # Run Jinja generator

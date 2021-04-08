@@ -47,4 +47,16 @@ export class {{entity.name}}FormComponent {
 			this.update = false;
 		}
 	}
+
+	Submit() {
+		{% for property in entity.properties %}
+			let {{property.name}}Value = this.form.get('{{property.name}}')?.value
+		{% endfor %}
+		let dto = {
+			{% for property in entity.properties %}
+				{{property.name}}: {{property.name}}Value,
+			{% endfor %}
+		}
+		console.log(dto)
+	}
 }

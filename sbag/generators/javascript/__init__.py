@@ -31,7 +31,7 @@ def sbag_generate_javascript(metamodel, model, output_path, overwrite, debug, **
         Returns correct java type if prop type is BaseType or returns correct entity DTO.
         """
         if isinstance(prop.type, Entity):
-            return 'I{}'.format(prop.name.capitalize())
+            return 'I{}'.format(prop.type.name.capitalize())
         else:
             return {
                 'int': 'number',

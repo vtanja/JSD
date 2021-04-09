@@ -1,12 +1,18 @@
 package com.example.{{ app }}.service;
+{% set ent = entity.name | lower %}
+{% set EntityDTO = entity.name | capitalize + 'DTO' %}
+{% set entityDTO = ent + 'DTO' %}
 
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import com.example.{{ app }}.dto.{{entity.name}}DTO;
+import com.example.{{ app }}.model.{{ entity.name }};
 import com.example.{{ app }}.repository.{{ entity.name | capitalize }}Repository;
+import com.example.{{ app }}.exception.NotFoundException;
 
 import java.util.List;
 
@@ -14,13 +20,19 @@ import java.util.List;
 public class {{entity.name}}Service {
     @Autowired
     private {{ entity.name | capitalize }}Repository {{entity.name | lower}}Repository;
+    {% set repo = entity.name | lower + 'Repository' %}
+    @Autowired
+    private ModelMapper modelMapper;
 
     public ResponseEntity<List<{{ entity.name }}DTO>> get{{entity.name|plural}}(){
         return new ResponseEntity<>(HttpStatus.OK); 
     }
 
     public ResponseEntity<{{ entity.name }}DTO> get{{entity.name}}(Long id){
-        return new ResponseEntity<>(HttpStatus.OK); 
+        {{ entity.name }} {{ ent }} = {{ repo }}.findById(id).orElseThrow(
+            () -> new NotFoundException("{{ entity.name }} with given id was not found."));
+        {{ EntityDTO }} {{ entityDTO }} = modelMapper.map({{ ent }}, {{ EntityDTO }}.class);
+        return new ResponseEntity<>({{ entityDTO }}, HttpStatus.OK);
     }
 
     public ResponseEntity<{{ entity.name }}DTO> update{{entity.name}}(Long id, {{entity.name}}DTO {{entity.name|lower}}){

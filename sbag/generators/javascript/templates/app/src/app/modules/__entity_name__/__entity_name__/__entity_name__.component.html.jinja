@@ -1,0 +1,12 @@
+<div class="container">
+	<div class="justify-content-center">
+		<div class="col">
+			<h1 class="h1">{{ entity.name }}</h1>
+		</div>
+		<div class="col">
+            {% for prop in entity.properties %}
+			<p>{{ prop.name }}: {{ obj?.value }}</p>
+            {% endfor %}
+		</div>
+    </div>
+</div>

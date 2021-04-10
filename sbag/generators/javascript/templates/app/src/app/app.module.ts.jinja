@@ -2,7 +2,6 @@ import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
 import { HttpClientModule } from '@angular/common/http';
-import {NgxPaginationModule} from 'ngx-pagination';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -24,7 +23,6 @@ import { {{entity.name}}Module } from './modules/{{entity.name|lower}}/{{entity.
     CoreModule,
     SharedModule,
     AppRoutingModule,
-    NgxPaginationModule,
     {%for entity in entities%}
     {{entity.name}}Module,
     {% endfor %}

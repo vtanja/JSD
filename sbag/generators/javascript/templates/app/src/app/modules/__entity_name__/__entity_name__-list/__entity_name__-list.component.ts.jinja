@@ -28,17 +28,32 @@ export class {{entity.name}}ListComponent implements OnInit {
 	){}
 
 	ngOnInit(){
-		this.{{service_field}}.get{{entity_name_plural}}().subscribe(
-			(data: {{model}}[] ) => {
-				this.{{entity_list_field}} = data;
-				this.totalLength = this.{{entity_list_field}}.length;
+		this.{{service_field}}.get{{entity_name_plural}}Size().subscribe(
+			(val: number ) => {
+				this.totalLength = val; 
+				this.{{service_field}}.get{{entity_name_plural}}(this.page-1, this.elementsPerPage).subscribe(
+					(data: {{model}}[] ) => {
+						this.{{entity_list_field}} = data;
+					},
+					(error) => alert(error.error)
+				);
 			},
 			(error) => alert(error.error)
-    	);
+		);
 	}
 
 	onChange(newValue:number) {
     	console.log(newValue);
 	    this.elementsPerPage = newValue;
+	}
+
+	changePage(page: number){
+		this.page = page;
+		this.{{service_field}}.get{{entity_name_plural}}(this.page-1, this.elementsPerPage).subscribe(
+			(data: {{model}}[] ) => {
+				this.{{entity_list_field}} = data;
+			},
+			(error) => alert(error.error)
+    	);
 	}
 }

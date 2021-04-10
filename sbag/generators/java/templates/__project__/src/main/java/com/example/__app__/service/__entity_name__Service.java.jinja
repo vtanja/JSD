@@ -5,6 +5,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
 import com.example.{{ app }}.dto.{{entity.name}}DTO;
 import com.example.{{ app }}.model.{{entity.name}};
@@ -28,19 +31,32 @@ public class {{serviceName}} {
     @Autowired
     private {{ repositoryName }} {{repositoryFieldName}};
     
-    public ResponseEntity<List<{{ dtoType }}>> get{{entity.name|plural}}(){
+    public ResponseEntity<?> get{{entity.name | plural}}Size(){
+        return new ResponseEntity<>({{repositoryFieldName}}.findAll().size(), HttpStatus.OK);
+    }
+
+    public ResponseEntity<List<{{ dtoType }}>> get{{entity.name|plural}}(int pageNo, int pageSize){
         ModelMapper modelMapper = new ModelMapper();
 
-        List<{{classType}}> {{fieldList}} =  this.{{repositoryFieldName}}.findAll();
         List<{{ dtoType }}> {{ dtoFieldList}} = new ArrayList<{{ dtoType }}>();
 
-        for ({{classType}} {{field}} : {{fieldList}})
-        {
-            {{ dtoType }} {{ dtoField }} = modelMapper.map({{field}}, {{ dtoType }}.class);
-            {{ dtoFieldList }}.add({{ dtoField }});
+        Pageable paging = PageRequest.of(pageNo, pageSize);
+ 
+        Page<{{classType}}> pagedResult = {{repositoryFieldName}}.findAll(paging);
+         
+        if(pagedResult.hasContent()) {
+            List<{{classType}}> {{fieldList}} = pagedResult.getContent();
+
+            for ({{classType}} {{field}} : {{fieldList}})
+            {
+                {{ dtoType }} {{ dtoField }} = modelMapper.map({{field}}, {{ dtoType }}.class);
+                {{ dtoFieldList }}.add({{ dtoField }});
+            }
+
+            return new ResponseEntity<>({{ dtoFieldList}}, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>({{ dtoFieldList}}, HttpStatus.OK);
         }
-        
-        return new ResponseEntity<>({{ dtoFieldList}}, HttpStatus.OK);
     }
 
     public ResponseEntity<{{ dtoType }}> get{{entity.name}}(Long id){

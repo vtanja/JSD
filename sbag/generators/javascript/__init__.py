@@ -4,6 +4,7 @@ from os.path import dirname, exists, join
 from sbag.language import Entity
 from textx import generator
 from textxjinja import textx_jinja_generator
+import re
 
 
 @generator('sbag', 'javascript')
@@ -71,17 +72,25 @@ def sbag_generate_javascript(metamodel, model, output_path, overwrite, debug, **
             return false
         else:
             return true
+    def format_property(prop: str):
+        return re.sub(r"(\w)([A-Z])", r"\1 \2", prop)
+
+    def first_letter_lower(string: str):
+        return string[0].lower() + string[1:]
 
     filters = {
         'get_correct_type': get_correct_type,
         'plural': plural,
         'get_form_input_type': get_form_input_type,
         'is_base_type': is_base_type
+        'format_property': format_property,
+        'first_letter_lower': first_letter_lower,
     }
 
     config['entities'] = model.entities
 
     for entity in model.entities:
+        config['properties'] = entity.properties
         config['entity'] = entity
         config['entity_name'] = entity.name.lower()
         textx_jinja_generator(template_folder, output_path, config, overwrite,

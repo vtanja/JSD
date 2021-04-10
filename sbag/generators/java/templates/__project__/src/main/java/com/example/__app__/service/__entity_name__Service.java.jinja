@@ -4,6 +4,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.modelmapper.ModelMapper;
 
 import com.example.{{ app }}.dto.{{entity.name}}DTO;
 import com.example.{{ app }}.model.{{entity.name}};
@@ -26,11 +27,35 @@ public class {{entity.name}}Service {
     }
 
     public ResponseEntity<{{ entity.name }}DTO> get{{entity.name}}(Long id){
-        return new ResponseEntity<>(HttpStatus.OK); 
+        ModelMapper modelMapper = new ModelMapper();
+        {{ entity.name }} {{ entity.name | lower }} = {{entity.name | lower}}Repository.find{{ entity.name }}ById(id);
+        if({{ entity.name | lower }} == null) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST); 
+        }
+        else {
+            {{ entity.name }}DTO {{ entity.name | lower }}Dto = modelMapper.map({{ entity.name | lower }}, {{ entity.name }}DTO.class);
+            return new ResponseEntity<>({{ entity.name | lower }}Dto, HttpStatus.OK); 
+        }
     }
 
-    public ResponseEntity<{{ entity.name }}DTO> update{{entity.name}}(Long id, {{entity.name}}DTO {{entity.name|lower}}){
-        return new ResponseEntity<>(HttpStatus.OK); 
+    public ResponseEntity<{{ entity.name }}DTO> update{{entity.name}}(Long id, {{entity.name}}DTO {{entity.name|lower}}Dto){
+        ModelMapper modelMapper = new ModelMapper();
+        {{ entity.name }} {{ entity.name | lower }} = {{entity.name | lower}}Repository.find{{ entity.name }}ById(id);
+        if({{ entity.name | lower }} == null) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST); 
+        }
+        else {
+        {% for property in entity.properties %}
+        {% if (property | is_base_type) %}
+            {{entity.name | lower}}.set{{property.name | capitalize_first_letter}}({{entity.name|lower}}Dto.get{{property.name | capitalize_first_letter}}());
+        {% else %}
+            //{{entity.name | lower}}.set{{property.name | capitalize_first_letter}}(null);
+        {% endif %}
+        {% endfor %}
+            {{entity.name | lower}}Repository.save({{entity.name | lower}});
+            {{ entity.name }}DTO retDto = modelMapper.map({{ entity.name | lower }}, {{ entity.name }}DTO.class);
+            return new ResponseEntity<>(retDto, HttpStatus.OK); 
+        }
     }
 
     public ResponseEntity<{{ entity.name }}DTO> create({{entity.name}}DTO {{entity.name|lower}}Dto){

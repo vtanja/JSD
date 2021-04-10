@@ -18,6 +18,17 @@ class BaseType():
         return self.name
 
 
+class Property():
+    """
+    Defines both base properties and associations.
+    """
+
+    def __init__(self, parent, name, type):
+        self.parent = parent
+        self.name = name
+        self.type = type
+
+
 class Entity():
     """
     Class for defining entities.
@@ -27,7 +38,8 @@ class Entity():
         """Constructor for Entities."""
         self.name = name
         self.parent = parent
-        self.properties = properties
+        self.properties = [Property(self, 'id', BaseType(None, 'Long'))]
+        self.properties.extend(properties)
 
     def __str__(self):
         return self.name
@@ -54,7 +66,8 @@ def sbag_language():
         'int': BaseType(None, 'int'),
         'string': BaseType(None, 'string'),
         'float': BaseType(None, 'float'),
-        'boolean': BaseType(None, 'boolean')
+        'boolean': BaseType(None, 'boolean'),
+        'Long': BaseType(None, 'Long')
     }
     mm = metamodel_from_file(os.path.join(current_dir, 'sbag.tx'),
                              classes=[BaseType, Entity, Config],

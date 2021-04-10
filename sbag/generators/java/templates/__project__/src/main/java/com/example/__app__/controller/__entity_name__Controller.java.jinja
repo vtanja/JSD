@@ -1,5 +1,6 @@
 package com.example.{{ app }}.controller;
 
+import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -27,10 +28,16 @@ public class {{ controllerName }} {
         this.{{ entityService }} = service;
     }
 
-    @GetMapping()
-    public ResponseEntity<List<{{ DtoType }}>> getAll{{ entities }}() {
+    @GetMapping(path="/count")
+    public ResponseEntity<Integer> get{{ entities }}Count() {
 
-        return {{ entityService }}.get{{entity.name | plural}}();
+        return {{ entityService }}.get{{entity.name | plural}}Count();
+    }
+
+    @GetMapping(path="/{pageNo}/{pageSize}")
+    public ResponseEntity<List<{{ DtoType }}>> getAll{{ entities }}(@PathVariable int pageNo, @PathVariable int pageSize) {
+
+        return {{ entityService }}.get{{entity.name | plural}}(pageNo, pageSize);
     }
 
     @GetMapping(path="/{id}")

@@ -6,10 +6,10 @@ import { {{ entity.name }}ListComponent } from './{{ entity_name }}-list/{{ enti
 import { {{ entity.name }}FormComponent } from './{{ entity_name }}-form/{{ entity_name }}-form.component';
 
 const routes: Routes = [
-  { path: '', component: {{ entity.name }}ListComponent },
-  { path: ':id', component: {{ entity.name }}Component },
   { path: 'create', component: {{ entity.name }}FormComponent },
-  { path: ':id/update', component: {{ entity.name }}FormComponent }
+  { path: ':id', component: {{ entity.name }}Component },
+  { path: ':id/update', component: {{ entity.name }}FormComponent },
+  { path: '', component: {{ entity.name }}ListComponent },
 ];
 
 @NgModule({

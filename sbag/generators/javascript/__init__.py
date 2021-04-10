@@ -31,7 +31,7 @@ def sbag_generate_javascript(metamodel, model, output_path, overwrite, debug, **
         Returns correct java type if prop type is BaseType or returns correct entity DTO.
         """
         if isinstance(prop.type, Entity):
-            return 'I{}'.format(prop.name.capitalize())
+            return 'I{}'.format(prop.type.name.capitalize())
         else:
             return {
                 'int': 'number',
@@ -66,10 +66,17 @@ def sbag_generate_javascript(metamodel, model, output_path, overwrite, debug, **
             entity += 's'
         return entity.capitalize()
 
+    def is_base_type(prop):
+        if isinstance(prop.type, Entity):
+            return false
+        else:
+            return true
+
     filters = {
         'get_correct_type': get_correct_type,
         'plural': plural,
-        'get_form_input_type': get_form_input_type
+        'get_form_input_type': get_form_input_type,
+        'is_base_type': is_base_type
     }
 
     config['entities'] = model.entities

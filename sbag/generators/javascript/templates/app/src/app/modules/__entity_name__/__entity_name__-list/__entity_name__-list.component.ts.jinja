@@ -1,12 +1,59 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 {% set entity_name = entity.name | lower %}
+{% set entity_name_plural = entity.name | plural %}
+{% set entity_list_field = entity.name | plural | lower %}
+{% set service_field = (entity.name | lower) + 'Service' %}
+{% set service_type = (entity.name) + 'Service' %}
+{% set model = 'I' + (entity.name) %}
+
+import { {{service_type}} } from '../{{entity_name}}.service';
+import { {{ model }} } from '../../../shared/model/{{entity_name}}.model';
+
 @Component({
 	selector: 'app-{{entity_name}}-list',
 	templateUrl: './{{entity_name}}-list.component.html',
 	styleUrls: ['./{{entity_name}}-list.component.css'],
 })
-
-export class {{entity.name}}ListComponent {
+export class {{entity.name}}ListComponent implements OnInit {
 	
-    constructor(){}
+	{{entity_list_field}}: {{ model }}[] = []; 
+
+	totalLength: any;
+	page:number = 1;
+	elementsPerPage = 5;
+	options:number[] = [5, 10, 15];
+
+    constructor(
+		private {{service_field}}: {{service_type}},
+	){}
+
+	ngOnInit(){
+		this.{{service_field}}.get{{entity_name_plural}}Count().subscribe(
+			(val: number ) => {
+				this.totalLength = val; 
+				this.{{service_field}}.get{{entity_name_plural}}(this.page-1, this.elementsPerPage).subscribe(
+					(data: {{model}}[] ) => {
+						this.{{entity_list_field}} = data;
+					},
+					(error) => alert(error.error)
+				);
+			},
+			(error) => alert(error.error)
+		);
+	}
+
+	onChange(newValue:number) {
+    	console.log(newValue);
+	    this.elementsPerPage = newValue;
+	}
+
+	changePage(page: number){
+		this.page = page;
+		this.{{service_field}}.get{{entity_name_plural}}(this.page-1, this.elementsPerPage).subscribe(
+			(data: {{model}}[] ) => {
+				this.{{entity_list_field}} = data;
+			},
+			(error) => alert(error.error)
+    	);
+	}
 }

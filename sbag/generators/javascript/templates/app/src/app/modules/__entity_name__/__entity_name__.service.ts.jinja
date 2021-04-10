@@ -18,8 +18,12 @@ export class {{service_name}} {
  
   constructor(private http: HttpClient) { }
 
-  get{{entity_plural}}(){
-    return this.http.get<{{interface_name}}[]>(environment.api + '/{{entity_name}}');
+  get{{entity_plural}}Count(){
+    return this.http.get<number>(environment.api + '/{{entity_name}}/count');
+  }
+
+  get{{entity_plural}}(pageNo:number, pageSize:number){
+    return this.http.get<{{interface_name}}[]>(environment.api + '/{{entity_name}}/'+pageNo+'/'+pageSize);
   }
 
   get{{entity.name}}({{entity_id}}: number) {

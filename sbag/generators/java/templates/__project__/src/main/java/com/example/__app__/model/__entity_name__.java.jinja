@@ -17,13 +17,12 @@ import javax.persistence.*;
 @Entity
 public class {{ entity.name | capitalize }} {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
     {% for property in entity.properties %}
     {% if type(property.type) == type(entity) %}
     @OneToOne
+    {% elif property.name == 'id' %}
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     {% else %}
     @Column
     {% endif %}

@@ -45,17 +45,6 @@ def sbag_generate_java(metamodel, model, output_path, overwrite, debug, **custom
             entity += 's'
         return entity.capitalize()
 
-    def get_correct_type_for_model(prop):
-        """
-        Returns correct java type if prop type is BaseType or returns correct entity DTO.
-        """
-        if isinstance(prop.type, Entity):
-            return prop.type.name.capitalize()
-        else:
-            return {
-                'string': 'String'
-            }.get(prop.type.name, prop.type)
-
     def get_type(prop):
         """
         Based on property type returns string saying if its base type, list or entity.
@@ -69,7 +58,6 @@ def sbag_generate_java(metamodel, model, output_path, overwrite, debug, **custom
             return 'entity'
 
     filters = {
-        'get_correct_type_for_model': get_correct_type_for_model,
         'plural': plural,
         'get_type': get_type
     }

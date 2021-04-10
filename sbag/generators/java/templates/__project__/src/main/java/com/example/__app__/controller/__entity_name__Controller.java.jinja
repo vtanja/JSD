@@ -8,10 +8,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import lombok.extern.slf4j.Slf4j;
 import java.util.List;
 import com.example.{{ app }}.dto.{{entity.name}}DTO;
+import com.example.{{ app }}.dto.{{entity.name}}DetailDTO;
 import com.example.{{ app }}.service.{{entity.name}}Service;
 
 {% set controllerName = (entity.name | capitalize) + 'Controller' %}
 {% set DtoType = entity.name + 'DTO' %}
+{% set DtoDetailType = entity.name + 'DetailDTO' %}
 {% set entityDto = (entity.name | lower) + 'Dto' %}
 {% set entityService = (entity.name | lower) + 'Service' %}
 {% set entities = (entity.name | plural) %}
@@ -41,7 +43,7 @@ public class {{ controllerName }} {
     }
 
     @GetMapping(path="/{id}")
-    public ResponseEntity<{{ DtoType }}> get{{ entity.name }}(@PathVariable Long id) {
+    public ResponseEntity<{{ DtoDetailType }}> get{{ entity.name }}(@PathVariable Long id) {
 
         return {{ entityService }}.get{{entity.name}}(id);
     }

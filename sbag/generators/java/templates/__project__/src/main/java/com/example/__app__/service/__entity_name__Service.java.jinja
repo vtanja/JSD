@@ -11,6 +11,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
 import com.example.{{ app }}.dto.{{entity.name}}DTO;
+import com.example.{{ app }}.dto.{{entity.name}}DetailDTO;
 import com.example.{{ app }}.model.{{ entity.name }};
 import com.example.{{ app }}.repository.{{ entity.name | capitalize }}Repository;
 import com.example.{{ app }}.exception.NotFoundException;
@@ -20,6 +21,7 @@ import java.util.ArrayList;
 
 {% set classType = (entity.name) %}
 {% set dtoType = (entity.name) + 'DTO' %}
+{% set dtoDetailType = (entity.name) + 'DetailDTO' %}
 {% set field = (entity.name|lower) %}
 {% set dtoField = (entity.name|lower) + 'DTO' %}
 {% set fieldList = (entity.name|plural|lower) %}
@@ -58,10 +60,10 @@ public class {{serviceName}} {
         return new ResponseEntity<>({{ dtoFieldList}}, HttpStatus.OK);
     }
 
-    public ResponseEntity<{{ dtoType }}> get{{entity.name}}(Long id){
+    public ResponseEntity<{{ dtoDetailType }}> get{{entity.name}}(Long id){
         {{ classType }} {{ field }} = {{ repositoryFieldName }}.findById(id).orElseThrow(
             () -> new NotFoundException("{{ classType }} with given id was not found."));
-        {{ dtoType }} {{ dtoField }} = modelMapper.map({{ field }}, {{ dtoType }}.class);
+        {{ dtoDetailType }} {{ dtoField }} = modelMapper.map({{ field }}, {{ dtoDetailType }}.class);
         return new ResponseEntity<>({{ dtoField }}, HttpStatus.OK);
     }
 

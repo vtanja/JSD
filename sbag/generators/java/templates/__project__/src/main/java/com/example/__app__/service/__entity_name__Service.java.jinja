@@ -31,7 +31,7 @@ public class {{serviceName}} {
     @Autowired
     private {{ repositoryName }} {{repositoryFieldName}};
     
-    public ResponseEntity<?> get{{entity.name | plural}}Size(){
+    public ResponseEntity<Integer> get{{entity.name | plural}}Count(){
         return new ResponseEntity<>({{repositoryFieldName}}.findAll().size(), HttpStatus.OK);
     }
 

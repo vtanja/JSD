@@ -28,10 +28,10 @@ public class {{ controllerName }} {
         this.{{ entityService }} = service;
     }
 
-    @GetMapping(path="/size")
-    public ResponseEntity<?> get{{ entities }}Size() {
+    @GetMapping(path="/count")
+    public ResponseEntity<Integer> get{{ entities }}Count() {
 
-        return {{ entityService }}.get{{entity.name | plural}}Size();
+        return {{ entityService }}.get{{entity.name | plural}}Count();
     }
 
     @GetMapping(path="/{pageNo}/{pageSize}")

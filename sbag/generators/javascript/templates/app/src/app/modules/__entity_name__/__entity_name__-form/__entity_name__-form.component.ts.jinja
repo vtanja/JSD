@@ -14,7 +14,7 @@ import { {{entity.name}}Service } from '../{{entity_name}}.service';
 export class {{entity.name}}FormComponent {
 	
 	update: boolean;
-	id: number | undefined;
+	id: number;
 	entity: I{{ entity.name }} | undefined;
 	form: FormGroup = new FormGroup({});
 
@@ -28,6 +28,7 @@ export class {{entity.name}}FormComponent {
 		if(this.router.url.includes('update')){
 			this.update = true;
 			this.id = Number(this.activatedRoute.snapshot.paramMap.get('id'));
+			console.log(this.id);
 			this.service.get{{entity.name}}(this.id).subscribe(
       			(res: any) => {
 					this.entity = res;
@@ -44,6 +45,7 @@ export class {{entity.name}}FormComponent {
 			);
 		}
 		else {
+			this.id = 0;
 			this.update = false;
 		}
 	}
@@ -58,14 +60,32 @@ export class {{entity.name}}FormComponent {
 			{% endfor %}
 		}
 		console.log(dto)
-		this.service.create{{entity.name}}(dto).subscribe(
-		(res) => {
-			alert('created');
-			this.form.reset()
-		},
-		(err) => {
-			alert(err.message);
-			console.log(err);
-		});
+		if(this.update) {
+			this.service.update{{entity.name}}(this.id, dto).subscribe(
+			(res: any) => {
+				alert('updated');
+				this.entity = res;
+				this.form.setValue({
+				{% for property in entity.properties %}
+					{{property.name}}: this.entity?.{{property.name}},
+				{% endfor %}
+				})
+			},
+			(err) => {
+				alert(err.message);
+				console.log(err);
+			});
+		}
+		else {
+			this.service.create{{entity.name}}(dto).subscribe(
+			(res) => {
+				alert('created');
+				this.form.reset()
+			},
+			(err) => {
+				alert(err.message);
+				console.log(err);
+			});
+		}
 	}
 }

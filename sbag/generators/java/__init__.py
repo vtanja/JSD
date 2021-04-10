@@ -1,7 +1,7 @@
 from os import mkdir, getcwd
 from os.path import dirname, exists, join
 
-from sbag.language import Entity, Config
+from sbag.language import Entity, Config, BaseType, OneToMany, ManyToMany
 from textx import generator
 from textxjinja import textx_jinja_generator
 
@@ -31,18 +31,6 @@ def sbag_generate_java(metamodel, model, output_path, overwrite, debug, **custom
 
     template_folder = join(this_folder, 'templates')
 
-    def get_correct_type(prop):
-        """
-        Returns correct java type if prop type is BaseType or
-        returns correct entity DTO.
-        """
-        if isinstance(prop.type, Entity):
-            return '{}DTO'.format(prop.type.name.capitalize())
-        else:
-            return {
-                'string': 'String'
-            }.get(prop.type.name, prop.type)
-
     def plural(entity: str):
         if entity[-2 :] in ['ch', 'sh', 'ss', 'es']:
             entity += 'es'
@@ -68,10 +56,22 @@ def sbag_generate_java(metamodel, model, output_path, overwrite, debug, **custom
                 'string': 'String'
             }.get(prop.type.name, prop.type)
 
+    def get_type(prop):
+        """
+        Based on property type returns string saying if its base type, list or entity.
+        """
+#        from pudb import set_trace; set_trace()
+        if isinstance(prop.type, BaseType):
+            return 'base'
+        elif isinstance(prop, OneToMany) or isinstance(prop, ManyToMany):
+            return 'list'
+        else:
+            return 'entity'
+
     filters = {
-        'get_correct_type': get_correct_type,
         'get_correct_type_for_model': get_correct_type_for_model,
-        'plural': plural
+        'plural': plural,
+        'get_type': get_type
     }
 
     # Run Jinja generator

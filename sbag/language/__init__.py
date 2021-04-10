@@ -59,19 +59,37 @@ class Config():
         self.parent = parent
 
 
+class OneToMany():
+
+    def __init__(self, parent, name, owner, type):
+        self.parent = parent
+        self.name = name
+        self.owner = owner
+        self.type = type
+
+
+class ManyToMany():
+
+    def __init__(self, parent, name, owner, type):
+        self.parent = parent
+        self.name = name
+        self.owner = owner
+        self.type = type
+
+
 @language('sbag', '*.sbag')
 def sbag_language():
     "sbag language"
 
     builtin_types = {
         'int': BaseType(None, 'int'),
-        'string': BaseType(None, 'string'),
+        'String': BaseType(None, 'String'),
         'float': BaseType(None, 'float'),
         'boolean': BaseType(None, 'boolean'),
         'Long': BaseType(None, 'Long')
     }
     mm = metamodel_from_file(os.path.join(current_dir, 'sbag.tx'),
-                             classes=[BaseType, Entity, Config],
+                             classes=[BaseType, Entity, Config, Property, OneToMany, ManyToMany],
                              builtins=builtin_types,
                              debug=True)
 

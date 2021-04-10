@@ -1,27 +1,27 @@
 project: Library
 
 entity Book:
-    title: string;
+    title: String;
     publishingYear: int;
     genres: Genre[*..*];
     author: Author[1..*books];
     publisher: Publisher[*..1];
 
 entity Author:
-    firstName: string;
-    lastName: string;
+    firstName: String;
+    lastName: String;
     books: Book[*..1];
     address: Address[1..1];
 
 entity Genre:
-    name: string;
+    name: String;
     books: Book[*..*genres];
 
 entity Publisher:
-    name: string;
+    name: String;
     books: Book[1..*publisher];
 
 entity Address:
-    city: string;
-    street: string;
+    city: String;
+    street: String;
     number: int;

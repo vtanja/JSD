@@ -3,14 +3,25 @@ project: Library
 entity Book:
     title: string;
     publishingYear: int;
-    genre: Genre[];
-    author: Author;
+    genres: Genre[*..*];
+    author: Author[1..*books];
+    publisher: Publisher[*..1];
 
 entity Author:
     firstName: string;
     lastName: string;
-    books: Book[];
+    books: Book[*..1];
+    address: Address[1..1];
 
 entity Genre:
     name: string;
-    books: Book[];
+    books: Book[*..*genres];
+
+entity Publisher:
+    name: string;
+    books: Book[1..*publisher];
+
+entity Address:
+    city: string;
+    street: string;
+    number: int;

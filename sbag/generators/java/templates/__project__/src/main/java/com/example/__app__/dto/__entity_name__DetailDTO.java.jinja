@@ -1,0 +1,28 @@
+package com.example.{{ app }}.dto;
+
+import lombok.NoArgsConstructor;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
+{% for property in entity.properties %}
+{% if property | get_type != 'base' %}
+import com.example.{{ app }}.dto.{{ property.type }}DTO;
+{% endif %}
+{% endfor %}
+
+import java.util.List;
+
+@Getter @Setter
+@NoArgsConstructor
+@AllArgsConstructor
+public class {{ entity.name | capitalize }}DetailDTO {
+    {% for property in entity.properties %}
+    {% if property | get_type == 'base' %}
+    private {{ property.type }} {{ property.name }};
+    {% elif property | get_type == 'list' %}
+    private List<{{ property.type }}DTO> {{ property.name }};
+    {% else %}
+    private {{ property.type }}DTO {{ property.name }};
+    {% endif %}
+    {% endfor %}
+}

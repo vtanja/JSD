@@ -27,7 +27,7 @@ export class {{service_name}} {
   }
 
   update{{entity.name}}({{entity_id}}: number, {{entity_name}}: {{interface_name}}) {
-    return this.http.put(environment.api + '/{{entity_name}}/' + {{entity_id}}, {{entity_name}});
+    return this.http.put<{{interface_name}}>(environment.api + '/{{entity_name}}/' + {{entity_id}}, {{entity_name}});
   }
   
   create{{entity.name}}({{entity_name}}: {{interface_name}}) {

@@ -41,15 +41,11 @@ public class {{serviceName}} {
     }
 
     public ResponseEntity<List<{{ dtoType }}>> get{{entity.name|plural}}(int pageNo, int pageSize){
-        ModelMapper modelMapper = new ModelMapper();
-
         List<{{ dtoType }}> {{ dtoFieldList}} = new ArrayList<{{ dtoType }}>();
-
         Pageable paging = PageRequest.of(pageNo, pageSize);
- 
         Page<{{classType}}> pagedResult = {{repositoryFieldName}}.findAll(paging);
          
-        if(pagedResult.hasContent()) {
+        if (pagedResult.hasContent()) {
             List<{{classType}}> {{fieldList}} = pagedResult.getContent();
 
             for ({{classType}} {{field}} : {{fieldList}})
@@ -58,10 +54,8 @@ public class {{serviceName}} {
                 {{ dtoFieldList }}.add({{ dtoField }});
             }
 
-            return new ResponseEntity<>({{ dtoFieldList}}, HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>({{ dtoFieldList}}, HttpStatus.OK);
         }
+        return new ResponseEntity<>({{ dtoFieldList}}, HttpStatus.OK);
     }
 
     public ResponseEntity<{{ dtoType }}> get{{entity.name}}(Long id){

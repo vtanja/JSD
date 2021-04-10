@@ -24,6 +24,7 @@ class Property():
     """
 
     def __init__(self, parent, name, type):
+        """Constructor for BaseTypes and Associations properties."""
         self.parent = parent
         self.name = name
         self.type = type

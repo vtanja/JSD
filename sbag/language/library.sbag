@@ -4,13 +4,13 @@ entity Book:
     title: String;
     publishingYear: int;
     genres: Genre[*..*];
-    author: Author[1..*books];
+    author: Author[*..*books];
     publisher: Publisher[*..1];
 
 entity Author:
     firstName: String;
     lastName: String;
-    books: Book[*..1];
+    books: Book[*..*];
     address: Address[1..1];
 
 entity Genre:

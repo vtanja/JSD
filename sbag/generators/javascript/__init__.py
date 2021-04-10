@@ -1,7 +1,7 @@
 from os import mkdir, getcwd
 from os.path import dirname, exists, join
 
-from sbag.language import Entity
+from sbag.language import Entity, BaseType, OneToMany, ManyToMany
 from textx import generator
 from textxjinja import textx_jinja_generator
 import re
@@ -36,7 +36,9 @@ def sbag_generate_javascript(metamodel, model, output_path, overwrite, debug, **
         else:
             return {
                 'int': 'number',
-                'float': 'number'
+                'float': 'number',
+                'String': 'string',
+                'Long': 'number'
             }.get(prop.type.name, prop.type.name)
 
     def plural(entity: str):
@@ -59,11 +61,20 @@ def sbag_generate_javascript(metamodel, model, output_path, overwrite, debug, **
     def first_letter_lower(string: str):
         return string[0].lower() + string[1:]
 
+    def get_property_type(prop):
+        if isinstance(prop.type, BaseType):
+            return 'base'
+        elif isinstance(prop, OneToMany) or isinstance(prop, ManyToMany):
+            return 'list'
+        else:
+            return 'entity'
+
     filters = {
         'get_correct_type': get_correct_type,
         'plural': plural,
         'format_property': format_property,
         'first_letter_lower': first_letter_lower,
+        'get_property_type': get_property_type
     }
 
     config['entities'] = model.entities

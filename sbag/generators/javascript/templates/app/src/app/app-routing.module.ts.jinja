@@ -9,7 +9,6 @@ const routes: Routes = [
       module => module.{{ entity.name }}Module
     )
   },
-  { path: '**', redirectTo: '', pathMatch: 'full' }
   {% endfor %}
   { path: '**', redirectTo: '', pathMatch: 'full' },
 ];

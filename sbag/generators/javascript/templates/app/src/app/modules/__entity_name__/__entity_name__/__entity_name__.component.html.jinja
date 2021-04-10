@@ -5,7 +5,18 @@
 		</div>
 		<div class="col">
             {% for prop in entity.properties %}
-			<p>{{ prop.name }}: {{ obj?.value }}</p>
+            {% if prop | get_property_type == 'base' %}
+			<p><strong>{{ prop.name }}</strong>: {{ '{{ obj?.' + prop.name + ' }}' }}</p>
+            {% elif prop | get_property_type == 'list' %}
+            <p><strong>{{ prop.name }}</strong>:</p>
+            <ul>
+                <li *ngFor="let item of obj?.{{ prop.name }}">
+                    <a routerLink="['/{{ prop.name }}/', item.id]">{{ prop.name + '{{ item.id }}' }}</a>
+                </li>
+            </ul>
+            {% else %}
+            <p><strong>{{ prop.name }}</strong>: <a routerLink="['/{{ prop.name }}/', {{ '{{ obj?.' + prop.name + '?.id }}' }}]">{{ '{{ obj?.' + prop.name + ' }}'  }}</a></p>
+            {% endif %}
             {% endfor %}
 		</div>
     </div>

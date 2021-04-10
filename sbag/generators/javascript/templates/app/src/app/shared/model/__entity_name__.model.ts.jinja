@@ -1,11 +1,17 @@
 {% for property in entity.properties %}
-{% if get_type(property.type) == get_type(entity) %}
-import { {{ property | get_correct_type }} } from './{{ property.name | lower }}.model';
+{% if property | get_property_type != 'base' %}
+import { {{ property | get_correct_type }} } from './{{ property.type.name | lower }}.model';
 {% endif %}
 {% endfor %}
 
 export interface I{{ entity.name }} {
     {% for property in entity.properties %}
+    {% if property | get_property_type == 'base' %}
     {{ property.name }}: {{ property | get_correct_type }};
+    {% elif property | get_property_type == 'list' %}
+    {{ property.name }}: {{ property | get_correct_type }}[];
+    {% else %}
+    {{ property.name }}: {{ property | get_correct_type }};
+    {% endif %}
     {% endfor %}
 }

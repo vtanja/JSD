@@ -11,11 +11,13 @@
             <p><strong>{{ prop.name }}</strong>:</p>
             <ul>
                 <li *ngFor="let item of obj?.{{ prop.name }}">
-                    <a routerLink="['/{{ prop.name }}/', item.id]">{{ prop.name + '{{ item.id }}' }}</a>
+                    <a [routerLink]="['/{{ prop.name }}', item.id]">{{ prop.name + ' {{ item.id }}' }}</a>
                 </li>
             </ul>
             {% else %}
-            <p><strong>{{ prop.name }}</strong>: <a routerLink="['/{{ prop.name }}/', {{ '{{ obj?.' + prop.name + '?.id }}' }}]">{{ '{{ obj?.' + prop.name + ' }}'  }}</a></p>
+            <p><strong>{{ prop.name }}</strong>:
+                <a [routerLink]="['/{{ prop.name }}', {{ 'obj?.' + prop.name + '?.id' }}]">
+                    {{ prop.type.name + ' ({{obj?.' + prop.name + '?.id}})' }}</a></p>
             {% endif %}
             {% endfor %}
 		</div>

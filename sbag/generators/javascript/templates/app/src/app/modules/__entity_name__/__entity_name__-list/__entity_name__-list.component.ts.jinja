@@ -28,7 +28,7 @@ export class {{entity.name}}ListComponent implements OnInit {
 	){}
 
 	ngOnInit(){
-		this.{{service_field}}.get{{entity_name_plural}}Size().subscribe(
+		this.{{service_field}}.get{{entity_name_plural}}Count().subscribe(
 			(val: number ) => {
 				this.totalLength = val; 
 				this.{{service_field}}.get{{entity_name_plural}}(this.page-1, this.elementsPerPage).subscribe(

@@ -5,6 +5,30 @@ from sbag.language import Config, BaseType, OneToMany, ManyToMany
 from textx import generator
 from textxjinja import textx_jinja_generator
 
+def plural(entity: str):
+    if entity[-2 :] in ['ch', 'sh', 'ss', 'es']:
+        entity += 'es'
+    elif entity[-1] in ['s', 'x', 'z', 'o']:
+        entity += 'es'
+    elif entity[-1] == 'y':
+        if entity[-2] in ['a', 'e', 'i', 'o', 'u']:
+            entity += 's'
+        else:
+            entity = entity[: -1] + 'ies'
+    else:
+        entity += 's'
+    return entity.capitalize()
+
+def get_type(prop):
+    """
+       Based on property type returns string saying if its base type, list or entity.
+       """
+    if isinstance(prop.type, BaseType):
+        return 'base'
+    elif isinstance(prop, OneToMany) or isinstance(prop, ManyToMany):
+        return 'list'
+    else:
+        return 'entity'
 
 @generator('sbag', 'java')
 def sbag_generate_java(metamodel, model, output_path, overwrite, debug, **custom_args):
@@ -29,32 +53,6 @@ def sbag_generate_java(metamodel, model, output_path, overwrite, debug, **custom
         mkdir(output_path)
 
     template_folder = join(this_folder, 'templates')
-
-    def plural(entity: str):
-        if entity[-2 :] in ['ch', 'sh', 'ss', 'es']:
-            entity += 'es'
-        elif entity[-1] in ['s', 'x', 'z', 'o']:
-            entity += 'es'
-        elif entity[-1] == 'y':
-            if entity[-2] in ['a', 'e', 'i', 'o', 'u']:
-                entity += 's'
-            else:
-                entity = entity[: -1] + 'ies'
-        else:
-            entity += 's'
-        return entity.capitalize()
-
-    def get_type(prop):
-        """
-        Based on property type returns string saying if its base type, list or entity.
-        """
-#        from pudb import set_trace; set_trace()
-        if isinstance(prop.type, BaseType):
-            return 'base'
-        elif isinstance(prop, OneToMany) or isinstance(prop, ManyToMany):
-            return 'list'
-        else:
-            return 'entity'
 
     filters = {
         'plural': plural,

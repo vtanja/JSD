@@ -62,6 +62,7 @@ class Config():
 class OneToMany():
 
     def __init__(self, parent, name, owner, type):
+        """Instantiate one to many associations."""
         self.parent = parent
         self.name = name
         self.owner = owner
@@ -71,6 +72,7 @@ class OneToMany():
 class ManyToMany():
 
     def __init__(self, parent, name, owner, type):
+        """Instantiate many to many associations."""
         self.parent = parent
         self.name = name
         self.owner = owner

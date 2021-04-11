@@ -10,15 +10,15 @@ def get_correct_type(prop):
     """
        Returns correct java type if prop type is BaseType or returns correct entity DTO.
        """
-    if isinstance(prop.type, Entity):
-        return 'I{}'.format(prop.type.name.capitalize())
+    if isinstance(prop.ptype, Entity):
+        return 'I{}'.format(prop.ptype.name.capitalize())
     else:
         return {
             'int': 'number',
             'float': 'number',
             'String': 'string',
             'Long': 'number'
-        }.get(prop.type.name, prop.type.name)
+        }.get(prop.ptype.name, prop.ptype.name)
 
 def plural(entity: str):
     if entity[-2 :] in ['ch', 'sh', 'ss', 'es']:
@@ -41,7 +41,7 @@ def first_letter_lower(string: str):
     return string[0].lower() + string[1:]
 
 def get_property_type(prop):
-    if isinstance(prop.type, BaseType):
+    if isinstance(prop.ptype, BaseType):
         return 'base'
     elif isinstance(prop, OneToMany) or isinstance(prop, ManyToMany):
         return 'list'

@@ -23,11 +23,11 @@ class Property():
     Defines both base properties and associations.
     """
 
-    def __init__(self, parent, name, type):
+    def __init__(self, parent, name, ptype):
         """Constructor for BaseTypes and Associations properties."""
         self.parent = parent
         self.name = name
-        self.type = type
+        self.ptype = ptype
 
 
 class Entity():
@@ -61,22 +61,22 @@ class Config():
 
 class OneToMany():
 
-    def __init__(self, parent, name, owner, type):
+    def __init__(self, parent, name, owner, ptype):
         """Instantiate one to many associations."""
         self.parent = parent
         self.name = name
         self.owner = owner
-        self.type = type
+        self.pype = ptype
 
 
 class ManyToMany():
 
-    def __init__(self, parent, name, owner, type):
+    def __init__(self, parent, name, owner, ptype):
         """Instantiate many to many associations."""
         self.parent = parent
         self.name = name
         self.owner = owner
-        self.type = type
+        self.ptype = ptype
 
 
 @language('sbag', '*.sbag')

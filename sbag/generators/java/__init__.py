@@ -23,7 +23,7 @@ def get_type(prop):
     """
        Based on property type returns string saying if its base type, list or entity.
        """
-    if isinstance(prop.type, BaseType):
+    if isinstance(prop.ptype, BaseType):
         return 'base'
     elif isinstance(prop, OneToMany) or isinstance(prop, ManyToMany):
         return 'list'

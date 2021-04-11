@@ -15,7 +15,7 @@ EntityProperty:
 ;
 
 Property:
-    name=ID ':' type=[BaseType] ';'
+    name=ID ':' ptype=[BaseType] ';'
 ;
 
 Association:
@@ -23,19 +23,19 @@ Association:
 ;
 
 OneToOne:
-    name=ID ':' type=[Entity] '[1..1]' ';'
+    name=ID ':' ptype=[Entity] '[1..1]' ';'
 ;
 
 OneToMany:
-    name=ID ':' type=[Entity] '[1..*' (owner=ID)? ']' ';'
+    name=ID ':' ptype=[Entity] '[1..*' (owner=ID)? ']' ';'
 ;
 
 ManyToOne:
-    name=ID ':' type=[Entity] '[*..1]' ';'
+    name=ID ':' ptype=[Entity] '[*..1]' ';'
 ;
 
 ManyToMany:
-    name=ID ':' type=[Entity] '[*..*' (owner=ID)? ']' ';'
+    name=ID ':' ptype=[Entity] '[*..*' (owner=ID)? ']' ';'
 ;
 
 BaseType:

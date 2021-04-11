@@ -19,7 +19,7 @@
             {% else %}
             <p><strong>{{ prop.name }}</strong>:
                 <a [routerLink]="['/{{ prop.name }}', {{ 'obj?.' + prop.name + '?.id' }}]">
-                    {{ prop.type.name + ' ({{obj?.' + prop.name + '?.id}})' }}</a></p>
+                    {{ prop.ptype.name + ' ({{obj?.' + prop.name + '?.id}})' }}</a></p>
             {% endif %}
             {% endfor %}
 		</div>

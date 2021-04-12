@@ -23,11 +23,11 @@ class Property():
     Defines both base properties and associations.
     """
 
-    def __init__(self, parent, name, type):
+    def __init__(self, parent, name, ptype):
         """Constructor for BaseTypes and Associations properties."""
         self.parent = parent
         self.name = name
-        self.type = type
+        self.ptype = ptype
 
 
 class Entity():
@@ -59,19 +59,39 @@ class Config():
         self.parent = parent
 
 
+class OneToMany():
+
+    def __init__(self, parent, name, owner, ptype):
+        """Instantiate one to many associations."""
+        self.parent = parent
+        self.name = name
+        self.owner = owner
+        self.pype = ptype
+
+
+class ManyToMany():
+
+    def __init__(self, parent, name, owner, ptype):
+        """Instantiate many to many associations."""
+        self.parent = parent
+        self.name = name
+        self.owner = owner
+        self.ptype = ptype
+
+
 @language('sbag', '*.sbag')
 def sbag_language():
     "sbag language"
 
     builtin_types = {
         'int': BaseType(None, 'int'),
-        'string': BaseType(None, 'string'),
+        'String': BaseType(None, 'String'),
         'float': BaseType(None, 'float'),
         'boolean': BaseType(None, 'boolean'),
         'Long': BaseType(None, 'Long')
     }
     mm = metamodel_from_file(os.path.join(current_dir, 'sbag.tx'),
-                             classes=[BaseType, Entity, Config],
+                             classes=[BaseType, Entity, Config, Property, OneToMany, ManyToMany],
                              builtins=builtin_types,
                              debug=True)
 

@@ -5,8 +5,8 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 {% for property in entity.properties %}
-{% if type(property.type) == type(entity) %}
-import com.example.{{ app }}.model.{{ property.type }};
+{% if property | get_type != 'base' %}
+import com.example.{{ app }}.model.{{ property.ptype }};
 {% endif %}
 {% endfor %}
 import javax.persistence.*;
@@ -18,15 +18,17 @@ import javax.persistence.*;
 public class {{ entity.name | capitalize }} {
 
     {% for property in entity.properties %}
-    {% if type(property.type) == type(entity) %}
+    {% if property | get_type != 'base' %}
     @OneToOne
+    private {{ property.ptype.name }} {{ property.name }};
     {% elif property.name == 'id' %}
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private {{ property.ptype}} {{ property.name }};
     {% else %}
     @Column
+    private {{ property.ptype}} {{ property.name }};
     {% endif %}
-    private {{ property | get_correct_type_for_model }} {{ property.name }};
 
     {% endfor %}
 }

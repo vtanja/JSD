@@ -1,10 +1,34 @@
 from os import mkdir, getcwd
 from os.path import dirname, exists, join
 
-from sbag.language import Entity, Config
+from sbag.language import Config, BaseType, OneToMany, ManyToMany
 from textx import generator
 from textxjinja import textx_jinja_generator
 
+def plural(entity: str):
+    if entity[-2 :] in ['ch', 'sh', 'ss', 'es']:
+        entity += 'es'
+    elif entity[-1] in ['s', 'x', 'z', 'o']:
+        entity += 'es'
+    elif entity[-1] == 'y':
+        if entity[-2] in ['a', 'e', 'i', 'o', 'u']:
+            entity += 's'
+        else:
+            entity = entity[: -1] + 'ies'
+    else:
+        entity += 's'
+    return entity.capitalize()
+
+def get_type(prop):
+    """
+       Based on property type returns string saying if its base type, list or entity.
+       """
+    if isinstance(prop.ptype, BaseType):
+        return 'base'
+    elif isinstance(prop, OneToMany) or isinstance(prop, ManyToMany):
+        return 'list'
+    else:
+        return 'entity'
 
 @generator('sbag', 'java')
 def sbag_generate_java(metamodel, model, output_path, overwrite, debug, **custom_args):
@@ -18,7 +42,6 @@ def sbag_generate_java(metamodel, model, output_path, overwrite, debug, **custom
     config['config'] = model.config
     config['project'] = model.config.project.capitalize()
     config['app'] = model.config.project.lower()
-    config['type'] = type
 
     # If output path is not specified take the current working directory
     if output_path is None:
@@ -31,47 +54,9 @@ def sbag_generate_java(metamodel, model, output_path, overwrite, debug, **custom
 
     template_folder = join(this_folder, 'templates')
 
-    def get_correct_type(prop):
-        """
-        Returns correct java type if prop type is BaseType or
-        returns correct entity DTO.
-        """
-        if isinstance(prop.type, Entity):
-            return '{}DTO'.format(prop.type.name.capitalize())
-        else:
-            return {
-                'string': 'String'
-            }.get(prop.type.name, prop.type)
-
-    def plural(entity: str):
-        if entity[-2 :] in ['ch', 'sh', 'ss', 'es']:
-            entity += 'es'
-        elif entity[-1] in ['s', 'x', 'z', 'o']:
-            entity += 'es'
-        elif entity[-1] == 'y':
-            if entity[-2] in ['a', 'e', 'i', 'o', 'u']:
-                entity += 's'
-            else:
-                entity = entity[: -1] + 'ies'
-        else:
-            entity += 's'
-        return entity.capitalize()
-
-    def get_correct_type_for_model(prop):
-        """
-        Returns correct java type if prop type is BaseType or returns correct entity DTO.
-        """
-        if isinstance(prop.type, Entity):
-            return prop.type.name.capitalize()
-        else:
-            return {
-                'string': 'String'
-            }.get(prop.type.name, prop.type)
-
     filters = {
-        'get_correct_type': get_correct_type,
-        'get_correct_type_for_model': get_correct_type_for_model,
-        'plural': plural
+        'plural': plural,
+        'get_type': get_type
     }
 
     # Run Jinja generator

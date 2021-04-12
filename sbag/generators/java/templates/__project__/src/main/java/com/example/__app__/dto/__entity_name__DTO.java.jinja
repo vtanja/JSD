@@ -4,17 +4,14 @@ import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
-{% for property in entity.properties %}
-{% if type(property.type) == type(entity) %}
-import com.example.{{ app }}.dto.{{ property.type }}DTO;
-{% endif %}
-{% endfor %}
 
 @Getter @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 public class {{ entity.name | capitalize }}DTO {
     {% for property in entity.properties %}
-    private {{ property | get_correct_type }} {{ property.name }};
+    {% if property | get_type == 'base' %}
+    private {{ property.ptype }} {{ property.name }};
+    {% endif %}
     {% endfor %}
 }

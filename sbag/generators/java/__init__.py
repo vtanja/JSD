@@ -34,7 +34,9 @@ def get_type(prop):
 
 
 def get_association_type(prop):
-    """Based on property returns string saying if its OneToMany, ManyToMany, OneToOne or ManyToOne association"""
+    """
+        Based on property returns string saying if its OneToMany, ManyToMany, OneToOne or ManyToOne association
+        """
     if isinstance(prop, OneToMany):
         return 'OneToMany'
     elif isinstance(prop, ManyToMany):

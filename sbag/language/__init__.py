@@ -82,7 +82,7 @@ class ManyToMany:
 class OneToOne:
 
     def __init__(self, parent, name, ptype):
-        """Instantiate many to many associations."""
+        """Instantiate one to one associations."""
         self.parent = parent
         self.name = name
         self.ptype = ptype
@@ -91,7 +91,7 @@ class OneToOne:
 class ManyToOne:
 
     def __init__(self, parent, name, ptype):
-        """Instantiate many to many associations."""
+        """Instantiate many to one associations."""
         self.parent = parent
         self.name = name
         self.ptype = ptype

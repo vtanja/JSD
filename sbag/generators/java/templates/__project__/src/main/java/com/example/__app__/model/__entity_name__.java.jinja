@@ -10,6 +10,7 @@ import com.example.{{ app }}.model.{{ property.ptype }};
 {% endif %}
 {% endfor %}
 import javax.persistence.*;
+import java.util.Set;
 
 @Getter @Setter
 @NoArgsConstructor
@@ -19,8 +20,26 @@ public class {{ entity.name | capitalize }} {
 
     {% for property in entity.properties %}
     {% if property | get_type != 'base' %}
+    {% if property | get_association_type == 'OneToOne'%}
     @OneToOne
     private {{ property.ptype.name }} {{ property.name }};
+    {% elif property | get_association_type == 'ManyToMany'%}
+    {% if property.owner == '' %}
+    @ManyToMany
+    @JoinTable
+    private Set<{{ property.ptype.name }}> {{ property.name }};
+    {% else %}
+    @ManyToMany(mappedBy = "{{property.owner}}")
+    private Set<{{ property.ptype.name }}> {{ property.name }};
+    {% endif %}
+    {% elif property | get_association_type == 'OneToMany'%}
+    @OneToMany(mappedBy = "{{property.owner}}")
+    private Set<{{ property.ptype.name }}> {{ property.name }};
+    {% elif property | get_association_type == 'ManyToOne'%}
+    @ManyToOne
+    @JoinColumn
+    private {{ property.ptype.name }} {{ property.name }};
+    {% endif %}
     {% elif property.name == 'id' %}
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

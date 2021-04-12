@@ -1,12 +1,13 @@
 from os import mkdir, getcwd
 from os.path import dirname, exists, join
 
-from sbag.language import Config, BaseType, OneToMany, ManyToMany
+from sbag.language import Config, BaseType, OneToMany, ManyToMany, ManyToOne, OneToOne
 from textx import generator
 from textxjinja import textx_jinja_generator
 
+
 def plural(entity: str):
-    if entity[-2 :] in ['ch', 'sh', 'ss', 'es']:
+    if entity[-2:] in ['ch', 'sh', 'ss', 'es']:
         entity += 'es'
     elif entity[-1] in ['s', 'x', 'z', 'o']:
         entity += 'es'
@@ -19,6 +20,7 @@ def plural(entity: str):
         entity += 's'
     return entity.capitalize()
 
+
 def get_type(prop):
     """
        Based on property type returns string saying if its base type, list or entity.
@@ -29,6 +31,21 @@ def get_type(prop):
         return 'list'
     else:
         return 'entity'
+
+
+def get_association_type(prop):
+    """
+        Based on property returns string saying if its OneToMany, ManyToMany, OneToOne or ManyToOne association
+        """
+    if isinstance(prop, OneToMany):
+        return 'OneToMany'
+    elif isinstance(prop, ManyToMany):
+        return 'ManyToMany'
+    elif isinstance(prop, OneToOne):
+        return 'OneToOne'
+    elif isinstance(prop, ManyToOne):
+        return 'ManyToOne'
+
 
 @generator('sbag', 'java')
 def sbag_generate_java(metamodel, model, output_path, overwrite, debug, **custom_args):
@@ -56,7 +73,8 @@ def sbag_generate_java(metamodel, model, output_path, overwrite, debug, **custom
 
     filters = {
         'plural': plural,
-        'get_type': get_type
+        'get_type': get_type,
+        'get_association_type': get_association_type
     }
 
     # Run Jinja generator
@@ -65,6 +83,7 @@ def sbag_generate_java(metamodel, model, output_path, overwrite, debug, **custom
         config['entity_name'] = entity.name
         textx_jinja_generator(template_folder, output_path, config,
                               overwrite, filters)
+
 
 def check_and_setup_config(model):
     if model.config is None:

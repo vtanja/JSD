@@ -81,21 +81,19 @@ class ManyToMany:
 
 class OneToOne:
 
-    def __init__(self, parent, name, owner, ptype):
+    def __init__(self, parent, name, ptype):
         """Instantiate many to many associations."""
         self.parent = parent
         self.name = name
-        self.owner = owner
         self.ptype = ptype
 
 
 class ManyToOne:
 
-    def __init__(self, parent, name, owner, ptype):
+    def __init__(self, parent, name, ptype):
         """Instantiate many to many associations."""
         self.parent = parent
         self.name = name
-        self.owner = owner
         self.ptype = ptype
 
 
@@ -111,7 +109,7 @@ def sbag_language():
         'Long': BaseType(None, 'Long')
     }
     mm = metamodel_from_file(os.path.join(current_dir, 'sbag.tx'),
-                             classes=[BaseType, Entity, Config, Property, OneToMany, ManyToMany],
+                             classes=[BaseType, Entity, Config, Property, OneToMany, ManyToMany, OneToOne, ManyToOne],
                              builtins=builtin_types,
                              debug=True)
 

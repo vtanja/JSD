@@ -59,7 +59,7 @@ class Config():
         self.parent = parent
 
 
-class OneToMany():
+class OneToMany:
 
     def __init__(self, parent, name, owner, ptype):
         """Instantiate one to many associations."""
@@ -69,7 +69,27 @@ class OneToMany():
         self.pype = ptype
 
 
-class ManyToMany():
+class ManyToMany:
+
+    def __init__(self, parent, name, owner, ptype):
+        """Instantiate many to many associations."""
+        self.parent = parent
+        self.name = name
+        self.owner = owner
+        self.ptype = ptype
+
+
+class OneToOne:
+
+    def __init__(self, parent, name, owner, ptype):
+        """Instantiate many to many associations."""
+        self.parent = parent
+        self.name = name
+        self.owner = owner
+        self.ptype = ptype
+
+
+class ManyToOne:
 
     def __init__(self, parent, name, owner, ptype):
         """Instantiate many to many associations."""

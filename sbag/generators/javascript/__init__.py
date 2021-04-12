@@ -77,9 +77,14 @@ def sbag_generate_javascript(metamodel, model, output_path, overwrite, debug, **
 
     config['entities'] = model.entities
 
+    textx_jinja_generator(template_folder, output_path, config, overwrite, filters)
+
+    entities_folder = join(this_folder, 'entities')
+    output_path = join(output_path, 'app', 'src', 'app', '')
+
     for entity in model.entities:
         config['properties'] = entity.properties
         config['entity'] = entity
         config['entity_name'] = entity.name.lower()
-        textx_jinja_generator(template_folder, output_path, config, overwrite,
+        textx_jinja_generator(entities_folder, output_path, config, overwrite,
                               filters)

@@ -34,9 +34,7 @@ def get_type(prop):
 
 
 def get_association_type(prop):
-    """
-       Based on property type returns string saying if its base type, list or entity.
-       """
+    """Based on property returns string saying if its OneToMany, ManyToMany, OneToOne or ManyToOne association"""
     if isinstance(prop, OneToMany):
         return 'OneToMany'
     elif isinstance(prop, ManyToMany):

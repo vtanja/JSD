@@ -20,7 +20,6 @@ public class {{ entity.name | capitalize }} {
 
     {% for property in entity.properties %}
     {% if property | get_type != 'base' %}
-    {{property}}
     {% if property | get_association_type == 'OneToOne'%}
     @OneToOne
     private {{ property.ptype.name }} {{ property.name }};
@@ -34,7 +33,7 @@ public class {{ entity.name | capitalize }} {
     private Set<{{ property.ptype.name }}> {{ property.name }};
     {% endif %}
     {% elif property | get_association_type == 'OneToMany'%}
-    @OneToMany(mappedBy = "{{property.owner}})"
+    @OneToMany(mappedBy = "{{property.owner}}")
     private Set<{{ property.ptype.name }}> {{ property.name }};
     {% elif property | get_association_type == 'ManyToOne'%}
     @ManyToOne

@@ -59,42 +59,33 @@ class Config():
         self.parent = parent
 
 
-class OneToMany:
+class OneToOne():
 
-    def __init__(self, parent, name, owner, ptype):
-        """Instantiate one to many associations."""
+    def __init__(self, parent, option):
+        """One to one entity association type."""
         self.parent = parent
-        self.name = name
-        self.owner = owner
-        self.pype = ptype
+        self.option = option
 
+class OneToMany():
+
+    def __init__(self, parent, owner):
+        """One to many entity association type."""
+        self.parent = parent
+        self.owner = owner
+
+class ManyToOne():
+
+    def __init__(self, parent, option):
+        """Many to one entity association type."""
+        self.parent = parent
+        self.option = option
 
 class ManyToMany:
 
-    def __init__(self, parent, name, owner, ptype):
-        """Instantiate many to many associations."""
+    def __init__(self, parent, owner):
+        """Many to many entity association type."""
         self.parent = parent
-        self.name = name
         self.owner = owner
-        self.ptype = ptype
-
-
-class OneToOne:
-
-    def __init__(self, parent, name, ptype):
-        """Instantiate one to one associations."""
-        self.parent = parent
-        self.name = name
-        self.ptype = ptype
-
-
-class ManyToOne:
-
-    def __init__(self, parent, name, ptype):
-        """Instantiate many to one associations."""
-        self.parent = parent
-        self.name = name
-        self.ptype = ptype
 
 
 @language('sbag', '*.sbag')
@@ -109,7 +100,7 @@ def sbag_language():
         'Long': BaseType(None, 'Long')
     }
     mm = metamodel_from_file(os.path.join(current_dir, 'sbag.tx'),
-                             classes=[BaseType, Entity, Config, Property, OneToMany, ManyToMany, OneToOne, ManyToOne],
+                             classes=[BaseType, Entity, Config, Property, OneToOne, OneToMany, ManyToOne, ManyToMany],
                              builtins=builtin_types,
                              debug=True)
 

@@ -29,4 +29,26 @@ export class {{entity.name}}Component {
         });
     }
 
+    delete(){
+        if(this.obj != undefined){
+            this.{{entity_name}}Service.delete{{entity_name|capitalize}}(this.obj.id).subscribe(
+			data =>{
+				alert("{{entity.name}} has been successfully deleted!");
+			},
+			error => {
+				alert("Something went wrong while deleting {{entity_name}}!");
+			});
+
+            let path = '/{{entity_name}}';
+
+            this.router.navigateByUrl('', { skipLocationChange: true }).then(() => {
+                this.router.navigate([path]);
+            });
+        }
+        else{
+            alert("Something went wrong while deleting {{entity_name}}!");
+        }
+		
+	}
+
 }

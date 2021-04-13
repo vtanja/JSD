@@ -56,7 +56,7 @@ config:
 
 ## Generisanje
 
-Na osnovu modela se generiše:
+Na osnovu modela se generiše admin interfejs sa:
  - hibernate sloj sa klasama modela
  - JPA repozitorijumi za svaku klasu
  - DTO objekti

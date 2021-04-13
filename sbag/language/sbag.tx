@@ -19,23 +19,27 @@ Property:
 ;
 
 Association:
+    name=ID ':' ptype=[Entity] atype=AssociationType ';'
+;
+
+AssociationType:
     OneToOne | OneToMany | ManyToOne | ManyToMany
 ;
 
 OneToOne:
-    name=ID ':' ptype=[Entity] '[1..1]' ';'
+    option='[1..1]'
 ;
 
 OneToMany:
-    name=ID ':' ptype=[Entity] '[1..*' (owner=ID)? ']' ';'
+    '[1..*' owner=ID? ']'
 ;
 
 ManyToOne:
-    name=ID ':' ptype=[Entity] '[*..1]' ';'
+    option='[*..1]'
 ;
 
 ManyToMany:
-    name=ID ':' ptype=[Entity] '[*..*' (owner=ID)? ']' ';'
+    '[*..*' owner=ID? ']'
 ;
 
 BaseType:

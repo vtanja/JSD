@@ -23,11 +23,11 @@ def plural(entity: str):
 
 def get_type(prop):
     """
-       Based on property type returns string saying if its base type, list or entity.
-       """
+    Based on property type returns string saying if its base type, list or entity.
+    """
     if isinstance(prop.ptype, BaseType):
         return 'base'
-    elif isinstance(prop, OneToMany) or isinstance(prop, ManyToMany):
+    elif isinstance(prop.atype, OneToMany) or isinstance(prop.atype, ManyToMany):
         return 'list'
     else:
         return 'entity'

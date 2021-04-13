@@ -1,7 +1,9 @@
 from os import mkdir, getcwd
 from os.path import dirname, exists, join
 
-from sbag.language import Entity, BaseType, OneToMany, ManyToMany
+from sbag.language import Entity
+from sbag.generators.java import get_type as get_property_type
+from sbag.generators.java import plural
 from textx import generator
 from textxjinja import textx_jinja_generator
 import re
@@ -20,33 +22,11 @@ def get_correct_type(prop):
             'Long': 'number'
         }.get(prop.ptype.name, prop.ptype.name)
 
-def plural(entity: str):
-    if entity[-2 :] in ['ch', 'sh', 'ss', 'es']:
-        entity += 'es'
-    elif entity[-1] in ['s', 'x', 'z', 'o']:
-        entity += 'es'
-    elif entity[-1] == 'y':
-        if entity[-2] in ['a', 'e', 'i', 'o', 'u']:
-            entity += 's'
-        else:
-            entity = entity[: -1] + 'ies'
-    else:
-        entity += 's'
-    return entity.capitalize()
-
 def format_property(prop: str):
     return re.sub(r"(\w)([A-Z])", r"\1 \2", prop)
 
 def first_letter_lower(string: str):
     return string[0].lower() + string[1:]
-
-def get_property_type(prop):
-    if isinstance(prop.ptype, BaseType):
-        return 'base'
-    elif isinstance(prop, OneToMany) or isinstance(prop, ManyToMany):
-        return 'list'
-    else:
-        return 'entity'
 
 @generator('sbag', 'javascript')
 def sbag_generate_javascript(metamodel, model, output_path, overwrite, debug, **custom_args):

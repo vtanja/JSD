@@ -14,22 +14,22 @@
 <br>
 <table class="table" style="width:90%; margin:auto" *ngIf="{{ entity_name_plural }}?.length != 0">
     <tr>
-    {% for property in properties%}
-        <th scope="col"> {{property.name|format_property|capitalize}} </th>
-    {% endfor %}
-    <th>&nbsp;</th>
-    <th>&nbsp;</th>
+        {% for property in properties%}
+            <th scope="col"> {{property.name|format_property|capitalize}} </th>
+        {% endfor %}
+        <th>&nbsp;</th>
+        <th>&nbsp;</th>
     </tr>
-    <tr *ngFor="let {{entity_name}} of {{ entity_name_plural }} | paginate: { itemsPerPage: elementsPerPage, currentPage: page, totalItems: totalLength }; let i = index" >
+    <tr *ngFor="let {{entity_name}} of {{ entity_name_plural }} | paginate: { itemsPerPage: elementsPerPage, currentPage: page, totalItems: totalLength }; let i = index" [routerLink]="!isDisabled ? ['/{{ entity_name }}', {{ entity_name }}.id] : []" >
         {% for property in properties%}
         {% set prop = '{{ ' + (entity.name|lower)+'.'+(property.name|first_letter_lower) + ' }}' %}
-        <td scope="row" [routerLink]="['/{{ entity_name }}', {{ entity_name }}.id]"> {{prop}} </td>
+        <td scope="row" > {{prop}} </td>
         {% endfor %}
         <td style="width: 20%;">
-            <button type="button" class="btn btn-warning" [routerLink]="['/{{ entity_name }}', {{ entity_name }}.id, 'update']">Update {{ entity_name }}</button>
+            <button type="button" class="btn btn-warning" (click)="isDisabled=true;" [routerLink]="['/{{ entity_name }}', {{ entity_name }}.id, 'update']">Update {{ entity_name }}</button>
         </td>
         <td style="width: 20%;">
-            <button type="button" class="btn btn-danger" (click)="idToDelete={{entity_name}}.id;open(mymodal)">Delete {{ entity_name }}</button>
+            <button type="button" class="btn btn-danger" (click)="isDisabled=true;idToDelete={{entity_name}}.id;open(mymodal)">Delete {{ entity_name }}</button>
         </td>
     </tr>
 </table>

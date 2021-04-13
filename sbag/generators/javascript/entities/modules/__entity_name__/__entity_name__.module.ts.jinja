@@ -6,6 +6,7 @@ import { {{entity.name}}FormComponent } from './{{entity_name}}-form/{{entity_na
 import { {{entity.name}}RoutingModule } from './{{  entity.name | lower}}-routing.module';
 import { CommonModule } from '@angular/common';
 import { NgxPaginationModule } from 'ngx-pagination';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { FormsModule } from '@angular/forms';
 
 @NgModule({
@@ -13,6 +14,7 @@ import { FormsModule } from '@angular/forms';
     {{ entity.name }}RoutingModule,
     CommonModule,
     NgxPaginationModule,
+    NgbModule,
     FormsModule     
   ],
   declarations: 

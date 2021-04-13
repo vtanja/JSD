@@ -8,6 +8,7 @@ import { Component, OnInit } from '@angular/core';
 
 import { {{service_type}} } from '../{{entity_name}}.service';
 import { {{ model }} } from '../../../shared/model/{{entity_name}}.model';
+import { Router } from '@angular/router';
 
 @Component({
 	selector: 'app-{{entity_name}}-list',
@@ -25,6 +26,7 @@ export class {{entity.name}}ListComponent implements OnInit {
 
     constructor(
 		private {{service_field}}: {{service_type}},
+		private router: Router,
 	){}
 
 	ngOnInit(){
@@ -55,5 +57,14 @@ export class {{entity.name}}ListComponent implements OnInit {
 			},
 			(error) => alert(error.error)
     	);
+	}
+
+	delete{{entity_name|capitalize}}(id: number){
+		this.{{service_field}}.delete{{entity_name|capitalize}}(id).subscribe(
+			data =>{
+				console.log("deleted");
+			}
+		);
+		this.router.navigateByUrl('/{{entity_name}}');
 	}
 }

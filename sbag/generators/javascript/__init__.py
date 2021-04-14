@@ -33,12 +33,10 @@ def first_letter_lower(string: str):
 
 def get_form_input_type(prop):
     """
-    Returns correct input type for given property type
+    Returns correct form input type for given property type
     """
-    if isinstance(prop.type, Entity):
-        return 'hidden'
-    else:
-        return {
+    if isinstance(prop.ptype, BaseType):
+       return {
             'int': 'number',
             'float': 'number',
             'string': 'text',

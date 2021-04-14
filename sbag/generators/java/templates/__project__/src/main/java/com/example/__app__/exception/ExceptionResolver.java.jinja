@@ -1,0 +1,23 @@
+package com.example.{{ app }}.exception;
+
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.ControllerAdvice;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+
+import com.example.{{ app }}.exception.NotFoundException;
+
+@ControllerAdvice @Slf4j
+public class ExceptionResolver {
+
+    @ExceptionHandler(NotFoundException.class)
+    public ResponseEntity<?> notFoundException(Exception exception) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.TEXT_PLAIN);
+        return new ResponseEntity<>(exception.getMessage(), headers, HttpStatus.NOT_FOUND);
+    }
+
+}

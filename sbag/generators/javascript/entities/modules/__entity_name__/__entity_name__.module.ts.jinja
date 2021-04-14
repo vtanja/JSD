@@ -8,14 +8,12 @@ import { {{entity.name}}FormComponent } from './{{entity_name}}-form/{{entity_na
 import { {{entity.name}}RoutingModule } from './{{  entity.name | lower}}-routing.module';
 import { CommonModule } from '@angular/common';
 import { NgxPaginationModule } from 'ngx-pagination';
-import { FormsModule } from '@angular/forms';
 
 @NgModule({
   imports: [
     FormsModule,
     ReactiveFormsModule,
     CommonModule,
-    {{ entity.name }}RoutingModule
     {{ entity.name }}RoutingModule,
     NgxPaginationModule,
     FormsModule     

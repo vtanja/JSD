@@ -15,27 +15,31 @@ EntityProperty:
 ;
 
 Property:
-    name=ID ':' type=[BaseType] ';'
+    name=ID ':' ptype=[BaseType] ';'
 ;
 
 Association:
+    name=ID ':' ptype=[Entity] atype=AssociationType ';'
+;
+
+AssociationType:
     OneToOne | OneToMany | ManyToOne | ManyToMany
 ;
 
 OneToOne:
-    name=ID ':' type=[Entity] '[1..1]' ';'
+    option='[1..1]'
 ;
 
 OneToMany:
-    name=ID ':' type=[Entity] '[1..*' (owner=ID)? ']' ';'
+    '[1..*' owner=ID? ']'
 ;
 
 ManyToOne:
-    name=ID ':' type=[Entity] '[*..1]' ';'
+    option='[*..1]'
 ;
 
 ManyToMany:
-    name=ID ':' type=[Entity] '[*..*' (owner=ID)? ']' ';'
+    '[*..*' owner=ID? ']'
 ;
 
 BaseType:

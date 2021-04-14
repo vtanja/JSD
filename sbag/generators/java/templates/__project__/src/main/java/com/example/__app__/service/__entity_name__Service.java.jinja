@@ -1,5 +1,6 @@
 package com.example.{{ app }}.service;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -9,9 +10,10 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
-import com.example.{{ app }}.dto.{{entity.name}}DTO;
-import com.example.{{ app }}.model.{{entity.name}};
+import com.example.{{ app }}.dto.{{entity.name}}DetailDTO;
+import com.example.{{ app }}.model.{{ entity.name }};
 import com.example.{{ app }}.repository.{{ entity.name | capitalize }}Repository;
+import com.example.{{ app }}.exception.NotFoundException;
 {% for property in entity.properties %}
 {% if (property | is_base_type)==False %}
 import com.example.{{ app }}.model.{{property.type}};
@@ -23,6 +25,7 @@ import java.util.ArrayList;
 
 {% set classType = (entity.name) %}
 {% set dtoType = (entity.name) + 'DTO' %}
+{% set dtoDetailType = (entity.name) + 'DetailDTO' %}
 {% set field = (entity.name|lower) %}
 {% set dtoField = (entity.name|lower) + 'DTO' %}
 {% set fieldList = (entity.name|plural|lower) %}
@@ -35,21 +38,20 @@ import java.util.ArrayList;
 public class {{serviceName}} {
     @Autowired
     private {{ repositoryName }} {{repositoryFieldName}};
-    
+
+    @Autowired
+    private ModelMapper modelMapper;
+
     public ResponseEntity<Integer> get{{entity.name | plural}}Count(){
         return new ResponseEntity<>({{repositoryFieldName}}.findAll().size(), HttpStatus.OK);
     }
 
     public ResponseEntity<List<{{ dtoType }}>> get{{entity.name|plural}}(int pageNo, int pageSize){
-        ModelMapper modelMapper = new ModelMapper();
-
         List<{{ dtoType }}> {{ dtoFieldList}} = new ArrayList<{{ dtoType }}>();
-
         Pageable paging = PageRequest.of(pageNo, pageSize);
- 
         Page<{{classType}}> pagedResult = {{repositoryFieldName}}.findAll(paging);
          
-        if(pagedResult.hasContent()) {
+        if (pagedResult.hasContent()) {
             List<{{classType}}> {{fieldList}} = pagedResult.getContent();
 
             for ({{classType}} {{field}} : {{fieldList}})
@@ -58,25 +60,22 @@ public class {{serviceName}} {
                 {{ dtoFieldList }}.add({{ dtoField }});
             }
 
-            return new ResponseEntity<>({{ dtoFieldList}}, HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>({{ dtoFieldList}}, HttpStatus.OK);
         }
+        return new ResponseEntity<>({{ dtoFieldList}}, HttpStatus.OK);
     }
 
-    public ResponseEntity<{{ entity.name }}DTO> get{{entity.name}}(Long id){
-        ModelMapper modelMapper = new ModelMapper();
-        {{ entity.name }} {{ entity.name | lower }} = {{entity.name | lower}}Repository.find{{ entity.name }}ById(id);
-        if({{ entity.name | lower }} == null) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST); 
-        }
-        else {
-            {{ entity.name }}DTO {{ entity.name | lower }}Dto = modelMapper.map({{ entity.name | lower }}, {{ entity.name }}DTO.class);
-            return new ResponseEntity<>({{ entity.name | lower }}Dto, HttpStatus.OK); 
-        }
+    public ResponseEntity<{{ dtoDetailType }}> get{{entity.name}}(Long id){
+        {{ classType }} {{ field }} = {{ repositoryFieldName }}.findById(id).orElseThrow(
+            () -> new NotFoundException("{{ classType }} with given id was not found."));
+        {{ dtoDetailType }} {{ dtoField }} = modelMapper.map({{ field }}, {{ dtoDetailType }}.class);
+        return new ResponseEntity<>({{ dtoField }}, HttpStatus.OK);
     }
 
-    public ResponseEntity<{{ entity.name }}DTO> update{{entity.name}}(Long id, {{entity.name}}DTO {{entity.name|lower}}Dto){
+    public ResponseEntity<{{ dtoType }}> update{{entity.name}}(Long id, {{dtoType}} {{dtoField}}){
+        return new ResponseEntity<>(HttpStatus.OK); 
+    }
+
+    public ResponseEntity<{{ dtoType }}> update{{entity.name}}(Long id, {{ dtoType }} {{ dtoField }}){
         ModelMapper modelMapper = new ModelMapper();
         {{ entity.name }} {{ entity.name | lower }} = {{entity.name | lower}}Repository.find{{ entity.name }}ById(id);
         if({{ entity.name | lower }} == null) {
@@ -85,7 +84,7 @@ public class {{serviceName}} {
         else {
         {% for property in entity.properties %}
         {% if (property | is_base_type) %}
-            {{entity.name | lower}}.set{{property.name | capitalize_first_letter}}({{entity.name|lower}}Dto.get{{property.name | capitalize_first_letter}}());
+            {{entity.name | lower}}.set{{property.name | capitalize_first_letter}}({{ dtoField }}.get{{property.name | capitalize_first_letter}}());
         {% else %}
             //{{entity.name | lower}}.set{{property.name | capitalize_first_letter}}(null);
         {% endif %}
@@ -96,7 +95,7 @@ public class {{serviceName}} {
         }
     }
 
-    public ResponseEntity<{{ entity.name }}DTO> create({{entity.name}}DTO {{entity.name|lower}}Dto){
+    public ResponseEntity<{{ dtoType }}> create({{ dtoType }} {{ entity.name|lower }}){
         {{entity.name}} {{entity.name | lower}} = new {{entity.name}}();
     {% for property in entity.properties %}
     {% if (property | is_base_type) %}

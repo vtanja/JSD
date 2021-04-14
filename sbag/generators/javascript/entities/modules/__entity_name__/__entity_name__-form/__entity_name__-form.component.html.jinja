@@ -1,7 +1,7 @@
 <div>
     <form [formGroup]="form">
     {% for property in entity.properties %}
-    {% if get_type(property.type) != get_type(entity) %}
+    {% if get_property_type(property.type) != get_property_type(entity) %}
         <br/>
         <label>{{property.name | capitalize}}</label>
     {% endif %}

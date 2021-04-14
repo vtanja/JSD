@@ -63,4 +63,14 @@ public class {{ controllerName }} {
         return {{ entityService }}.delete{{ entity.name }}(id);
     }
 
+    @GetMapping(path="/lists")
+    public ResponseEntity<?> getLists() {
+        try {
+            return {{ entityService }}.getLists();
+        }
+        catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
 }

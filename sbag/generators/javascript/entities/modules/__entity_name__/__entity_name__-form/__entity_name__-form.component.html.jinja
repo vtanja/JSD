@@ -1,13 +1,17 @@
 <div>
     <form [formGroup]="form">
     {% for property in entity.properties %}
-    {% if get_property_type(property.type) != get_property_type(entity) %}
-        <br/>
+    <br/>
         <label>{{property.name | capitalize}}</label>
-    {% endif %}
+    {% if get_property_type(property) == 'base' %}
         <br/>
 		<input class="form-control" type="{{ property | get_form_input_type }}" formControlName={{property.name}}>
         <br/>
+    {% elif get_property_type(property) == 'entity' %}
+        <div>entity</div>
+    {% else %}
+        <div>list</div>
+    {% endif %}    
 	{% endfor %}
     <input class="btn btn-primary" type="submit"
 			[disabled]="form.invalid" (click)="Submit()" />

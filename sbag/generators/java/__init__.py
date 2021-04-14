@@ -46,8 +46,10 @@ def get_association_type(prop):
     elif isinstance(prop, ManyToOne):
         return 'ManyToOne'
 
+
 def capitalize_first_letter(prop: str):
     return prop[0].upper() + prop[1:]
+
 
 def is_base_type(prop):
     if isinstance(prop.type, Entity):
@@ -84,7 +86,7 @@ def sbag_generate_java(metamodel, model, output_path, overwrite, debug, **custom
         'get_type': get_type,
         'get_association_type': get_association_type,
         'capitalize_first_letter': capitalize_first_letter,
-        'is_base_type', is_base_type
+        'is_base_type': is_base_type
     }
 
     # Run Jinja generator

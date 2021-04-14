@@ -22,11 +22,14 @@ def get_correct_type(prop):
             'Long': 'number'
         }.get(prop.ptype.name, prop.ptype.name)
 
+
 def format_property(prop: str):
     return re.sub(r"(\w)([A-Z])", r"\1 \2", prop)
 
+
 def first_letter_lower(string: str):
     return string[0].lower() + string[1:]
+
 
 def get_form_input_type(prop):
     """
@@ -41,6 +44,7 @@ def get_form_input_type(prop):
             'string': 'text',
             'boolean': 'checkbox'
         }.get(prop.type.name, prop.type.name)
+
 
 @generator('sbag', 'javascript')
 def sbag_generate_javascript(metamodel, model, output_path, overwrite, debug, **custom_args):

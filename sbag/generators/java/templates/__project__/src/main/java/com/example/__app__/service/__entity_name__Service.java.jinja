@@ -75,7 +75,13 @@ public class {{serviceName}} {
         return new ResponseEntity<>(HttpStatus.OK); 
     }
 
-    public ResponseEntity<?> delete{{entity.name}}(Long id){
-        return new ResponseEntity<>(HttpStatus.OK); 
+    public ResponseEntity<Void> delete{{entity.name}}(Long id){
+        try{
+            {{repositoryFieldName}}.deleteById(id);
+            return new ResponseEntity<>(HttpStatus.OK);
+        }
+        catch(Exception e){
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
     }
 }

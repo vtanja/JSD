@@ -24,16 +24,16 @@ public class {{ entity.name | capitalize }} {
     @OneToOne
     private {{ property.ptype.name }} {{ property.name }};
     {% elif property | get_association_type == 'ManyToMany'%}
-    {% if property.owner == '' %}
+    {% if property.atype.owner == '' %}
     @ManyToMany
     @JoinTable
     private Set<{{ property.ptype.name }}> {{ property.name }};
     {% else %}
-    @ManyToMany(mappedBy = "{{property.owner}}")
+    @ManyToMany(mappedBy = "{{property.atype.owner}}")
     private Set<{{ property.ptype.name }}> {{ property.name }};
     {% endif %}
     {% elif property | get_association_type == 'OneToMany'%}
-    @OneToMany(mappedBy = "{{property.owner}}")
+    @OneToMany(mappedBy = "{{property.atype.owner}}")
     private Set<{{ property.ptype.name }}> {{ property.name }};
     {% elif property | get_association_type == 'ManyToOne'%}
     @ManyToOne

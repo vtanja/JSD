@@ -16,7 +16,7 @@ import com.example.{{ app }}.repository.{{ entity.name | capitalize }}Repository
 import com.example.{{ app }}.exception.NotFoundException;
 {% for property in entity.properties %}
 {% if (property | get_type != 'base') %}
-import com.example.{{ app }}.model.{{property.type}};
+import com.example.{{ app }}.model.{{ property.ptype }};
 {% endif %}
 {% endfor %}
 

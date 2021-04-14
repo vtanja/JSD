@@ -3,7 +3,7 @@ from os.path import dirname, exists, join
 
 from sbag.language import Entity
 from sbag.generators.java import get_type as get_property_type
-from sbag.generators.java import plural, is_base_type
+from sbag.generators.java import plural
 from textx import generator
 from textxjinja import textx_jinja_generator
 import re
@@ -71,8 +71,7 @@ def sbag_generate_javascript(metamodel, model, output_path, overwrite, debug, **
         'format_property': format_property,
         'first_letter_lower': first_letter_lower,
         'get_property_type': get_property_type,
-        'get_form_input_type': get_form_input_type,
-        'is_base_type': is_base_type
+        'get_form_input_type': get_form_input_type
     }
 
     config['entities'] = model.entities

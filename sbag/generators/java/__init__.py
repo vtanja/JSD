@@ -50,13 +50,6 @@ def get_association_type(prop):
 def capitalize_first_letter(prop: str):
     return prop[0].upper() + prop[1:]
 
-
-def is_base_type(prop):
-    if isinstance(prop.type, Entity):
-        return False
-    else:
-        return True
-
 @generator('sbag', 'java')
 def sbag_generate_java(metamodel, model, output_path, overwrite, debug, **custom_args):
     "Generator for generating java from sbag descriptions"
@@ -85,8 +78,7 @@ def sbag_generate_java(metamodel, model, output_path, overwrite, debug, **custom
         'plural': plural,
         'get_type': get_type,
         'get_association_type': get_association_type,
-        'capitalize_first_letter': capitalize_first_letter,
-        'is_base_type': is_base_type
+        'capitalize_first_letter': capitalize_first_letter
     }
 
     # Run Jinja generator

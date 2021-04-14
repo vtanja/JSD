@@ -3,7 +3,20 @@ import { Component } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { I{{entity.name}} } from 'src/app/shared/model/{{entity_name}}.model';
+{% for property in entity.properties %}
+{% if property | get_property_type != 'base' %}
+import { I{{ property.ptype }} } from 'src/app/shared/model/{{property.ptype | lower}}.model';
+{% endif %}
+{% endfor %}
 import { {{entity.name}}Service } from '../{{entity_name}}.service';
+
+interface ISelectLists {
+{% for property in entity.properties %}
+{% if property | get_property_type != 'base' %}
+	{{ property.name }}List: I{{ property.ptype }}[],
+{% endif %}
+{% endfor %}
+}
 
 @Component({
 	selector: 'app-{{entity_name}}-form',
@@ -12,11 +25,18 @@ import { {{entity.name}}Service } from '../{{entity_name}}.service';
 })
 
 export class {{entity.name}}FormComponent {
-	
 	update: boolean;
 	id: number;
 	entity: I{{ entity.name }} | undefined;
 	form: FormGroup = new FormGroup({});
+
+	selectLists: ISelectLists = {
+	{% for property in entity.properties %}
+	{% if property | get_property_type != 'base' %}
+		{{ property.name }}List: [],
+	{% endif %}
+	{% endfor %}
+	}
 
     constructor(private service: {{entity.name}}Service, private router: Router, private activatedRoute: ActivatedRoute, private fb: FormBuilder){
 		this.form = this.fb.group({
@@ -24,6 +44,16 @@ export class {{entity.name}}FormComponent {
 			'{{ property.name }}': new FormControl(),
     		{% endfor %}
         });
+
+		this.service.getLists().subscribe(
+			(res: any) => {
+			    this.selectLists = res;
+			},
+			(err: any) => {
+				alert("error");
+				console.log(err);
+			}
+	  	);
 
 		if(this.router.url.includes('update')){
 			this.update = true;

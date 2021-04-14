@@ -1,7 +1,7 @@
 from os import mkdir, getcwd
 from os.path import dirname, exists, join
 
-from sbag.language import Entity
+from sbag.language import Entity, BaseType
 from sbag.generators.java import get_type as get_property_type
 from sbag.generators.java import plural
 from textx import generator
@@ -41,7 +41,7 @@ def get_form_input_type(prop):
             'float': 'number',
             'string': 'text',
             'boolean': 'checkbox'
-        }.get(prop.type.name, prop.type.name)
+        }.get(prop.ptype.name, prop.ptype.name)
 
 
 @generator('sbag', 'javascript')

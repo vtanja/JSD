@@ -72,6 +72,7 @@ def sbag_generate_javascript(metamodel, model, output_path, overwrite, debug, **
             return false
         else:
             return true
+
     def format_property(prop: str):
         return re.sub(r"(\w)([A-Z])", r"\1 \2", prop)
 
@@ -82,7 +83,7 @@ def sbag_generate_javascript(metamodel, model, output_path, overwrite, debug, **
         'get_correct_type': get_correct_type,
         'plural': plural,
         'get_form_input_type': get_form_input_type,
-        'is_base_type': is_base_type
+        'is_base_type': is_base_type,
         'format_property': format_property,
         'first_letter_lower': first_letter_lower,
     }

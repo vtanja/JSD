@@ -15,7 +15,7 @@ import com.example.{{ app }}.model.{{ entity.name }};
 import com.example.{{ app }}.repository.{{ entity.name | capitalize }}Repository;
 import com.example.{{ app }}.exception.NotFoundException;
 {% for property in entity.properties %}
-{% if (property | is_base_type)==False %}
+{% if (property | get_type != 'base') %}
 import com.example.{{ app }}.model.{{property.type}};
 {% endif %}
 {% endfor %}
@@ -71,10 +71,6 @@ public class {{serviceName}} {
         return new ResponseEntity<>({{ dtoField }}, HttpStatus.OK);
     }
 
-    public ResponseEntity<{{ dtoType }}> update{{entity.name}}(Long id, {{dtoType}} {{dtoField}}){
-        return new ResponseEntity<>(HttpStatus.OK); 
-    }
-
     public ResponseEntity<{{ dtoType }}> update{{entity.name}}(Long id, {{ dtoType }} {{ dtoField }}){
         ModelMapper modelMapper = new ModelMapper();
         {{ entity.name }} {{ entity.name | lower }} = {{entity.name | lower}}Repository.find{{ entity.name }}ById(id);
@@ -83,7 +79,7 @@ public class {{serviceName}} {
         }
         else {
         {% for property in entity.properties %}
-        {% if (property | is_base_type) %}
+        {% if  property | get_type == 'base' %}
             {{entity.name | lower}}.set{{property.name | capitalize_first_letter}}({{ dtoField }}.get{{property.name | capitalize_first_letter}}());
         {% else %}
             //{{entity.name | lower}}.set{{property.name | capitalize_first_letter}}(null);
@@ -98,7 +94,7 @@ public class {{serviceName}} {
     public ResponseEntity<{{ dtoType }}> create({{ dtoType }} {{ entity.name|lower }}){
         {{entity.name}} {{entity.name | lower}} = new {{entity.name}}();
     {% for property in entity.properties %}
-    {% if (property | is_base_type) %}
+    {% if property | get_type == 'base' %}
         {{entity.name | lower}}.set{{property.name | capitalize_first_letter}}({{entity.name|lower}}Dto.get{{property.name | capitalize_first_letter}}());
     {% else %}
         {{entity.name | lower}}.set{{property.name | capitalize_first_letter}}(null);

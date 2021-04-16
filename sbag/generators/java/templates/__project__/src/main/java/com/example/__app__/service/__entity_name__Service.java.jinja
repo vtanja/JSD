@@ -1,7 +1,8 @@
 package com.example.{{ app }}.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.modelmapper.ModelMapper;
-import org.springframework.boot.configurationprocessor.json.JSONException;
 import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -18,13 +19,13 @@ import com.example.{{ app }}.repository.{{ entity.name | capitalize }}Repository
 import com.example.{{ app }}.exception.NotFoundException;
 {% for property in entity.properties %}
 {% if (property | get_type != 'base') %}
+import com.example.{{ app }}.model.{{property.ptype.name}};
 import com.example.{{ app }}.dto.{{ property.ptype }}DTO;
+import com.example.{{ app }}.service.{{property.ptype}}Service;
 {% endif %}
 {% endfor %}
 
-import java.util.List;
-import java.util.ArrayList;
-import java.util.LinkedList;
+import java.util.*;
 
 {% set classType = (entity.name) %}
 {% set dtoType = (entity.name) + 'DTO' %}
@@ -41,9 +42,24 @@ import java.util.LinkedList;
 public class {{serviceName}} {
     @Autowired
     private {{ repositoryName }} {{repositoryFieldName}};
-
     @Autowired
     private ModelMapper modelMapper;
+
+{% if entity | has_associations == True %}
+{% for property in entity.properties %}
+{% if property | get_type != 'base' %}
+    @Autowired
+    private {{property.ptype}}Service {{property.ptype.name | first_letter_lower}}Service;
+{% endif %}
+{% endfor %}
+{% endif %}
+
+    public {{entity.name}} getById(Long id){
+        if ({{repositoryFieldName}}.findById(id).isPresent())
+            return {{repositoryFieldName}}.findById(id).get();
+        else
+            return null;
+    }
 
     public ResponseEntity<Integer> get{{entity.name | plural}}Count(){
         return new ResponseEntity<>({{repositoryFieldName}}.findAll().size(), HttpStatus.OK);
@@ -94,13 +110,32 @@ public class {{serviceName}} {
         }
     }
 
-    public ResponseEntity<{{ dtoType }}> create({{ dtoType }} {{entity.name|lower}}Dto){
+    public ResponseEntity<{{ dtoDetailType }}> create({{ dtoDetailType }} {{entity.name|lower}}Dto){
         {{entity.name}} {{entity.name | lower}} = new {{entity.name}}();
     {% for property in entity.properties %}
     {% if property | get_type == 'base' %}
         {{entity.name | lower}}.set{{property.name | capitalize_first_letter}}({{entity.name|lower}}Dto.get{{property.name | capitalize_first_letter}}());
+    
+    {% elif property | get_type == 'entity' %}
+        if({{entity.name|lower}}Dto.get{{property.name | capitalize_first_letter}}() != null) {
+            {{entity.name | lower}}.set{{property.name | capitalize_first_letter}}(
+                {{property.ptype.name | first_letter_lower}}Service.getById({{entity.name|lower}}Dto.getId())
+            );
+        }
+        else 
+            {{entity.name | lower}}.set{{property.name | capitalize_first_letter}}(null);
+        
     {% else %}
-        {{entity.name | lower}}.set{{property.name | capitalize_first_letter}}(null);
+        if({{entity.name|lower}}Dto.get{{property.name | capitalize_first_letter}}() != null) {
+            Set<{{property.ptype.name}}> {{ property.name | lower }} = new HashSet<>();
+            for ({{property.ptype.name}}DTO dto: {{entity.name|lower}}Dto.get{{property.name | capitalize_first_letter}}()) {
+                {{ property.name | lower }}.add({{property.ptype.name | first_letter_lower}}Service.getById(dto.getId()));
+            }
+            {{entity.name | lower}}.set{{property.name | capitalize_first_letter}}({{ property.name | lower }});
+        }
+        else
+            {{entity.name | lower}}.set{{property.name | capitalize_first_letter}}(null);
+
 	{% endif %}
     {% endfor %}
         {{entity.name | lower}}Repository.save({{entity.name | lower}});
@@ -117,13 +152,22 @@ public class {{serviceName}} {
         }
     }
 
-    public ResponseEntity<?> getLists() throws JSONException{
-        return new ResponseEntity<>(HttpStatus.OK);
+    public ResponseEntity<String> getLists() throws JsonProcessingException{
+        HashMap<String,Object> map = new HashMap<>();
+        
+    {% for property in entity.properties %}
+    {% if property | get_type != 'base' %}
+        List<{{property.ptype}}DTO> {{ property.name | first_letter_lower }} = {{property.ptype.name | first_letter_lower}}Service.getAll();
+        map.put("{{ property.name }}List", {{ property.name | first_letter_lower }});
+    {% endif %}
+    {% endfor %}
+        String json = new ObjectMapper().writeValueAsString(map);
+        return new ResponseEntity<>(json, HttpStatus.OK);
     }
 
     public List<{{ dtoType }}>getAll(){
         List<{{classType}}> {{fieldList}} = {{repositoryFieldName}}.findAll();
-        List<{{dtoType}}> {{dtoFieldList}} = new LinkedList<{{dtoType}}>();
+        List<{{dtoType}}> {{dtoFieldList}} = new LinkedList<>();
         for({{classType}} {{field}}: {{fieldList}}) {
             {{ dtoType }} {{ dtoField }} = modelMapper.map({{field}}, {{ dtoType }}.class);
             {{ dtoFieldList }}.add({{ dtoField }});

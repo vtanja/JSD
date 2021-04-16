@@ -23,12 +23,8 @@ import com.example.{{ app }}.service.{{entity.name}}Service;
 @Slf4j
 @RequestMapping( path = "/{{ entity.name | lower }}")
 public class {{ controllerName }} {
-    private final {{ entity.name }}Service {{ entityService }};
-
     @Autowired
-    public {{ controllerName }}({{ entity.name }}Service service){
-        this.{{ entityService }} = service;
-    }
+    private {{ entity.name }}Service {{ entityService }};
 
     @GetMapping(path="/count")
     public ResponseEntity<Integer> get{{ entities }}Count() {
@@ -49,7 +45,7 @@ public class {{ controllerName }} {
     }
 
     @PostMapping()
-    public ResponseEntity<{{ DtoType }}> create(@RequestBody {{ DtoType }} {{ entityDto }}) {
+    public ResponseEntity<{{ DtoDetailType }}> create(@RequestBody {{ DtoDetailType }} {{ entityDto }}) {
         return {{ entityService }}.create({{ entityDto }});
     }
 
@@ -64,7 +60,7 @@ public class {{ controllerName }} {
     }
 
     @GetMapping(path="/lists")
-    public ResponseEntity<?> getLists() {
+    public ResponseEntity<String> getLists() {
         try {
             return {{ entityService }}.getLists();
         }

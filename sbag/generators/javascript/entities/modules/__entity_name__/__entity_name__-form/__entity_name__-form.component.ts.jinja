@@ -10,6 +10,7 @@ import { I{{ property.ptype }} } from 'src/app/shared/model/{{property.ptype | l
 {% endfor %}
 import { {{entity.name}}Service } from '../{{entity_name}}.service';
 
+{% if entity | has_associations %}
 interface ISelectLists {
 {% for property in entity.properties %}
 {% if property | get_property_type != 'base' %}
@@ -17,6 +18,7 @@ interface ISelectLists {
 {% endif %}
 {% endfor %}
 }
+{% endif %}
 
 @Component({
 	selector: 'app-{{entity_name}}-form',
@@ -30,6 +32,7 @@ export class {{entity.name}}FormComponent {
 	entity: I{{ entity.name }} | undefined;
 	form: FormGroup = new FormGroup({});
 
+	{% if entity | has_associations %}
 	selectLists: ISelectLists = {
 	{% for property in entity.properties %}
 	{% if property | get_property_type != 'base' %}
@@ -37,6 +40,7 @@ export class {{entity.name}}FormComponent {
 	{% endif %}
 	{% endfor %}
 	}
+	{% endif %}
 
     constructor(private service: {{entity.name}}Service, private router: Router, private activatedRoute: ActivatedRoute, private fb: FormBuilder){
 		this.form = this.fb.group({
@@ -45,15 +49,18 @@ export class {{entity.name}}FormComponent {
     		{% endfor %}
         });
 
+		{% if entity | has_associations == True %}
 		this.service.getLists().subscribe(
 			(res: any) => {
 			    this.selectLists = res;
+				console.log(res);
 			},
 			(err: any) => {
 				alert("error");
 				console.log(err);
 			}
 	  	);
+		{% endif %}
 
 		if(this.router.url.includes('update')){
 			this.update = true;

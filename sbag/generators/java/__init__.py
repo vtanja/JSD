@@ -60,6 +60,7 @@ def sbag_generate_java(metamodel, model, output_path, overwrite, debug, **custom
     config['project'] = model.config.project.capitalize()
     config['app'] = model.config.project.lower()
 
+    setup_paths_for_generation(config, model)
     # If output path is not specified take the current working directory
     if output_path is None:
         output_path = getcwd()
@@ -94,3 +95,25 @@ def check_and_setup_config(model):
         model.config.group = 'com.example'
     if model.config.description == '':
         model.config.description = 'Describe your project here'
+
+def setup_paths_for_generation(config, model):
+    entity_names = [ent.name.lower() for ent in model.entities]
+    config['controllers'] = new_controllers(entity_names, model.paths)
+    config['paths'] = new_paths_for_existing_controllers(entity_names, model.paths)
+
+
+def new_controllers(entity_names, paths):
+    new_controllers = []
+    for path in paths:
+        if path.resource not in entity_names:
+            new_controllers.append(path)
+    return new_controllers
+
+def new_paths_for_existing_controllers(entity_names, paths):
+    controller_paths = {}
+    for path in paths:
+        if path.resource in entity_names:
+            if path.resource.capitalize() not in controller_paths:
+                controller_paths[path.resource.capitalize()] = []
+            controller_paths[path.resource.capitalize()].append(path)
+    return controller_paths

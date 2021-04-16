@@ -82,3 +82,11 @@ class ManyToMany:
         """Many to many entity association type."""
         self.parent = parent
         self.owner = owner
+
+class Path:
+
+    def __init__(self, resource, content, parent):
+        """Create instance of path."""
+        self.resource = resource
+        self.content = content
+        self.parent = parent

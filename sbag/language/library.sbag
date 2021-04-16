@@ -42,3 +42,7 @@ entity Address:
             return: Publisher[]
     ;
 ;
+/custom
+    get:
+        return: String
+;

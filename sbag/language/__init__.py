@@ -1,6 +1,6 @@
 import os
 from textx import language, metamodel_from_file
-from .builtins import Entity, BaseType, Config, Property, OneToOne, OneToMany, ManyToOne, ManyToMany
+from .builtins import *
 
 current_dir = os.path.dirname(__file__)
 
@@ -18,7 +18,9 @@ def sbag_language():
         'Long': BaseType(None, 'Long')
     }
     mm = metamodel_from_file(os.path.join(current_dir, 'sbag.tx'),
-                             classes=[BaseType, Entity, Config, Property, OneToOne, OneToMany, ManyToOne, ManyToMany],
+                             classes=[BaseType, Entity, Config, Property,
+                                      OneToOne, OneToMany, ManyToOne, ManyToMany,
+                                      Path],
                              builtins=builtin_types,
                              debug=True)
 

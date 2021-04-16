@@ -1,0 +1,64 @@
+package com.example.{{ app }}.controller;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.web.bind.annotation.*;
+import com.example.{{ app }}.security.JwtTokenUtils;
+import com.example.{{ app }}.model.User;
+import com.example.{{ app }}.repository.UserRepository;
+import com.example.{{ app }}.repository.RoleRepository;
+import com.example.{{ app }}.dto.AuthRequestDTO;
+import com.example.{{ app }}.dto.UserTokenStateDTO;
+
+
+@RestController
+@RequestMapping(value = "/auth", produces = MediaType.APPLICATION_JSON_VALUE)
+public class AuthController {
+
+  @Lazy @Autowired AuthenticationManager authenticationManager;
+
+  @Autowired JwtTokenUtils jwtTokenUtils;
+
+  @Autowired UserRepository userRepository;
+
+  @Lazy @Autowired PasswordEncoder passwordEncoder;
+
+  @Autowired
+  RoleRepository roleRepository;
+
+   @PostMapping(path = "/login")
+  public ResponseEntity<?> login(@RequestBody AuthRequestDTO request) throws Exception {
+
+    System.out.println(request.getUsername() + " " + request.getPassword());
+    try {
+      Authentication authenticate =
+          authenticationManager.authenticate(
+              new UsernamePasswordAuthenticationToken(
+                  request.getUsername(), request.getPassword()));
+
+      SecurityContextHolder.getContext().setAuthentication(authenticate);
+
+      Authentication loggedInUser = SecurityContextHolder.getContext().getAuthentication();
+
+      User user = userRepository.findByUsername(loggedInUser.getName());
+      String jwt = jwtTokenUtils.generateToken(user.getUsername());
+      int experiesIn = jwtTokenUtils.getExpiredIn();
+      String refresh = jwtTokenUtils.generateRefreshToken(user.getUsername());
+      UserTokenStateDTO userTokenStateDTO = new UserTokenStateDTO(jwt,experiesIn,refresh);
+
+      return new ResponseEntity<>(
+              userTokenStateDTO, HttpStatus.ACCEPTED);
+    } catch (Exception ex) {
+        throw new Exception(ex.getMessage());
+    }
+  }
+
+}

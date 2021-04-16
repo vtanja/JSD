@@ -37,13 +37,13 @@ def get_association_type(prop):
     """
         Based on property returns string saying if its OneToMany, ManyToMany, OneToOne or ManyToOne association
         """
-    if isinstance(prop, OneToMany):
+    if isinstance(prop.atype, OneToMany):
         return 'OneToMany'
-    elif isinstance(prop, ManyToMany):
+    elif isinstance(prop.atype, ManyToMany):
         return 'ManyToMany'
-    elif isinstance(prop, OneToOne):
+    elif isinstance(prop.atype, OneToOne):
         return 'OneToOne'
-    elif isinstance(prop, ManyToOne):
+    elif isinstance(prop.atype, ManyToOne):
         return 'ManyToOne'
 
 

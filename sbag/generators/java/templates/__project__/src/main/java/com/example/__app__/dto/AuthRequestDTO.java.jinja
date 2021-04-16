@@ -1,0 +1,20 @@
+package com.example.{{ app }}.dto;
+
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
+@Setter
+public class AuthRequestDTO {
+  private String username;
+  private String password;
+
+  public AuthRequestDTO() {
+    super();
+  }
+
+  public AuthRequestDTO(String username, String password) {
+    this.setUsername(username);
+    this.setPassword(password);
+  }
+}

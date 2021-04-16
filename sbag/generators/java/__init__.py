@@ -1,7 +1,7 @@
 from os import mkdir, getcwd
 from os.path import dirname, exists, join
 
-from sbag.language import Config, BaseType, OneToMany, ManyToMany, ManyToOne, OneToOne
+from sbag.language import Config, BaseType, Entity, OneToMany, ManyToMany, ManyToOne, OneToOne
 from textx import generator
 from textxjinja import textx_jinja_generator
 
@@ -50,6 +50,21 @@ def get_association_type(prop):
 def capitalize_first_letter(prop: str):
     return prop[0].upper() + prop[1:]
 
+
+def first_letter_lower(string: str):
+    return string[0].lower() + string[1:]
+
+
+def has_associations(entity: Entity):
+    """
+    Returns true if entity has any associations as properties
+    """
+    for prop in entity.properties:
+        if hasattr(prop, "atype"):
+            return True
+    return False
+
+
 @generator('sbag', 'java')
 def sbag_generate_java(metamodel, model, output_path, overwrite, debug, **custom_args):
     "Generator for generating java from sbag descriptions"
@@ -78,7 +93,9 @@ def sbag_generate_java(metamodel, model, output_path, overwrite, debug, **custom
         'plural': plural,
         'get_type': get_type,
         'get_association_type': get_association_type,
-        'capitalize_first_letter': capitalize_first_letter
+        'capitalize_first_letter': capitalize_first_letter,
+        'first_letter_lower': first_letter_lower,
+        'has_associations': has_associations
     }
 
     # Run Jinja generator

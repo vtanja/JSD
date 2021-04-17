@@ -54,55 +54,61 @@ export class {{entity.name}}FormComponent {
 			(res: any) => {
 			    this.selectLists = res;
 				console.log(res);
-				if(this.router.url.includes('update')){
-					this.update = true;
-					this.title = "Update {{entity.name}}";
-					this.id = Number(this.activatedRoute.snapshot.paramMap.get('id'));
-					console.log(this.id);
-					this.service.get{{entity.name}}(this.id).subscribe(
-						(res: any) => {
-							this.entity = res;
-							{% for property in entity.properties %}
-							{% if property | get_property_type == 'entity' %}
-							let {{property.name}}Val = null
-							if(this.entity?.{{property.name}} != null){
-								{{property.name}}Val = this.selectLists.{{ property.name }}List.find(el => el.id == this.entity?.{{property.name}}.id)
-							}
-							{% elif property | get_property_type == 'list' %}
-							let {{property.name}}Val: (I{{property.ptype.name}} | undefined)[] = []
-							this.entity?.{{property.name}}.forEach(element => {
-								let el = this.selectLists.{{ property.name }}List.find(e => e.id == element.id)
-								{{property.name}}Val.push(el)
-							});
-							{% endif %}
-							{% endfor %}
-							this.form.setValue({
-							{% for property in entity.properties %}
-							{% if property | get_property_type != 'base' %}
-								{{property.name}}: {{property.name}}Val,
-							{% else %}
-								{{property.name}}: this.entity?.{{property.name}},
-							{% endif %}
-							{% endfor %}
-							})
-						},
-						(err: any) => {
-							alert("error");
-							console.log(err);
-						}
-					);
-				}
-				else {
-					this.id = 0;
-					this.update = false;
-				}
+				this.loadData();
 			},
 			(err: any) => {
 				alert("error");
 				console.log(err);
 			}
 	  	);
+		{% else %}
+		this.loadData();
 		{% endif %}
+	}
+
+	loadData(){
+		if(this.router.url.includes('update')){
+			this.update = true;
+			this.title = "Update {{entity.name}}";
+			this.id = Number(this.activatedRoute.snapshot.paramMap.get('id'));
+			console.log(this.id);
+			this.service.get{{entity.name}}(this.id).subscribe(
+				(res: any) => {
+					this.entity = res;
+					{% for property in entity.properties %}
+					{% if property | get_property_type == 'entity' %}
+					let {{property.name}}Val = null
+					if(this.entity?.{{property.name}} != null){
+						{{property.name}}Val = this.selectLists.{{ property.name }}List.find(el => el.id == this.entity?.{{property.name}}.id)
+					}
+					{% elif property | get_property_type == 'list' %}
+					let {{property.name}}Val: (I{{property.ptype.name}} | undefined)[] = []
+					this.entity?.{{property.name}}.forEach(element => {
+						let el = this.selectLists.{{ property.name }}List.find(e => e.id == element.id)
+						{{property.name}}Val.push(el)
+					});
+					{% endif %}
+					{% endfor %}
+					this.form.setValue({
+					{% for property in entity.properties %}
+					{% if property | get_property_type != 'base' %}
+						{{property.name}}: {{property.name}}Val,
+					{% else %}
+						{{property.name}}: this.entity?.{{property.name}},
+					{% endif %}
+					{% endfor %}
+					})
+				},
+				(err: any) => {
+					alert("error");
+					console.log(err);
+				}
+			);
+		}
+		else {
+			this.id = 0;
+			this.update = false;
+		}
 	}
 
 	submit() {

@@ -82,5 +82,7 @@ def sbag_generate_javascript(metamodel, model, output_path, overwrite, debug, **
         config['properties'] = entity.properties
         config['entity'] = entity
         config['entity_name'] = entity.name.lower()
+        if model.config.project != None:
+            config['app_name'] =  model.config.project
         textx_jinja_generator(entities_folder, output_path, config, overwrite,
                               filters)

@@ -5,7 +5,7 @@ import { HeaderComponent } from './header/header.component';
 import { FooterComponent } from './footer/footer.component';
 import { HomepageComponent } from './homepage/homepage.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
-import { AppRoutingModule } from './../app-routing.module'
+import { AppRoutingModule } from './../app-routing.module';
 
 
 @NgModule({

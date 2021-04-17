@@ -3,10 +3,8 @@ import { Component } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { I{{entity.name}} } from 'src/app/shared/model/{{entity_name}}.model';
-{% for property in entity.properties %}
-{% if property | get_property_type != 'base' %}
-import { I{{ property.ptype }} } from 'src/app/shared/model/{{property.ptype | lower}}.model';
-{% endif %}
+{% for property in entity | get_unique_properties %}
+import { I{{ property }} } from 'src/app/shared/model/{{property | lower}}.model';
 {% endfor %}
 import { {{entity.name}}Service } from '../{{entity_name}}.service';
 
@@ -31,6 +29,7 @@ export class {{entity.name}}FormComponent {
 	id: number;
 	entity: I{{ entity.name }} | undefined;
 	form: FormGroup = new FormGroup({});
+	title: String = "Create {{entity.name}}";
 
 	{% if entity | has_associations %}
 	selectLists: ISelectLists = {
@@ -43,6 +42,7 @@ export class {{entity.name}}FormComponent {
 	{% endif %}
 
     constructor(private service: {{entity.name}}Service, private router: Router, private activatedRoute: ActivatedRoute, private fb: FormBuilder){
+		this.hideAlerts();
 		this.form = this.fb.group({
 			{% for property in entity.properties %}
 			'{{ property.name }}': new FormControl(),
@@ -64,14 +64,33 @@ export class {{entity.name}}FormComponent {
 
 		if(this.router.url.includes('update')){
 			this.update = true;
+			this.title = "Update {{entity.name}}";
 			this.id = Number(this.activatedRoute.snapshot.paramMap.get('id'));
 			console.log(this.id);
 			this.service.get{{entity.name}}(this.id).subscribe(
       			(res: any) => {
 					this.entity = res;
+					{% for property in entity.properties %}
+					{% if property | get_property_type == 'entity' %}
+					let {{property.name}}Val = null
+					if(this.entity?.{{property.name}} != null){
+						{{property.name}}Val = this.selectLists.{{ property.name }}List.find(el => el.id == this.entity?.{{property.name}}.id)
+					}
+					{% elif property | get_property_type == 'list' %}
+					let {{property.name}}Val: (I{{property.ptype.name}} | undefined)[] = []
+					this.entity?.{{property.name}}.forEach(element => {
+						let el = this.selectLists.{{ property.name }}List.find(e => e.id == element.id)
+						{{property.name}}Val.push(el)
+					});
+					{% endif %}
+					{% endfor %}
 					this.form.setValue({
 					{% for property in entity.properties %}
+					{% if property | get_property_type != 'base' %}
+						{{property.name}}: {{property.name}}Val,
+					{% else %}
 						{{property.name}}: this.entity?.{{property.name}},
+					{% endif %}
 					{% endfor %}
 					})
 				},
@@ -87,7 +106,7 @@ export class {{entity.name}}FormComponent {
 		}
 	}
 
-	Submit() {
+	submit() {
 		{% for property in entity.properties %}
 		let {{property.name}}Value = this.form.get('{{property.name}}')?.value
 		{% endfor %}
@@ -100,29 +119,57 @@ export class {{entity.name}}FormComponent {
 		if(this.update) {
 			this.service.update{{entity.name}}(this.id, dto).subscribe(
 			(res: any) => {
-				alert('updated');
+				this.alertSuccess();
 				this.entity = res;
-				this.form.setValue({
-				{% for property in entity.properties %}
-					{{property.name}}: this.entity?.{{property.name}},
-				{% endfor %}
-				})
 			},
 			(err) => {
-				alert(err.message);
+				this.alertWarn();
 				console.log(err);
 			});
 		}
 		else {
 			this.service.create{{entity.name}}(dto).subscribe(
 			(res) => {
-				alert('created');
+				this.alertSuccess();
 				this.form.reset()
 			},
 			(err) => {
-				alert(err.message);
+				this.alertWarn();
 				console.log(err);
 			});
+		}
+	}
+
+	hideAlerts() {
+		let successAlert = document.getElementById("successAlert");
+		if(successAlert != null){
+			successAlert.style.display = "none"
+		}
+		let warnAlert = document.getElementById("warnAlert");
+		if(warnAlert != null){
+			warnAlert.style.display = "none"
+		}
+	}
+
+	alertSuccess(){
+		let successAlert = document.getElementById("successAlert");
+		if(successAlert != null){
+			successAlert.style.display = "block"
+		}
+		let warnAlert = document.getElementById("warnAlert");
+		if(warnAlert != null){
+			warnAlert.style.display = "none"
+		}
+	}
+
+	alertWarn(){
+		let successAlert = document.getElementById("successAlert");
+		if(successAlert != null){
+			successAlert.style.display = "none"
+		}
+		let warnAlert = document.getElementById("warnAlert");
+		if(warnAlert != null){
+			warnAlert.style.display = "block"
 		}
 	}
 }

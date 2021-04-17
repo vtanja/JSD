@@ -50,7 +50,7 @@ public class {{ controllerName }} {
     }
 
     @PutMapping(path = "/{id}")
-    public ResponseEntity<{{ DtoType }}> update(@PathVariable Long id, @RequestBody {{ DtoType }} {{ entityDto }}) {
+    public ResponseEntity<{{ DtoDetailType }}> update(@PathVariable Long id, @RequestBody {{ DtoDetailType }} {{ entityDto }}) {
         return {{ entityService }}.update{{ entity.name }}(id, {{ entityDto }});
     }
 

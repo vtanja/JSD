@@ -3,7 +3,7 @@ from os.path import dirname, exists, join
 
 from sbag.language import Entity, BaseType
 from sbag.generators.java import get_type as get_property_type
-from sbag.generators.java import plural, first_letter_lower, has_associations
+from sbag.generators.java import plural, first_letter_lower, has_associations, capitalize_first_letter, get_unique_properties
 from textx import generator
 from textxjinja import textx_jinja_generator
 import re
@@ -66,7 +66,9 @@ def sbag_generate_javascript(metamodel, model, output_path, overwrite, debug, **
         'first_letter_lower': first_letter_lower,
         'get_property_type': get_property_type,
         'get_form_input_type': get_form_input_type,
-        'has_associations': has_associations
+        'has_associations': has_associations,
+        'capitalize_first_letter': capitalize_first_letter,
+        'get_unique_properties': get_unique_properties
     }
 
     config['entities'] = model.entities

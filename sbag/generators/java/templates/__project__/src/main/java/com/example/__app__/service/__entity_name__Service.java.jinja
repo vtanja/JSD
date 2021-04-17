@@ -1,7 +1,6 @@
 package com.example.{{ app }}.service;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.Gson;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -225,8 +224,9 @@ public class {{serviceName}} {
         }
     }
 
-    public ResponseEntity<String> getLists() throws JsonProcessingException{
+    public ResponseEntity<String> getLists(){
         HashMap<String,Object> map = new HashMap<>();
+        Gson gson = new Gson();
         
     {% for property in entity.properties %}
     {% if property | get_type != 'base' %}
@@ -234,7 +234,7 @@ public class {{serviceName}} {
         map.put("{{ property.name }}List", {{ property.name | first_letter_lower }});
     {% endif %}
     {% endfor %}
-        String json = new ObjectMapper().writeValueAsString(map);
+        String json = gson.toJson(map);
         return new ResponseEntity<>(json, HttpStatus.OK);
     }
 

@@ -10,10 +10,8 @@ import { environment } from 'src/environments/environment';
 {% set selectLists = 'ISelectLists' %}
 
 import { {{interface_name}} } from 'src/app/shared/model/{{entity_name}}.model';
-{% for property in entity.properties %}
-{% if property | get_property_type != 'base' %}
-import { I{{ property.ptype }} } from 'src/app/shared/model/{{property.ptype | lower}}.model';
-{% endif %}
+{% for property in entity | get_unique_properties %}
+import { I{{ property }} } from 'src/app/shared/model/{{property | lower}}.model';
 {% endfor %}
 
 interface {{ selectLists }} {

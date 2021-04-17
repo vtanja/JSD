@@ -19,14 +19,14 @@
             --
         </option>
         <option *ngFor="let obj of selectLists.{{ property.name }}List" [ngValue]="obj">
-            {{openBrackets}}obj.id{{closeBrackets}}
+            {{property.ptype.name}}({{openBrackets}}obj.id{{closeBrackets}})
         </option>
     </select>
     <br/>
 {% else %}
     <select multiple class="form-control" formControlName={{property.name}}>
         <option *ngFor="let obj of selectLists.{{ property.name }}List" [value]="obj">
-            {{openBrackets}}obj.id{{closeBrackets}}
+            {{property.ptype.name}}({{openBrackets}}obj.id{{closeBrackets}})
         </option>
     </select>
     <br/>

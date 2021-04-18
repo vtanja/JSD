@@ -1,0 +1,51 @@
+{% set openBrackets = '{{' %}
+{% set closeBrackets = '}}' %}
+<div style="width: 50%; margin:auto;">
+    <br/>
+    <h2>{{openBrackets}}title{{closeBrackets}}</h2>
+    <form [formGroup]="form">
+    {% for property in entity.properties %}
+{% if property.name != 'id'%}
+    <label>{{property.name | capitalize_first_letter | format_property}}</label>
+{%endif%}
+{% if property | get_property_type == 'base' %}
+{% if property.name != 'id'%}
+    <input class="form-control" type="{{ property | get_form_input_type }}" formControlName={{property.name}}>
+{% endif %}
+    <br/>
+{% elif property | get_property_type == 'entity' %}
+    <select class="form-control" formControlName={{property.name}}>
+        <option [ngValue]="null">
+            --
+        </option>
+        <option *ngFor="let obj of selectLists.{{ property.name }}List" [ngValue]="obj">
+            {{property.ptype.name}}({{openBrackets}}obj.id{{closeBrackets}})
+        </option>
+    </select>
+    <br/>
+{% else %}
+    <select multiple class="form-control" formControlName={{property.name}}>
+        <option *ngFor="let obj of selectLists.{{ property.name }}List" [value]="obj">
+            {{property.ptype.name}}({{openBrackets}}obj.id{{closeBrackets}})
+        </option>
+    </select>
+    <br/>
+{% endif %}    
+{% endfor %}
+    <div id="successAlert" style="display: none" class="alert alert-success alert-dismissible fade show" role="alert">
+        <strong>Success!</strong>
+        <button type="button" class="close" (click)="hideAlerts()" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div id="warnAlert" style="display: none" class="alert alert-warning alert-dismissible fade show" role="alert">
+        <strong>Something went wrong!</strong> Please try again later
+        <button type="button" class="close" (click)="hideAlerts()" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <input class="btn btn-primary" type="submit"
+			[disabled]="form.invalid" (click)="submit()" />
+    </form>
+    <br/>
+</div>

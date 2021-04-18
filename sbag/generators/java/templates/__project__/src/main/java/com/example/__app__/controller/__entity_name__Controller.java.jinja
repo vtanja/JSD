@@ -23,12 +23,8 @@ import com.example.{{ app }}.service.{{entity.name}}Service;
 @Slf4j
 @RequestMapping( path = "/{{ entity.name | lower }}")
 public class {{ controllerName }} {
-    private final {{ entity.name }}Service {{ entityService }};
-
     @Autowired
-    public {{ controllerName }}({{ entity.name }}Service service){
-        this.{{ entityService }} = service;
-    }
+    private {{ entity.name }}Service {{ entityService }};
 
     @GetMapping(path="/count")
     public ResponseEntity<Integer> get{{ entities }}Count() {
@@ -49,18 +45,23 @@ public class {{ controllerName }} {
     }
 
     @PostMapping()
-    public ResponseEntity<{{ DtoType }}> create(@RequestBody {{ DtoType }} {{ entityDto }}) {
+    public ResponseEntity<{{ DtoDetailType }}> create(@RequestBody {{ DtoDetailType }} {{ entityDto }}) {
         return {{ entityService }}.create({{ entityDto }});
     }
 
     @PutMapping(path = "/{id}")
-    public ResponseEntity<{{ DtoType }}> update(@PathVariable Long id, @RequestBody {{ DtoType }} {{ entityDto }}) {
+    public ResponseEntity<{{ DtoDetailType }}> update(@PathVariable Long id, @RequestBody {{ DtoDetailType }} {{ entityDto }}) {
         return {{ entityService }}.update{{ entity.name }}(id, {{ entityDto }});
     }
 
     @DeleteMapping(path = "/{id}")
     public ResponseEntity<?> delete(@PathVariable Long id) {
         return {{ entityService }}.delete{{ entity.name }}(id);
+    }
+
+    @GetMapping(path="/lists")
+    public ResponseEntity<String> getLists() {
+        return {{ entityService }}.getLists();
     }
 
 }

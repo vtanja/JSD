@@ -1,17 +1,17 @@
 from os import mkdir, getcwd
 from os.path import dirname, exists, join
 
-from sbag.language import Entity
+from sbag.language import Entity, BaseType
 from sbag.generators.java import get_type as get_property_type
-from sbag.generators.java import plural
+from sbag.generators.java import plural, first_letter_lower, has_associations, capitalize_first_letter, get_unique_properties
 from textx import generator
 from textxjinja import textx_jinja_generator
 import re
 
 def get_correct_type(prop):
     """
-       Returns correct java type if prop type is BaseType or returns correct entity DTO.
-       """
+    Returns correct java type if prop type is BaseType or returns correct entity DTO.
+    """
     if isinstance(prop.ptype, Entity):
         return 'I{}'.format(prop.ptype.name.capitalize())
     else:
@@ -22,11 +22,23 @@ def get_correct_type(prop):
             'Long': 'number'
         }.get(prop.ptype.name, prop.ptype.name)
 
+
 def format_property(prop: str):
     return re.sub(r"(\w)([A-Z])", r"\1 \2", prop)
 
-def first_letter_lower(string: str):
-    return string[0].lower() + string[1:]
+
+def get_form_input_type(prop):
+    """
+    Returns correct form input type for given property type
+    """
+    if isinstance(prop.ptype, BaseType):
+       return {
+            'int': 'number',
+            'float': 'number',
+            'string': 'text',
+            'boolean': 'checkbox'
+        }.get(prop.ptype.name, prop.ptype.name)
+
 
 @generator('sbag', 'javascript')
 def sbag_generate_javascript(metamodel, model, output_path, overwrite, debug, **custom_args):
@@ -52,7 +64,11 @@ def sbag_generate_javascript(metamodel, model, output_path, overwrite, debug, **
         'plural': plural,
         'format_property': format_property,
         'first_letter_lower': first_letter_lower,
-        'get_property_type': get_property_type
+        'get_property_type': get_property_type,
+        'get_form_input_type': get_form_input_type,
+        'has_associations': has_associations,
+        'capitalize_first_letter': capitalize_first_letter,
+        'get_unique_properties': get_unique_properties
     }
 
     config['entities'] = model.entities

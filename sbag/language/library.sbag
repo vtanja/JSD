@@ -11,7 +11,8 @@ entity Author:
     firstName: String;
     lastName: String;
     books: Book[*..*];
-    address: Address[1..1];
+    homeAddress: Address[1..1];
+    workAddress: Address[1..1];
 
 entity Genre:
     name: String;

@@ -1,5 +1,5 @@
 from os import mkdir, getcwd
-from os.path import dirname, exists, join, split
+from os.path import dirname, exists, join
 
 from sbag.language import Entity, BaseType
 from sbag.generators.java import get_type as get_property_type

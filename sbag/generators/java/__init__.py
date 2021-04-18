@@ -76,7 +76,7 @@ def get_unique_properties(entity):
 
 
 def get_template_name_from_path(path: str):
-    head, tail = os.path.split(path)
+    tail = os.path.split(path)[-1]
     return tail
 
 

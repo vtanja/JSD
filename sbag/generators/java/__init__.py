@@ -1,3 +1,4 @@
+import os
 from os import mkdir, getcwd
 from os.path import dirname, exists, join
 
@@ -73,6 +74,11 @@ def get_unique_properties(entity):
     return ret
 
 
+def get_template_name_from_path(path: str):
+    head, tail = os.path.split(path)
+    return tail
+
+
 @generator('sbag', 'java')
 def sbag_generate_java(metamodel, model, output_path, overwrite, debug, **custom_args):
     "Generator for generating java from sbag descriptions"
@@ -104,7 +110,8 @@ def sbag_generate_java(metamodel, model, output_path, overwrite, debug, **custom
         'capitalize_first_letter': capitalize_first_letter,
         'first_letter_lower': first_letter_lower,
         'has_associations': has_associations,
-        'get_unique_properties': get_unique_properties
+        'get_unique_properties': get_unique_properties,
+        'get_template_name_from_path': get_template_name_from_path
     }
 
     # Run Jinja generator

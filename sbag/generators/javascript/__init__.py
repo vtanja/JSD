@@ -1,10 +1,9 @@
-import os
 from os import mkdir, getcwd
 from os.path import dirname, exists, join, split
 
 from sbag.language import Entity, BaseType
 from sbag.generators.java import get_type as get_property_type
-from sbag.generators.java import plural, first_letter_lower, has_associations, capitalize_first_letter, get_unique_properties
+from sbag.generators.java import plural, first_letter_lower, has_associations, capitalize_first_letter, get_unique_properties, get_template_name_from_path
 from textx import generator
 from textxjinja import textx_jinja_generator
 import re
@@ -40,10 +39,6 @@ def get_form_input_type(prop):
             'string': 'text',
             'boolean': 'checkbox'
         }.get(prop.ptype.name, prop.ptype.name)
-
-def get_template_name_from_path(path: str):
-    head, tail = os.path.split(path)
-    return tail
 
 
 @generator('sbag', 'javascript')

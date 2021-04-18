@@ -7,11 +7,13 @@ import { HomepageComponent } from './homepage/homepage.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { AppRoutingModule } from './../app-routing.module';
 import {LoginComponent} from './auth/login/login.component';
+import {RegisterComponent} from './auth/register/register.component';
 import {ReactiveFormsModule} from '@angular/forms';
 
 
 @NgModule({
-  declarations: [LoaderComponent, HeaderComponent, HomepageComponent, FooterComponent, LoginComponent],
+  declarations: [LoaderComponent, HeaderComponent, HomepageComponent, FooterComponent, LoginComponent,
+  RegisterComponent],
   imports: [
     CommonModule,
     NgbModule,
@@ -23,7 +25,8 @@ import {ReactiveFormsModule} from '@angular/forms';
     HeaderComponent,
     HomepageComponent,
     FooterComponent,
-    LoginComponent
+    LoginComponent,
+    RegisterComponent
   ]
 })
 export class SharedModule { }

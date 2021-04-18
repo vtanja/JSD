@@ -1,3 +1,6 @@
+/// Generated from {{ self._TemplateReference__context.name | get_template_name_from_path }} by SBAG (https://github.com/vtanja/JSD)
+/// on {{ date }}
+
 package com.example.{{ app }}.model;
 
 import lombok.*;
@@ -24,6 +27,9 @@ public class User implements UserDetails, Serializable {
 
     @Column
     private String password;
+
+    @Column
+    private String email;
 
     @ManyToMany()
     @JoinTable

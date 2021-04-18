@@ -6,20 +6,27 @@ import { FooterComponent } from './footer/footer.component';
 import { HomepageComponent } from './homepage/homepage.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { AppRoutingModule } from './../app-routing.module';
+import {LoginComponent} from './auth/login/login.component';
+import {RegisterComponent} from './auth/register/register.component';
+import {ReactiveFormsModule} from '@angular/forms';
 
 
 @NgModule({
-  declarations: [LoaderComponent, HeaderComponent, HomepageComponent, FooterComponent],
+  declarations: [LoaderComponent, HeaderComponent, HomepageComponent, FooterComponent, LoginComponent,
+  RegisterComponent],
   imports: [
     CommonModule,
     NgbModule,
-    AppRoutingModule
+    AppRoutingModule,
+    ReactiveFormsModule
   ],
   exports: [
     LoaderComponent,
     HeaderComponent,
     HomepageComponent,
-    FooterComponent
+    FooterComponent,
+    LoginComponent,
+    RegisterComponent
   ]
 })
 export class SharedModule { }

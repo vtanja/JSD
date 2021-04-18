@@ -5,6 +5,7 @@ from os.path import dirname, exists, join
 from sbag.language import Config, BaseType, Entity, OneToMany, ManyToMany, ManyToOne, OneToOne
 from textx import generator
 from textxjinja import textx_jinja_generator
+import datetime
 
 
 def plural(entity: str):
@@ -91,6 +92,7 @@ def sbag_generate_java(metamodel, model, output_path, overwrite, debug, **custom
     config['config'] = model.config
     config['project'] = model.config.project.capitalize()
     config['app'] = model.config.project.lower()
+    config['date'] = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
     # If output path is not specified take the current working directory
     if output_path is None:

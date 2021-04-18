@@ -3,10 +3,11 @@ from os.path import dirname, exists, join
 
 from sbag.language import Entity, BaseType
 from sbag.generators.java import get_type as get_property_type
-from sbag.generators.java import plural, first_letter_lower, has_associations, capitalize_first_letter, get_unique_properties
+from sbag.generators.java import plural, first_letter_lower, has_associations, capitalize_first_letter, get_unique_properties, get_template_name_from_path
 from textx import generator
 from textxjinja import textx_jinja_generator
 import re
+import datetime
 
 def get_correct_type(prop):
     """
@@ -68,10 +69,12 @@ def sbag_generate_javascript(metamodel, model, output_path, overwrite, debug, **
         'get_form_input_type': get_form_input_type,
         'has_associations': has_associations,
         'capitalize_first_letter': capitalize_first_letter,
-        'get_unique_properties': get_unique_properties
+        'get_unique_properties': get_unique_properties,
+        'get_template_name_from_path': get_template_name_from_path
     }
 
     config['entities'] = model.entities
+    config['date'] = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
     textx_jinja_generator(template_folder, output_path, config, overwrite, filters)
 

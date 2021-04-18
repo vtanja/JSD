@@ -7,6 +7,7 @@ import { I{{entity.name}} } from 'src/app/shared/model/{{entity_name}}.model';
 import { I{{ property }} } from 'src/app/shared/model/{{property | lower}}.model';
 {% endfor %}
 import { {{entity.name}}Service } from '../{{entity_name}}.service';
+import { SharedService } from 'src/app/shared/shared.service';
 
 {% if entity | has_associations %}
 interface ISelectLists {
@@ -25,6 +26,7 @@ interface ISelectLists {
 })
 
 export class {{entity.name}}FormComponent {
+	isLoading: boolean = true;
 	update: boolean = false;
 	id: number = 0;
 	entity: I{{ entity.name }} | undefined;
@@ -41,7 +43,14 @@ export class {{entity.name}}FormComponent {
 	}
 	{% endif %}
 
-    constructor(private service: {{entity.name}}Service, private router: Router, private activatedRoute: ActivatedRoute, private fb: FormBuilder){
+    constructor(
+		private service: {{entity.name}}Service, 
+		private router: Router, 
+		private activatedRoute: ActivatedRoute, 
+		private fb: FormBuilder,
+		private sharedService: SharedService
+		)
+	{
 		this.hideAlerts();
 		this.form = this.fb.group({
 			{% for property in entity.properties %}
@@ -98,6 +107,8 @@ export class {{entity.name}}FormComponent {
 					{% endif %}
 					{% endfor %}
 					})
+					this.sharedService.isLoading(false);
+					this.isLoading = false;
 				},
 				(err: any) => {
 					alert("error");
@@ -108,10 +119,14 @@ export class {{entity.name}}FormComponent {
 		else {
 			this.id = 0;
 			this.update = false;
+			this.sharedService.isLoading(false);
+			this.isLoading = false;
 		}
 	}
 
 	submit() {
+		this.sharedService.isLoading(true);
+		this.isLoading = true;
 		{% for property in entity.properties %}
 		let {{property.name}}Value = this.form.get('{{property.name}}')?.value
 		{% endfor %}
@@ -124,10 +139,14 @@ export class {{entity.name}}FormComponent {
 		if(this.update) {
 			this.service.update{{entity.name}}(this.id, dto).subscribe(
 			(res: any) => {
-				this.alertSuccess();
 				this.entity = res;
+				this.sharedService.isLoading(false);
+				this.isLoading = false;
+				this.alertSuccess();
 			},
 			(err) => {
+				this.sharedService.isLoading(false);
+				this.isLoading = false;
 				this.alertWarn();
 				console.log(err);
 			});
@@ -135,10 +154,14 @@ export class {{entity.name}}FormComponent {
 		else {
 			this.service.create{{entity.name}}(dto).subscribe(
 			(res) => {
+				this.form.reset();
+				this.sharedService.isLoading(false);
+				this.isLoading = false;
 				this.alertSuccess();
-				this.form.reset()
 			},
 			(err) => {
+				this.sharedService.isLoading(false);
+				this.isLoading = false;
 				this.alertWarn();
 				console.log(err);
 			});

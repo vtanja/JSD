@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 {% set entity_name = entity.name | lower %}
 {% set entity_name_plural = entity.name | plural %}
 {% set entity_list_field = entity.name | plural | lower %}
@@ -10,6 +10,7 @@ import { {{service_type}} } from '../{{entity_name}}.service';
 import { {{ model }} } from '../../../shared/model/{{entity_name}}.model';
 import { Router } from '@angular/router';
 import { NgbModal, ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
+import { SharedService } from 'src/app/shared/shared.service';
 
 @Component({
 	selector: 'app-{{entity_name}}-list',
@@ -25,6 +26,7 @@ export class {{entity.name}}ListComponent implements OnInit {
 	elementsPerPage = 5;
 	options:number[] = [5, 10, 15];
 	idToDelete: any;
+	isLoading: boolean = true;
 
 	isDisabled: boolean = false;
 
@@ -34,6 +36,7 @@ export class {{entity.name}}ListComponent implements OnInit {
 		private {{service_field}}: {{service_type}},
 		private router: Router,
 		private modalService: NgbModal,
+		private sharedService: SharedService
 	){}
 
 	ngOnInit(){
@@ -43,6 +46,8 @@ export class {{entity.name}}ListComponent implements OnInit {
 				this.{{service_field}}.get{{entity_name_plural}}(this.page-1, this.elementsPerPage).subscribe(
 					(data: {{model}}[] ) => {
 						this.{{entity_list_field}} = data;
+						this.sharedService.isLoading(false);
+						this.isLoading = false;
 					},
 					(error) => alert(error.error)
 				);
@@ -57,10 +62,14 @@ export class {{entity.name}}ListComponent implements OnInit {
 	}
 
 	changePage(page: number){
+		this.sharedService.isLoading(true);
+		this.isLoading = true;
 		this.page = page;
 		this.{{service_field}}.get{{entity_name_plural}}(this.page-1, this.elementsPerPage).subscribe(
 			(data: {{model}}[] ) => {
 				this.{{entity_list_field}} = data;
+				this.sharedService.isLoading(false);
+				this.isLoading = false;
 			},
 			(error) => alert(error.error)
     	);

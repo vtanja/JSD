@@ -1,6 +1,6 @@
 {% set openBrackets = '{{' %}
 {% set closeBrackets = '}}' %}
-<div style="width: 50%; margin:auto;">
+<div style="width: 50%; margin:auto;" [hidden] = "isLoading">
     <br/>
     <h2>{{openBrackets}}title{{closeBrackets}}</h2>
     <form [formGroup]="form">

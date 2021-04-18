@@ -5,7 +5,7 @@ on {{ date }}
 
 {% set openBrackets = '{{' %}
 {% set closeBrackets = '}}' %}
-<div style="width: 50%; margin:auto;">
+<div style="width: 50%; margin:auto;" [hidden] = "isLoading">
     <br/>
     <h2>{{openBrackets}}title{{closeBrackets}}</h2>
     <form [formGroup]="form">
@@ -49,8 +49,7 @@ on {{ date }}
             <span aria-hidden="true">&times;</span>
         </button>
     </div>
-    <input class="btn btn-primary" type="submit"
-			[disabled]="form.invalid" (click)="submit()" />
+    <input class="btn btn-primary" type="submit" [disabled]="form.invalid" (click)="submit()"/>
     </form>
     <br/>
 </div>

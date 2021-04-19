@@ -37,10 +37,11 @@ def new_imports_for_existing_controllers(controller_paths):
 
 class EndPoint():
 
-    def __init__(self, method, path, rtype, rtype_list, parameters):
+    def __init__(self, method, path, rtype, post_type, rtype_list, parameters):
         self.method = method
         self.path = path
         self.rtype = rtype
+        self.post_type = post_type
         self.rtype_list = rtype_list
         self.parameters = [param for param in parameters]
 
@@ -64,7 +65,7 @@ def endpoints_from_path(path, resource='', parameters=[]):
             if resource_contains_parameter(content.resource):
                 parameters.remove(content.resource[1:-1])
         else:
-            endpoints.append(EndPoint(content.method, resource, content.rtype, content.rtype_list, parameters))
+            endpoints.append(EndPoint(content.name, resource, content.rtype, content.post_type, content.rtype_list, parameters))
 
     return endpoints
 

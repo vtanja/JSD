@@ -20,7 +20,7 @@ def sbag_language():
     mm = metamodel_from_file(os.path.join(current_dir, 'sbag.tx'),
                              classes=[BaseType, Entity, Config, Property,
                                       OneToOne, OneToMany, ManyToOne, ManyToMany,
-                                      Path],
+                                      Path, Method],
                              builtins=builtin_types,
                              debug=True)
 

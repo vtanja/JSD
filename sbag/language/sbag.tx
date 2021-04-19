@@ -68,8 +68,7 @@ Content:
 ;
 
 Method:
-    method=ID ':'
-        'return' ':' rtype=[RType] rtype_list='[]'?
+    name=ID ('(' post_type=[RType] ')')? ':' rtype=[RType] rtype_list='[]'?
 ;
 
 RType:

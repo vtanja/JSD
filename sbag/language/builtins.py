@@ -90,3 +90,13 @@ class Path:
         self.resource = resource
         self.content = content
         self.parent = parent
+
+class Method:
+
+    def __init__(self, name, post_type, rtype, rtype_list, parent) -> None:
+        """Create instance of method."""
+        self.nme = name
+        self.post_type = post_type
+        self.rtype = rtype
+        self.rtype_list = rtype_list
+        self.parent = parent

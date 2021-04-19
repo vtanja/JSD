@@ -28,26 +28,21 @@ entity Address:
 
 /author
     /book
-        get:
-            return: Book[]
+        get: Book[]
         /{id}
-            get:
-                return: Book
-            post:
-                return: Book
+            get: Book
+            post(Book): Book
             /{ud}
-                get: return: String
+                get: String
             ;
         ;
     ;
 ;
 /address
     /publisher
-        get:
-            return: Publisher[]
+        get: Publisher[]
     ;
 ;
 /custom
-    get:
-        return: String
+    get: String
 ;

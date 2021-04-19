@@ -1,77 +1,96 @@
-# JSD za generisanje web aplikacija
+# DSL for generating Web applications
 
-Jezik bi generisao web aplikacije i to: Spring Boot + Angular. Dodatno proširenje može biti generisanje koda za razne vrste framework-a. Jezik je inspirisan [raml](https://github.com/raml-org/raml-spec) jezikom, koji je jsd za modelovanje RESTful API-ja. 
+Our language can generate Spring Boot + Angular applications. The language itself is inspired by [raml](https://github.com/raml-org/raml-spec) language. SBAG will generate admin interface for managing each entity defined in your SBAG definition and create custom paths that you can override and create fancy new features! SBAG has configured Spring Security with basic authorization and authentication.
 
-## Ideja
+## Grammar
 
-Osnovna ideja je da se na pocetku definiše model aplikacije koji bi se mogao referencirati iz ostatka jezika. Iduća sekcija je definisanje putanja, a unutar putanja se definišu zahtjevi koji se koriste na toj putanji.
+Language is separathed in three main parts:
+1. Configuration, where you can specify some metadata which will be used while generating your next application.
+2. Entities declaration, here you define entities that will be used in your application.
+3. Custom paths, here you can define custom paths that will be generated and all you have to is add business logic to generated methods.
 
-## Primjer
+## Example
 
-Sitaksa jezika nije definitivna, biće izmjenjena po potrebi.
+Here is a little example, we define a library project with its entites and custom paths.
 
 ```
-entity Knjiga:
-   naziv: string;
-   godinaIzdavanja: int;
-   zanr: string;
-   autor: Autor;
+project: Library
 
-entity Autor:
-   ime: string;
-   prezime: string;
+entity Book:
+   title: String;
+   publishingYear: int;
+   generes: Genre[*..*];
+   authors: Author[*..*books];
+   publisher: Publisher[*..1];
 
-config:
-   api: www.example.com
+entity Author:
+   firstName: String;
+   lastName: String;
+   books: Book[*..*];
+   address: Address[1..1];
+   
+entity Genre:
+   name: String;
+   books: Book[*..*genres];
+   
+entity Publisher:
+   name: String;
+   books; Book[1..*publisher];
 
-/knjige
+entity Address:
+   city: String;
+   street: String;
+   number: int;
+
+/book
    get:
-      200:
-         type: Knjiga[]
-      404:
-         type: string("Knjiga nije pronadjena")
+         return: Book[]
    /{id}
       get:
-         200:
-            type: Knjiga
-      delete:
-         200: string("Uspesno obrisan")
+         return: Book
 
-/autori
+/author
    get:
-      200:
-         type: Autor[]
+      return: Author[]
    /{id}
       get:
-         200:
-            type: Autor
-         404:
-            type: string("Autor nije pronadjen")
-      /knjige
-         get:
-            200: type: Knjige[]
-         post:
-            200: body: Knjiga
+         return: Author
+      /book
+         get: return: Book[]
+         post: return: Book
+         
+/custom
+   get: return String
 ```
 
-## Generisanje
+## Generation
 
-Na osnovu modela se generiše admin interfejs sa:
- - hibernate sloj sa klasama modela
- - JPA repozitorijumi za svaku klasu
- - DTO objekti
+1. Configuration is not required, you can ommit it. In that case a default values will be used. You can define following properties:
 
-Na osnovu putanja se na backendu generišu:
-- kontroleri
-- za svaki kontroler se generiše i servis kome se delegira izvršavanje zahtjeva
-- na osnovu modela koji se koristi na putanji se generiše servisna logika
+- project - name of the project (will be used for folder and app names)
+- description - short project description (used for readme files)
 
-Na frontend strani se generišu:
-- servisi koji šalju zahtjeve ka kontrolerima na bekendu 
-- kreira se routing module
-- za svaku putanju se definiše Angualr komponenta koja je zadužena za iscrtavanje
-- u zavisnosti od tipa podatka koji vraća get zahtjev za datu komponentu može se generisati i prikaz entiteta (za pojedinačne entitete se prikazuju njegovi atributi, dok za kolekcije se može prikazati ili tabela ili kartice za svaki od elemenata kolekcije). 
-- ukoliko je pak u pitanju post zahtjev, moguće je na osnovu tipa podatka koji se šalje izgenerisati formu sa svim potrebnim poljima.
+2. Entities - you need to specify them, and then use them later on while specifying custom paths. From entity declaration following is generated:
+
+- Spring boot hibernate layer with model classes
+- JPA repository for each entity
+- DTO objects 
+- Angular components for each CRUD operation
+- Controller paths for CRUD operations
+- CRUD business logic in services
+
+When defining entities you will need to specify associations between them. This is done with '[]' and some parameters depending on association type. One side is the owning side, and other side is the inverse side. We are specifying owner attribute name on the inverse side:
+
+- One to one association:  [1..1] and [1..1\<owner attribute name\>].
+- One to many: [1..*\<owner attribute name\>].
+- Many to one associations: [*..1].
+- Many to many association: [*..*] and [*..*\<owner attribute name\>].
+
+3. Custom paths are not required. If you define them they will be generated in different controller based on root path:
+
+- if root path name is an entity name, path will be generated in that entity's controller
+- else a new controller will be created for that root path, and every subpath will be generated in that conroller
+   For each path, an empty method is generated in appropriate service for frontend and backend services.
 
 # Credits
 

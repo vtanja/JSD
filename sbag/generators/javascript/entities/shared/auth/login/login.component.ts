@@ -30,15 +30,19 @@ export class LoginComponent implements OnInit {
 
     
     onSubmit(value: Object) {
+      this.sharedService.isLoading(false);
+
       this.authService.login(value).subscribe(
         (data) => {
           localStorage.setItem('User-token', data.accessToken);
           localStorage.setItem('Expires-in', data.expiresIn);
           localStorage.setItem('Refresh-token', data.refreshToken);
           localStorage.setItem('Username', data.username);
-          localStorage.setItem('User-role', data.roles);
+          localStorage.setItem('User-role', data.role);
           this.loginForm.reset();
           console.log(data);
+
+          this.sharedService.isLogged(true);
           this.router.navigate(['']);
         },
         (error) => {

@@ -33,6 +33,11 @@ entity Address:
         /{id}
             get:
                 return: Book
+            post:
+                return: Book
+            /{ud}
+                get: return: String
+            ;
         ;
     ;
 ;

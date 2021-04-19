@@ -9,6 +9,10 @@ export class AuthService {
 
   constructor(private http: HttpClient) { }
 
+  register(user: {}) {
+		return this.http.post<any>(environment.api + '/auth/register', user);
+	}
+
   login(data: any) {
 		return this.http.post<any>(environment.api + '/auth/login', data);
 	}

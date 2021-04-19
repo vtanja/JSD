@@ -15,6 +15,9 @@ import com.example.{{ app }}.dto.{{entity.name}}DetailDTO;
 import com.example.{{ app }}.model.{{ entity.name }};
 import com.example.{{ app }}.repository.{{ entity.name | capitalize }}Repository;
 import com.example.{{ app }}.exception.NotFoundException;
+{% for ent in controller_imports[entity.name] %}
+import com.example.{{ app }}.model.{{ ent }};
+{% endfor %}
 
 import java.util.List;
 import java.util.ArrayList;
@@ -78,4 +81,13 @@ public class {{serviceName}} {
     public ResponseEntity<?> delete{{entity.name}}(Long id){
         return new ResponseEntity<>(HttpStatus.OK); 
     }
+
+    {% for endpoint in controller_paths[entity.name] %}
+    {% set comma_separator = joiner() %}
+    public ResponseEntity<{{ endpoint.get_correct_type() }}> {{ endpoint.function_name() }}({% for param in endpoint.parameters %}{{ comma_separator() }}String {{ param }}{% endfor %}) {
+        throw new UnsupportedOperationException("Not implemented, yet.");
+    }
+
+    {% endfor %}
+
 }

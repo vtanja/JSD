@@ -1,8 +1,6 @@
 package com.example.{{ app }}.controller;
 
-import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import lombok.extern.slf4j.Slf4j;
@@ -10,6 +8,9 @@ import java.util.List;
 import com.example.{{ app }}.dto.{{entity.name}}DTO;
 import com.example.{{ app }}.dto.{{entity.name}}DetailDTO;
 import com.example.{{ app }}.service.{{entity.name}}Service;
+{% for ent in controller_imports[entity.name] %}
+import com.example.{{ app }}.model.{{ ent }};
+{% endfor %}
 
 {% set controllerName = (entity.name | capitalize) + 'Controller' %}
 {% set DtoType = entity.name + 'DTO' %}
@@ -62,5 +63,15 @@ public class {{ controllerName }} {
     public ResponseEntity<?> delete(@PathVariable Long id) {
         return {{ entityService }}.delete{{ entity.name }}(id);
     }
+
+    {% for endpoint in controller_paths[entity.name] %}
+    {% set comma_separator = joiner() %}
+    @{{ endpoint.method | capitalize }}Mapping(path = "/{{ endpoint.path }}")
+    public ResponseEntity<{{ endpoint.get_correct_type() }}> {{ endpoint.function_name() }}({% for param in endpoint.parameters %}{{ comma_separator() }}@PathVariable String {{ param }}{% endfor %}) {
+    {% set comma_separator = joiner() %}
+        return {{ entityService }}.{{ endpoint.function_name() }}({% for param in endpoint.parameters %}{{ comma_separator() }}{{ param }}{% endfor %});
+    }
+
+    {% endfor %}
 
 }

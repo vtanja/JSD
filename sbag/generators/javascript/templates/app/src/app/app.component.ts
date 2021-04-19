@@ -21,7 +21,7 @@ export class AppComponent implements OnInit {
         this.isLoading = res;
       });
 
-      this.sharedService.loggedInSubject.subscribe((res: any)=>{
+      this.sharedService.loggedInSubject.subscribe((res: any) => {
         this.isLogged = res;
       });
     }

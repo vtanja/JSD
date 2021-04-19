@@ -26,8 +26,7 @@ export class RegisterComponent implements OnInit {
           alert('You have registered successfully!');        
           this.router.navigate(['']);
       },
-      (err)=>{
-        console.log(err);
+      (err) => {
         alert('Unable to register! Try again!');     
         this.registerForm.reset();
       });

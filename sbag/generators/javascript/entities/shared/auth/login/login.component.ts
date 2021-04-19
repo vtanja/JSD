@@ -2,7 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {FormBuilder} from '@angular/forms';
 import { AuthService } from '../auth.service';
 import { Router } from '@angular/router'; 
-import { SharedService} from '../../shared.service'
+import { SharedService} from '../../shared.service';
 
 @Component({
   selector: 'app-login',
@@ -40,7 +40,6 @@ export class LoginComponent implements OnInit {
           localStorage.setItem('Username', data.username);
           localStorage.setItem('User-role', data.role);
           this.loginForm.reset();
-          console.log(data);
 
           this.sharedService.isLogged(true);
           this.router.navigate(['']);

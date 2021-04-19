@@ -18,7 +18,6 @@ export class HeaderComponent implements OnInit {
   }
 
   logout(){
-    console.log('localStorage');
     localStorage.clear();
     this.sharedService.isLogged(false);
     this.router.navigateByUrl('/login', { skipLocationChange: true }).then(() => {

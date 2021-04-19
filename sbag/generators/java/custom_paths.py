@@ -1,6 +1,25 @@
 from os.path import join
 from sbag.language import Entity, Path
 
+class EndPoint():
+
+    def __init__(self, method, path, rtype, post_type, rtype_list, parameters):
+        self.method = method
+        self.path = path
+        self.rtype = rtype
+        self.post_type = post_type
+        self.rtype_list = rtype_list
+        self.parameters = [param for param in parameters]
+
+    def get_correct_type(self):
+        return self.rtype if self.rtype_list == '' else 'List<{}>'.format(str(self.rtype))
+
+    def function_name(self):
+        function_name = ''
+        for part in self.path.split('/'):
+            function_name = ''.join([function_name, part.replace('{', '').replace('}', '').capitalize()])
+        return ''.join([self.method, function_name])
+
 def setup_custom_paths_for_generation(config, model):
     entity_names = [ent.name.lower() for ent in model.entities]
     config['new_controllers'] = new_controllers(entity_names, model.paths)
@@ -48,25 +67,6 @@ def add_import_to_controller(entity, controller_imports):
 
 def import_already_added(entity, controller_imports):
     return entity not in controller_imports
-
-class EndPoint():
-
-    def __init__(self, method, path, rtype, post_type, rtype_list, parameters):
-        self.method = method
-        self.path = path
-        self.rtype = rtype
-        self.post_type = post_type
-        self.rtype_list = rtype_list
-        self.parameters = [param for param in parameters]
-
-    def get_correct_type(self):
-        return self.rtype if self.rtype_list == '' else 'List<{}>'.format(str(self.rtype))
-
-    def function_name(self):
-        function_name = ''
-        for part in self.path.split('/'):
-            function_name = ''.join([function_name, part.replace('{', '').replace('}', '').capitalize()])
-        return ''.join([self.method, function_name])
 
 def endpoints_from_path(path, resource='', parameters=[]):
     endpoints = []

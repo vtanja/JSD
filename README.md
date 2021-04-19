@@ -1,6 +1,6 @@
 # DSL for generating Web applications
 
-Our language can generate Spring Boot + Angular applications. The language itself is inspired by [raml](https://github.com/raml-org/raml-spec) language. SBAG will generate admin interface for managing each entity defined in your SBAG definition and create custom paths that you can override and create fancy new features!
+Our language can generate Spring Boot + Angular applications. The language itself is inspired by [raml](https://github.com/raml-org/raml-spec) language. SBAG will generate admin interface for managing each entity defined in your SBAG definition and create custom paths that you can override and create fancy new features! SBAG has configured Spring Security with basic authorization and authentication.
 
 ## Grammar
 
@@ -76,6 +76,11 @@ entity Address:
 - Angular components for each CRUD operation
 - Controller paths for CRUD operations
 - CRUD business logic in services
+When defining entities you will need to specify associations between them. This is done with '[]' and some parameters depending on association type. One side is the owning side, and other side is the inverse side. We are specifying owner attribute name on the inverse side:
+- One to one association:  [1..1] and [1..1<owner attribute name>].
+- One to many: [1..*<owner attribute name>].
+- Many to one associations: [*..1].
+- Many to many association: [*..*] and [*..*<owner attribute name>].
 
 3. Custom paths are not required. If you define them they will be generated in different controller based on root path:
    a. if root path name is an entity name, path will be generated in that entity's controller

@@ -55,7 +55,7 @@ public class AuthController {
       String jwt = jwtTokenUtils.generateToken(user.getUsername());
       int experiesIn = jwtTokenUtils.getExpiredIn();
       String refresh = jwtTokenUtils.generateRefreshToken(user.getUsername());
-      UserTokenStateDTO userTokenStateDTO = new UserTokenStateDTO(jwt,experiesIn,refresh);
+      UserTokenStateDTO userTokenStateDTO = new UserTokenStateDTO(jwt,experiesIn,refresh, user.getUsername(), user.getRoles());
 
       return new ResponseEntity<>(
               userTokenStateDTO, HttpStatus.ACCEPTED);

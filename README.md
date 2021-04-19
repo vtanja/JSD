@@ -47,17 +47,17 @@ entity Address:
          return: Book[]
    /{id}
       get:
-         return: Knjiga
+         return: Book
 
 /author
    get:
       return: Autor[]
    /{id}
       get:
-         return: Autor
-      /knjige
-         get: return: Knjige[]
-         post: return: Knjiga
+         return: Author
+      /book
+         get: return: Book[]
+         post: return: Book
          
 /custom
    get: return String

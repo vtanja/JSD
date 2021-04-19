@@ -4,7 +4,13 @@ from .builtins import *
 
 current_dir = os.path.dirname(__file__)
 
-
+def method_object_processor(method):
+    if method.name not in ['get', 'post', 'head', 'put', 'patch', 'delete']:
+        raise TextXSyntaxError('Method name: "{}" not valid.'.format(method.name), **get_location(method))
+    if method.name != 'post' and method.post_type is not None:
+        raise TextXSyntaxError('Unexpected type after method name.', get_location(method))
+    if method.name == 'post' and method.post_type is None:
+        raise TextXSyntaxError('Method post missing required request object type.', get_location(method))
 
 @language('sbag', '*.sbag')
 def sbag_language():
@@ -27,5 +33,8 @@ def sbag_language():
     # Here if necessary register object processors or scope providers
     # http://textx.github.io/textX/stable/metamodel/#object-processors
     # http://textx.github.io/textX/stable/scoping/
-
+    obj_processors = {
+        'Method': method_object_processor
+    }
+    mm.register_obj_processors(obj_processors)
     return mm

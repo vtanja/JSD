@@ -12,4 +12,9 @@ export class AuthService {
   login(data: any) {
 		return this.http.post<any>(environment.api + '/auth/login', data);
 	}
+
+  getToken(){
+    let token = localStorage.getItem('User-token');
+		return token == null ? '' : 'Bearer ' + token;
+  }
 }

@@ -16,11 +16,15 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import com.example.{{ app }}.security.JwtTokenUtils;
 import com.example.{{ app }}.model.User;
+import com.example.{{ app }}.model.Role;
 import com.example.{{ app }}.repository.UserRepository;
 import com.example.{{ app }}.repository.RoleRepository;
 import com.example.{{ app }}.dto.AuthRequestDTO;
 import com.example.{{ app }}.dto.UserTokenStateDTO;
+import com.example.{{ app }}.dto.RegistrationDTO;
 
+import java.util.HashSet;
+import java.util.Set;
 
 @RestController
 @RequestMapping(value = "/auth", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -62,6 +66,44 @@ public class AuthController {
     } catch (Exception ex) {
         throw new Exception(ex.getMessage());
     }
+  }
+
+  @PostMapping(path="/register")
+  public ResponseEntity<?> register(@RequestBody RegistrationDTO regDTO) throws Exception {
+        var uUsername = userRepository.findByUsername(regDTO.getUsername());
+        var uEmail = userRepository.findByEmail(regDTO.getEmail());
+        if(uUsername != null || uEmail != null) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+        User user = new User();
+        user.setEmail(regDTO.getEmail());
+        user.setUsername(regDTO.getUsername());
+        user.setPassword(passwordEncoder.encode(regDTO.getPassword()));
+
+        Set<Role> rolesSet = new HashSet<>();
+
+        if (userRepository.findAll().size() == 0){
+          if (roleRepository.findByName("admin") == null){
+            Role role = new Role();
+            role.setName("admin");
+            roleRepository.save(role);
+          }
+          rolesSet.add(roleRepository.findByName("admin"));
+        }
+        else{
+          if (roleRepository.findByName("user") == null){
+            Role role = new Role();
+            role.setName("user");
+            roleRepository.save(role);
+          }
+          rolesSet.add(roleRepository.findByName("user"));
+        }
+        
+        user.setRoles(rolesSet);
+
+        this.userRepository.save(user);
+
+        return new ResponseEntity<>(HttpStatus.OK);
   }
 
 }

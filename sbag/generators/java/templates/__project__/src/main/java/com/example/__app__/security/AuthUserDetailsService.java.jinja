@@ -92,22 +92,8 @@ public class AuthUserDetailsService implements UserDetailsService {
 
         Set<Role> rolesSet = new HashSet<>();
 
-        if (userRepository.findAll().size() == 0){
-          if (roleRepository.findByName("ADMIN") == null){
-            Role role = new Role();
-            role.setName("ADMIN");
-            roleRepository.save(role);
-          }
-          rolesSet.add(roleRepository.findByName("ADMIN"));
-        }
-        else{
-          if (roleRepository.findByName("USER") == null){
-            Role role = new Role();
-            role.setName("USER");
-            roleRepository.save(role);
-          }
-          rolesSet.add(roleRepository.findByName("USER"));
-        }
+        // TODO: Assign role to new user
+        
         
         user.setRoles(rolesSet);
 

@@ -42,4 +42,11 @@ export class {{service_name}} {
     return this.http.delete(environment.api + '/{{entity_name}}/' + {{entity_id}});
   }
 
+  {% for endpoint in controller_paths[entity.name] %}
+  {% set comma_separator = joiner() %}
+  {{ endpoint.function_name() }}({% for param in endpoint.parameters %}{{param}}{% endfor %}) {
+  }
+
+  {% endfor %}
+
 }

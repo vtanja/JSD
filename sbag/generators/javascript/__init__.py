@@ -1,12 +1,14 @@
 from os import mkdir, getcwd
 from os.path import dirname, exists, join
 
+from sbag.generators.java.custom_paths import new_paths_for_existing_controllers
 from sbag.language import Entity
 from sbag.generators.java import get_type as get_property_type
 from sbag.generators.java import plural
 from textx import generator
 from textxjinja import textx_jinja_generator
 import re
+
 
 def get_correct_type(prop):
     """
@@ -22,11 +24,14 @@ def get_correct_type(prop):
             'Long': 'number'
         }.get(prop.ptype.name, prop.ptype.name)
 
+
 def format_property(prop: str):
     return re.sub(r"(\w)([A-Z])", r"\1 \2", prop)
 
+
 def first_letter_lower(string: str):
     return string[0].lower() + string[1:]
+
 
 @generator('sbag', 'javascript')
 def sbag_generate_javascript(metamodel, model, output_path, overwrite, debug, **custom_args):
@@ -56,6 +61,8 @@ def sbag_generate_javascript(metamodel, model, output_path, overwrite, debug, **
     }
 
     config['entities'] = model.entities
+    entity_names = [ent.name.lower() for ent in model.entities]
+    config['controller_paths'] = new_paths_for_existing_controllers(entity_names, model.paths)
 
     textx_jinja_generator(template_folder, output_path, config, overwrite, filters)
 

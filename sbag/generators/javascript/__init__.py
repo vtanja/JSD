@@ -1,6 +1,6 @@
 from os import mkdir, getcwd
 from os.path import dirname, exists, join
-from sbag.generators.java.custom_paths import new_paths_for_existing_controllers
+from sbag.generators.java.custom_paths import new_paths_for_existing_controllers, new_imports_for_existing_controllers
 from sbag.language import Entity, BaseType
 from sbag.generators.java import get_type as get_property_type
 from sbag.generators.java import plural, first_letter_lower, has_associations, capitalize_first_letter, \
@@ -97,12 +97,13 @@ def sbag_generate_javascript(metamodel, model, output_path, overwrite, debug, **
         'get_unique_properties': get_unique_properties,
         'get_template_name_from_path': get_template_name_from_path,
         'get_path_for_methods': get_path_for_methods,
-        'get_path_parameters': get_path_parameters
+        'get_path_parameters': get_path_parameters,
     }
 
     config['entities'] = model.entities
     entity_names = [ent.name.lower() for ent in model.entities]
     config['controller_paths'] = new_paths_for_existing_controllers(entity_names, model.paths)
+    config['controller_imports'] = new_imports_for_existing_controllers(config['controller_paths'])
     config['date'] = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
     textx_jinja_generator(template_folder, output_path, config, overwrite, filters)

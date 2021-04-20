@@ -67,30 +67,30 @@ entity Address:
 
 1. Configuration is not required, you can ommit it. In that case a default values will be used. You can define following properties:
 
-- project - name of the project (will be used for folder and app names)
-- description - short project description (used for readme files)
+  - project - name of the project (will be used for folder and app names)
+  - description - short project description (used for readme files)
 
 2. Entities - you need to specify them, and then use them later on while specifying custom paths. From entity declaration following is generated:
 
-- Spring boot hibernate layer with model classes
-- JPA repository for each entity
-- DTO objects 
-- Angular components for each CRUD operation
-- Controller paths for CRUD operations
-- CRUD business logic in services
+  - Spring boot hibernate layer with model classes
+  - JPA repository for each entity
+  - DTO objects 
+  - Angular components for each CRUD operation
+  - Controller paths for CRUD operations
+  - CRUD business logic in services
 
 When defining entities you will need to specify associations between them. This is done with '[]' and some parameters depending on association type. One side is the owning side, and other side is the inverse side. We are specifying owner attribute name on the inverse side:
 
-- One to one association:  [1..1] and [1..1\<owner attribute name\>].
-- One to many: [1..*\<owner attribute name\>].
-- Many to one associations: [*..1].
-- Many to many association: [*..*] and [*..*\<owner attribute name\>].
+  - One to one association:  [1..1] and [1..1\<owner attribute name\>].
+  - One to many: [1..*\<owner attribute name\>].
+  - Many to one associations: [*..1].
+  - Many to many association: [*..*] and [*..*\<owner attribute name\>].
 
 3. Custom paths are not required. If you define them they will be generated in different controller based on root path:
 
-- if root path name is an entity name, path will be generated in that entity's controller
-- else a new controller will be created for that root path, and every subpath will be generated in that conroller
-   For each path, an empty method is generated in appropriate service for frontend and backend services.
+  - if root path name is an entity name, path will be generated in that entity's controller
+  - else a new controller will be created for that root path, and every subpath will be generated in that conroller
+  For each path, an empty method is generated in appropriate service for frontend and backend services.
 
 # Credits
 

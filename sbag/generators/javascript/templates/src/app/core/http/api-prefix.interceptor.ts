@@ -16,7 +16,7 @@ export class ApiPrefixInterceptor implements HttpInterceptor {
   intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     const authToken = this.authService.getToken();
 
-    if (authToken != '') {
+    if (authToken !== '') {
 
 			let authReq = request.clone({
 				headers: request.headers.set('AuthToken', authToken),

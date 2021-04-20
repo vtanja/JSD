@@ -19,7 +19,7 @@ export class HomepageComponent implements OnInit{
   }
 
   ngOnInit(){
-    if (this.authService.getToken() == '' || this.authService.getToken()==undefined){
+    if (this.authService.getToken() === '' || this.authService.getToken() === null || this.authService.getToken() === undefined){
         this.router.navigate(['login']);
     }
   }

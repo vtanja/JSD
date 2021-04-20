@@ -3,7 +3,8 @@ from os.path import dirname, exists, join
 from sbag.generators.java.custom_paths import new_paths_for_existing_controllers
 from sbag.language import Entity, BaseType
 from sbag.generators.java import get_type as get_property_type
-from sbag.generators.java import plural, first_letter_lower, has_associations, capitalize_first_letter, get_unique_properties, get_template_name_from_path
+from sbag.generators.java import plural, first_letter_lower, has_associations, capitalize_first_letter, \
+    get_unique_properties, get_template_name_from_path
 from textx import generator
 from textxjinja import textx_jinja_generator
 import re
@@ -29,21 +30,39 @@ def format_property(prop: str):
     return re.sub(r"(\w)([A-Z])", r"\1 \2", prop)
 
 
-
 def first_letter_lower(string: str):
     return string[0].lower() + string[1:]
+
 
 def get_form_input_type(prop):
     """
     Returns correct form input type for given property type
     """
     if isinstance(prop.ptype, BaseType):
-       return {
+        return {
             'int': 'number',
             'float': 'number',
             'string': 'text',
             'boolean': 'checkbox'
         }.get(prop.ptype.name, prop.ptype.name)
+
+
+def get_path_for_methods(endpoint):
+    paths = endpoint.path.split('/')
+    ret = ''
+    for p in paths:
+        if '{' not in p:
+            ret = ret + p + '/'
+
+    return ret
+
+
+def get_path_parameters(endpoint):
+    ret = ''
+    for param in endpoint.parameters:
+        ret = ret + ' + ' + param + ' + ' + "'/'"
+
+    return ret
 
 
 
@@ -76,7 +95,9 @@ def sbag_generate_javascript(metamodel, model, output_path, overwrite, debug, **
         'has_associations': has_associations,
         'capitalize_first_letter': capitalize_first_letter,
         'get_unique_properties': get_unique_properties,
-        'get_template_name_from_path': get_template_name_from_path
+        'get_template_name_from_path': get_template_name_from_path,
+        'get_path_for_methods': get_path_for_methods,
+        'get_path_parameters': get_path_parameters
     }
 
     config['entities'] = model.entities
@@ -94,6 +115,6 @@ def sbag_generate_javascript(metamodel, model, output_path, overwrite, debug, **
         config['entity'] = entity
         config['entity_name'] = entity.name.lower()
         if model.config.project != None:
-            config['app_name'] =  model.config.project
+            config['app_name'] = model.config.project
         textx_jinja_generator(entities_folder, output_path, config, overwrite,
                               filters)

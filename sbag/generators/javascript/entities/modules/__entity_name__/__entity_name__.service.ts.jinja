@@ -62,7 +62,29 @@ export class {{service_name}} {
   
   {% for endpoint in controller_paths[entity.name] %}
   {% set comma_separator = joiner() %}
-  {{ endpoint.function_name() }}({% for param in endpoint.parameters %}{{param}}{% endfor %}) {
+  {{ endpoint.function_name() }}({% for param in endpoint.parameters %}{{ comma_separator() }}{{param}}{% endfor %}) {
+    {% if endpoint.method == 'get' %}
+    {% if '{' in endpoint.path and '}' in endpoint.path %}
+     return this.http.get(environment.api + '{{endpoint | get_path_for_methods}}' {{endpoint | get_path_parameters}});
+    {% else %}
+     return this.http.get(environment.api + '{{endpoint.path}}');
+     {{endpoint.rtype}}
+    {% endif %}
+    {% elif endpoint.method == 'delete' %}
+    return this.http.delete(environment.api + '{{endpoint | get_path_for_methods}}' + {{endpoint.parameters[0]}});
+    {% elif endpoint.method == 'put' %}
+    {% if '{' in endpoint.path and '}' in endpoint.path %}
+    return this.http.put(environment.api + '{{endpoint | get_path_for_methods}}' {{endpoint | get_path_parameters}}, {{endpoint.parameters[0]}});
+    {% else %}
+    return this.http.put(environment.api + '{{endpoint | get_path_for_methods}}', {{endpoint.parameters[0]}});
+    {% endif %}
+    {% elif endpoint.method == 'post' %}
+    {% if '{' in endpoint.path and '}' in endpoint.path %}
+    return this.http.post(environment.api + '{{endpoint | get_path_for_methods}}' {{endpoint | get_path_parameters}}, {{endpoint.parameters[0]}});
+    {% else %}
+    return this.http.post(environment.api + '{{endpoint | get_path_for_methods}}', {{endpoint.parameters[0]}});
+    {% endif %}
+    {% endif %}
   }
 
   {% endfor %}

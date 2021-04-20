@@ -31,7 +31,7 @@ public class User implements UserDetails, Serializable {
     @Column
     private String email;
 
-    @ManyToMany()
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable
     private Set<Role> roles;
 

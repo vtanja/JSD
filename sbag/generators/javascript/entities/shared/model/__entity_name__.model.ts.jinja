@@ -1,7 +1,8 @@
-{% for property in entity.properties %}
-{% if property | get_property_type != 'base' %}
-import { {{ property | get_correct_type }} } from './{{ property.ptype.name | lower }}.model';
-{% endif %}
+/// Generated from {{ self._TemplateReference__context.name | get_template_name_from_path }} by SBAG (https://github.com/vtanja/JSD)
+/// on {{ date }}
+
+{% for property in entity | get_unique_properties %}
+import { I{{ property }} } from 'src/app/shared/model/{{property | lower}}.model';
 {% endfor %}
 
 export interface I{{ entity.name }} {

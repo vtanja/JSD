@@ -5,7 +5,6 @@ from .builtins import Entity, BaseType, Config, Property, OneToOne, OneToMany, M
 current_dir = os.path.dirname(__file__)
 
 
-
 @language('sbag', '*.sbag')
 def sbag_language():
     "sbag language"

@@ -1,0 +1,17 @@
+/// Generated from {{ self._TemplateReference__context.name | get_template_name_from_path }} by SBAG (https://github.com/vtanja/JSD)
+/// on {{ date }}
+
+package com.example.{{ app }}.util;
+
+import org.springframework.stereotype.Component;
+
+import java.io.Serializable;
+import java.util.Date;
+
+@Component
+public class TimeProvider implements Serializable {
+
+    public Date now() {
+        return new Date();
+    }
+}

@@ -1,9 +1,11 @@
+import os
 from os import mkdir, getcwd
 from os.path import dirname, exists, join
 
-from sbag.language import Config, BaseType, OneToMany, ManyToMany, ManyToOne, OneToOne
+from sbag.language import Config, BaseType, Entity, OneToMany, ManyToMany, ManyToOne, OneToOne
 from textx import generator
 from textxjinja import textx_jinja_generator
+import datetime
 
 
 def plural(entity: str):
@@ -37,14 +39,45 @@ def get_association_type(prop):
     """
         Based on property returns string saying if its OneToMany, ManyToMany, OneToOne or ManyToOne association
         """
-    if isinstance(prop, OneToMany):
+    if isinstance(prop.atype, OneToMany):
         return 'OneToMany'
-    elif isinstance(prop, ManyToMany):
+    elif isinstance(prop.atype, ManyToMany):
         return 'ManyToMany'
-    elif isinstance(prop, OneToOne):
+    elif isinstance(prop.atype, OneToOne):
         return 'OneToOne'
-    elif isinstance(prop, ManyToOne):
+    elif isinstance(prop.atype, ManyToOne):
         return 'ManyToOne'
+
+
+def capitalize_first_letter(prop: str):
+    return prop[0].upper() + prop[1:]
+
+
+def first_letter_lower(string: str):
+    return string[0].lower() + string[1:]
+
+
+def has_associations(entity: Entity):
+    """
+    Returns true if entity has any associations as properties
+    """
+    for prop in entity.properties:
+        if hasattr(prop, "atype"):
+            return True
+    return False
+
+
+def get_unique_properties(entity):
+    ret = set()
+    for prop in entity.properties:
+        if hasattr(prop, "atype"):
+            ret.add(prop.ptype.name)
+    return ret
+
+
+def get_template_name_from_path(path: str):
+    tail = os.path.split(path)[-1]
+    return tail
 
 
 @generator('sbag', 'java')
@@ -59,6 +92,7 @@ def sbag_generate_java(metamodel, model, output_path, overwrite, debug, **custom
     config['config'] = model.config
     config['project'] = model.config.project.capitalize()
     config['app'] = model.config.project.lower()
+    config['date'] = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
     # If output path is not specified take the current working directory
     if output_path is None:
@@ -74,7 +108,12 @@ def sbag_generate_java(metamodel, model, output_path, overwrite, debug, **custom
     filters = {
         'plural': plural,
         'get_type': get_type,
-        'get_association_type': get_association_type
+        'get_association_type': get_association_type,
+        'capitalize_first_letter': capitalize_first_letter,
+        'first_letter_lower': first_letter_lower,
+        'has_associations': has_associations,
+        'get_unique_properties': get_unique_properties,
+        'get_template_name_from_path': get_template_name_from_path
     }
 
     # Run Jinja generator

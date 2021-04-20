@@ -1,0 +1,23 @@
+/// Generated from {{ self._TemplateReference__context.name | get_template_name_from_path }} by SBAG (https://github.com/vtanja/JSD)
+/// on {{ date }}
+
+package com.example.{{ app }}.dto;
+
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
+@Setter
+public class AuthRequestDTO {
+  private String username;
+  private String password;
+
+  public AuthRequestDTO() {
+    super();
+  }
+
+  public AuthRequestDTO(String username, String password) {
+    this.setUsername(username);
+    this.setPassword(password);
+  }
+}

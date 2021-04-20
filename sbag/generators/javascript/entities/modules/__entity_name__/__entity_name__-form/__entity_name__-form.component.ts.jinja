@@ -1,5 +1,27 @@
-import { Component } from '@angular/core';
+/// Generated from {{ self._TemplateReference__context.name | get_template_name_from_path }} by SBAG (https://github.com/vtanja/JSD)
+/// on {{ date }}
+
 {% set entity_name = entity.name | lower %}
+import { Component } from '@angular/core';
+import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
+import { ActivatedRoute, Router } from '@angular/router';
+import { I{{entity.name}} } from 'src/app/shared/model/{{entity_name}}.model';
+{% for property in entity | get_unique_properties %}
+import { I{{ property }} } from 'src/app/shared/model/{{property | lower}}.model';
+{% endfor %}
+import { {{entity.name}}Service } from '../{{entity_name}}.service';
+import { SharedService } from 'src/app/shared/shared.service';
+
+{% if entity | has_associations %}
+interface ISelectLists {
+{% for property in entity.properties %}
+{% if property | get_property_type != 'base' %}
+	{{ property.name }}List: I{{ property.ptype }}[],
+{% endif %}
+{% endfor %}
+}
+{% endif %}
+
 @Component({
 	selector: 'app-{{entity_name}}-form',
 	templateUrl: './{{entity_name}}-form.component.html',
@@ -7,6 +29,178 @@ import { Component } from '@angular/core';
 })
 
 export class {{entity.name}}FormComponent {
-	
-    constructor(){}
+	isLoading: boolean = true;
+	update: boolean = false;
+	id: number = 0;
+	entity: I{{ entity.name }} | undefined;
+	form: FormGroup = new FormGroup({});
+	title: String = "Create {{entity.name}}";
+
+	{% if entity | has_associations %}
+	selectLists: ISelectLists = {
+	{% for property in entity.properties %}
+	{% if property | get_property_type != 'base' %}
+		{{ property.name }}List: [],
+	{% endif %}
+	{% endfor %}
+	}
+	{% endif %}
+
+    constructor(
+		private service: {{entity.name}}Service, 
+		private router: Router, 
+		private activatedRoute: ActivatedRoute, 
+		private fb: FormBuilder,
+		private sharedService: SharedService
+		)
+	{
+		this.hideAlerts();
+		this.form = this.fb.group({
+			{% for property in entity.properties %}
+			'{{ property.name }}': new FormControl(),
+    		{% endfor %}
+        });
+
+		{% if entity | has_associations == True %}
+		this.service.getLists().subscribe(
+			(res: any) => {
+			    this.selectLists = res;
+				console.log(res);
+				this.loadData();
+			},
+			(err: any) => {
+				alert("error");
+				console.log(err);
+			}
+	  	);
+		{% else %}
+		this.loadData();
+		{% endif %}
+	}
+
+	loadData(){
+		if(this.router.url.includes('update')){
+			this.update = true;
+			this.title = "Update {{entity.name}}";
+			this.id = Number(this.activatedRoute.snapshot.paramMap.get('id'));
+			console.log(this.id);
+			this.service.get{{entity.name}}(this.id).subscribe(
+				(res: any) => {
+					this.entity = res;
+					{% for property in entity.properties %}
+					{% if property | get_property_type == 'entity' %}
+					let {{property.name}}Val = null
+					if(this.entity?.{{property.name}} != null){
+						{{property.name}}Val = this.selectLists.{{ property.name }}List.find(el => el.id == this.entity?.{{property.name}}.id)
+					}
+					{% elif property | get_property_type == 'list' %}
+					let {{property.name}}Val: (I{{property.ptype.name}} | undefined)[] = []
+					this.entity?.{{property.name}}.forEach(element => {
+						let el = this.selectLists.{{ property.name }}List.find(e => e.id == element.id)
+						{{property.name}}Val.push(el)
+					});
+					{% endif %}
+					{% endfor %}
+					this.form.setValue({
+					{% for property in entity.properties %}
+					{% if property | get_property_type != 'base' %}
+						{{property.name}}: {{property.name}}Val,
+					{% else %}
+						{{property.name}}: this.entity?.{{property.name}},
+					{% endif %}
+					{% endfor %}
+					})
+					this.sharedService.isLoading(false);
+					this.isLoading = false;
+				},
+				(err: any) => {
+					alert("error");
+					console.log(err);
+				}
+			);
+		}
+		else {
+			this.id = 0;
+			this.update = false;
+			this.sharedService.isLoading(false);
+			this.isLoading = false;
+		}
+	}
+
+	submit() {
+		this.sharedService.isLoading(true);
+		this.isLoading = true;
+		{% for property in entity.properties %}
+		let {{property.name}}Value = this.form.get('{{property.name}}')?.value
+		{% endfor %}
+		let dto: I{{entity.name}} = {
+			{% for property in entity.properties %}
+			{{property.name}}: {{property.name}}Value,
+			{% endfor %}
+		}
+		console.log(dto)
+		if(this.update) {
+			this.service.update{{entity.name}}(this.id, dto).subscribe(
+			(res: any) => {
+				this.entity = res;
+				this.sharedService.isLoading(false);
+				this.isLoading = false;
+				this.alertSuccess();
+			},
+			(err) => {
+				this.sharedService.isLoading(false);
+				this.isLoading = false;
+				this.alertWarn();
+				console.log(err);
+			});
+		}
+		else {
+			this.service.create{{entity.name}}(dto).subscribe(
+			(res) => {
+				this.form.reset();
+				this.sharedService.isLoading(false);
+				this.isLoading = false;
+				this.alertSuccess();
+			},
+			(err) => {
+				this.sharedService.isLoading(false);
+				this.isLoading = false;
+				this.alertWarn();
+				console.log(err);
+			});
+		}
+	}
+
+	hideAlerts() {
+		let successAlert = document.getElementById("successAlert");
+		if(successAlert != null){
+			successAlert.style.display = "none"
+		}
+		let warnAlert = document.getElementById("warnAlert");
+		if(warnAlert != null){
+			warnAlert.style.display = "none"
+		}
+	}
+
+	alertSuccess(){
+		let successAlert = document.getElementById("successAlert");
+		if(successAlert != null){
+			successAlert.style.display = "block"
+		}
+		let warnAlert = document.getElementById("warnAlert");
+		if(warnAlert != null){
+			warnAlert.style.display = "none"
+		}
+	}
+
+	alertWarn(){
+		let successAlert = document.getElementById("successAlert");
+		if(successAlert != null){
+			successAlert.style.display = "none"
+		}
+		let warnAlert = document.getElementById("warnAlert");
+		if(warnAlert != null){
+			warnAlert.style.display = "block"
+		}
+	}
 }

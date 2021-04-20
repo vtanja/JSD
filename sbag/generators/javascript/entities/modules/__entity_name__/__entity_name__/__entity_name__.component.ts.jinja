@@ -38,7 +38,12 @@ export class {{entity.name}}Component {
                     this.sharedService.isLoading(false);
 					this.isLoading = false;
                 },
-                error => console.error(error)
+                error => {
+                    if (error.status == 403)
+                        alert("Forbidden");
+                    else 
+                        alert(error.error);
+                }
             );
         });
     }
@@ -50,7 +55,10 @@ export class {{entity.name}}Component {
 				alert("{{entity.name}} has been successfully deleted!");
 			},
 			error => {
-				alert("Something went wrong while deleting {{entity_name}}!");
+                if (error.status == 403)
+					alert("Forbidden");
+				else 
+					alert("Something went wrong while deleting {{entity_name}}!");
 			});
 
             let path = '/{{entity_name}}';

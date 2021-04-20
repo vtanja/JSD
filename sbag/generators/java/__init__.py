@@ -123,7 +123,7 @@ def sbag_generate_java(metamodel, model, output_path, overwrite, debug, **custom
                                 overwrite, filters)
 
     generate_custom_path_files(config, template_folder, output_path,
-                                overwrite, filters)
+                               overwrite, filters)
 
 
 def check_and_setup_config(model):
@@ -136,6 +136,7 @@ def check_and_setup_config(model):
     if model.config.description == '':
         model.config.description = 'Describe your project here'
 
+
 def generate_entity_based_files(config, model, template_folder, output_path, overwrite, filters):
     project_folder = join(template_folder, '__project__', '')
     project_output = join(output_path, '__project__', '')
@@ -145,11 +146,11 @@ def generate_entity_based_files(config, model, template_folder, output_path, ove
         textx_jinja_generator(project_folder, project_output, config,
                               overwrite, filters)
 
+
 def generate_custom_path_files(config, template_folder, output_path,
-                                overwrite, filters):
+                               overwrite, filters):
     custom_paths_folder = join(template_folder, 'custom_paths')
-    custom_paths_output= join(output_path, '__project__', 'src', 'main', \
-                              'java', 'com', 'example', '__app__', '')
+    custom_paths_output = join(output_path, '__project__', 'src', 'main', 'java', 'com', 'example', '__app__', '')
     for path in config['new_controllers']:
         config['path_name'] = path.capitalize()
         textx_jinja_generator(custom_paths_folder, custom_paths_output, config,

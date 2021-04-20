@@ -75,18 +75,18 @@ export class {{service_name}} {
     {% endif %}
   }
   {% elif endpoint.method == 'post' or endpoint.method == 'put' %}
-  {{ endpoint.function_name() }}({% for param in endpoint.parameters %}{{ comma_separator() }}{{param}}: any{% endfor %}, {{endpoint.post_type | lower}}: I{{endpoint.post_type}}) {
+  {{ endpoint.function_name() }}({% for param in endpoint.parameters %}{% if endpoint.parameters | length > 0 %}{{ comma_separator() }}{{param}}: any, {% endif %}{% endfor %}{{endpoint.post_type | lower}}: I{{endpoint.post_type}}) {
     {% if endpoint.method == 'put' %}
     {% if '{' in endpoint.path and '}' in endpoint.path %}
     return this.http.put(environment.api + '{{endpoint | get_path_for_methods}}' {{endpoint | get_path_parameters}}, {{endpoint.post_type | lower}});
     {% else %}
-    return this.http.put(environment.api + '{{endpoint | get_path_for_methods}}', {{endpoint.parameters[0]}});
+    return this.http.put(environment.api + '{{endpoint | get_path_for_methods}}', {{endpoint.post_type | lower}});
     {% endif %}
     {% elif endpoint.method == 'post' %}
     {% if '{' in endpoint.path and '}' in endpoint.path %}
     return this.http.post(environment.api + '{{endpoint | get_path_for_methods}}' {{endpoint | get_path_parameters}}, {{endpoint.post_type | lower}});
     {% else %}
-    return this.http.post(environment.api + '{{endpoint | get_path_for_methods}}', {{endpoint.parameters[0]}});
+    return this.http.post(environment.api + '{{endpoint | get_path_for_methods}}', {{endpoint.post_type | lower}});
     {% endif %}
     {% endif %}
   }

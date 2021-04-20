@@ -54,7 +54,6 @@ public class AuthUserDetailsService implements UserDetailsService {
   }
 
   public ResponseEntity<?> login(AuthRequestDTO request) throws Exception {
-    System.out.println(request.getUsername() + " " + request.getPassword());
     try {
       Authentication authenticate =
           authenticationManager.authenticate(

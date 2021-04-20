@@ -45,4 +45,5 @@ entity Address:
 ;
 /custom
     get: String
+    post(Book): String
 ;

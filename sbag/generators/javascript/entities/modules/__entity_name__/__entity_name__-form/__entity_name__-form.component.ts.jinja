@@ -69,8 +69,10 @@ export class {{entity.name}}FormComponent {
 				this.loadData();
 			},
 			(err: any) => {
-				alert("error");
-				console.log(err);
+				if (err.status == 403)
+					alert("Forbidden");
+				else 
+					alert(err.error);
 			}
 	  	);
 		{% else %}
@@ -114,8 +116,10 @@ export class {{entity.name}}FormComponent {
 					this.isLoading = false;
 				},
 				(err: any) => {
-					alert("error");
-					console.log(err);
+					if (err.status == 403)
+						alert("Forbidden");
+					else 
+						alert(err.error);
 				}
 			);
 		}

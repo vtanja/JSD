@@ -52,10 +52,20 @@ export class {{entity.name}}ListComponent implements OnInit {
 						this.sharedService.isLoading(false);
 						this.isLoading = false;
 					},
-					(error) => alert(error.error)
+					(error) => {
+						if (error.status == 403)
+							alert("Forbidden");
+						else 
+							alert(error.error);
+					}
 				);
 			},
-			(error) => alert(error.error)
+			(error) => {
+				if (error.status == 403)
+					alert("Forbidden");
+				else 
+					alert(error.error);
+			}
 		);
 	}
 
@@ -74,7 +84,12 @@ export class {{entity.name}}ListComponent implements OnInit {
 				this.sharedService.isLoading(false);
 				this.isLoading = false;
 			},
-			(error) => alert(error.error)
+			(error) => {
+				if (error.status == 403)
+					alert("Forbidden");
+				else 
+					alert(error.error);
+			}
     	);
 	}
 
@@ -84,7 +99,10 @@ export class {{entity.name}}ListComponent implements OnInit {
 				alert("{{entity.name}} has been successfully deleted!");
 			},
 			error => {
-				alert("Something went wrong while deleting {{entity_name}}!");
+				if (error.status == 403)
+					alert("Forbidden");
+				else 
+					alert("Something went wrong while deleting {{entity_name}}!");
 			}
 		);
 		let path = '/{{entity_name}}';

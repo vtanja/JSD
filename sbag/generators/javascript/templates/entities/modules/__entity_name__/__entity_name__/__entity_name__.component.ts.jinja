@@ -1,0 +1,94 @@
+/// Generated from {{ self._TemplateReference__context.name | get_template_name_from_path }} by SBAG (https://github.com/vtanja/JSD)
+/// on {{ date }}
+
+{% set entity_name = entity.name | lower %}
+import { Component } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
+import { NgbModal, ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
+import { {{ entity.name }}Service } from '../{{ entity_name }}.service';
+import { I{{ entity.name }} } from 'src/app/shared/model/{{ entity_name }}.model';
+import { SharedService } from 'src/app/shared/shared.service';
+
+@Component({
+	selector: 'app-{{entity_name}}',
+	templateUrl: './{{entity_name}}.component.html',
+	styleUrls: ['./{{entity_name}}.component.css'],
+})
+
+export class {{entity.name}}Component {
+    isLoading: boolean = true;
+    obj: I{{ entity.name }}|undefined;
+
+    closeResult: string = '';
+
+    constructor(private {{entity_name}}Service: {{ entity.name }}Service,
+                private activatedRoute: ActivatedRoute, private router: Router,
+                private modalService: NgbModal,
+                private sharedService: SharedService){}
+
+    ngOnInit(): void {
+        this.activatedRoute.paramMap.subscribe(params => {
+            let param = params.get('id');
+            if (param == null) {
+                this.router.navigate(['/{{ entity_name }}']);
+            }
+            this.{{ entity_name }}Service.get{{ entity.name }}(parseInt(param!)).subscribe(
+                data => { 
+                    this.obj = data;
+                    this.sharedService.isLoading(false);
+					this.isLoading = false;
+                },
+                error => {
+                    if (error.status == 403)
+                        alert("Forbidden");
+                    else 
+                        alert(error.error);
+                }
+            );
+        });
+    }
+
+    delete(){
+        if(this.obj != undefined){
+            this.{{entity_name}}Service.delete{{entity_name|capitalize}}(this.obj.id).subscribe(
+			data =>{
+				alert("{{entity.name}} has been successfully deleted!");
+			},
+			error => {
+                if (error.status == 403)
+					alert("Forbidden");
+				else 
+					alert("Something went wrong while deleting {{entity_name}}!");
+			});
+
+            let path = '/{{entity_name}}';
+
+            this.router.navigateByUrl('', { skipLocationChange: true }).then(() => {
+                this.router.navigate([path]);
+            });
+        }
+        else{
+            alert("Something went wrong while deleting {{entity_name}}!");
+        }
+		
+	}
+
+    open(content:any) {
+		this.modalService.open(content, {ariaLabelledBy: 'modal-basic-title'}).result.then((result) => {
+		this.closeResult = `Closed with: ${result}`;
+		}, (reason) => {
+		this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
+		});
+	}
+
+	private getDismissReason(reason: any): string {
+		if (reason === ModalDismissReasons.ESC) {
+		return 'by pressing ESC';
+		} else if (reason === ModalDismissReasons.BACKDROP_CLICK) {
+		return 'by clicking on a backdrop';
+		} else {
+		return `with: ${reason}`;
+		}
+	}
+
+}

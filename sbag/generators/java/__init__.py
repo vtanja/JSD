@@ -117,12 +117,28 @@ def sbag_generate_java(metamodel, model, output_path, overwrite, debug, **custom
     }
 
     # Run Jinja generator
+    generate_base_project_structure(template_folder, output_path, config,
+                                    overwrite, filters)
+
+    generate_entity_based_files(template_folder, output_path, config, model,
+                                overwrite, filters)
+
+def generate_base_project_structure(template_folder, output_path, config, overwrite, filters):
+    project_template = join(template_folder, '__project__', '')
+    project_output = join(output_path, '__project__', '')
+    textx_jinja_generator(project_template, project_output, config,
+                          overwrite, filters)
+
+def generate_entity_based_files(template_folder, output_path, config, model,
+                                overwrite, filters):
+    entities_template = join(template_folder, 'app', '')
+    entities_output = join(output_path, '__project__', 'src', 'main', 'java',
+                           'com', 'example', '__app__', '')
     for entity in model.entities:
         config['entity'] = entity
         config['entity_name'] = entity.name
-        textx_jinja_generator(template_folder, output_path, config,
+        textx_jinja_generator(entities_template, entities_output, config,
                               overwrite, filters)
-
 
 def check_and_setup_config(model):
     if model.config is None:

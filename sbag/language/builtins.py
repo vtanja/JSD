@@ -62,6 +62,7 @@ class OneToOne():
         self.parent = parent
         self.option = option
 
+
 class OneToMany():
 
     def __init__(self, parent, owner):
@@ -69,12 +70,14 @@ class OneToMany():
         self.parent = parent
         self.owner = owner
 
+
 class ManyToOne():
 
     def __init__(self, parent, option):
         """Many to one entity association type."""
         self.parent = parent
         self.option = option
+
 
 class ManyToMany:
 

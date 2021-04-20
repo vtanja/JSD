@@ -45,7 +45,11 @@ export class LoginComponent implements OnInit {
           this.router.navigate(['']);
         },
         (error) => {
-          alert(error.error);
+          if(error.status == 401){
+            alert("Wrong username or password");
+          }
+          else
+            alert(error.error);
         }
       );
     }

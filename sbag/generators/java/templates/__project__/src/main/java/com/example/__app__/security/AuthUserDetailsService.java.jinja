@@ -93,20 +93,20 @@ public class AuthUserDetailsService implements UserDetailsService {
         Set<Role> rolesSet = new HashSet<>();
 
         if (userRepository.findAll().size() == 0){
-          if (roleRepository.findByName("admin") == null){
+          if (roleRepository.findByName("ADMIN") == null){
             Role role = new Role();
-            role.setName("admin");
+            role.setName("ADMIN");
             roleRepository.save(role);
           }
-          rolesSet.add(roleRepository.findByName("admin"));
+          rolesSet.add(roleRepository.findByName("ADMIN"));
         }
         else{
-          if (roleRepository.findByName("user") == null){
+          if (roleRepository.findByName("USER") == null){
             Role role = new Role();
-            role.setName("user");
+            role.setName("USER");
             roleRepository.save(role);
           }
-          rolesSet.add(roleRepository.findByName("user"));
+          rolesSet.add(roleRepository.findByName("USER"));
         }
         
         user.setRoles(rolesSet);

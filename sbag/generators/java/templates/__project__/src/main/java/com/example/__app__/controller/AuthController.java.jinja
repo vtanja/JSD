@@ -1,0 +1,31 @@
+/// Generated from {{ self._TemplateReference__context.name | get_template_name_from_path }} by SBAG (https://github.com/vtanja/JSD)
+/// on {{ date }}
+
+package com.example.{{ app }}.controller;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import com.example.{{ app }}.security.AuthUserDetailsService;
+import com.example.{{ app }}.dto.AuthRequestDTO;
+import com.example.{{ app }}.dto.RegistrationDTO;
+
+@RestController
+@RequestMapping(value = "/auth", produces = MediaType.APPLICATION_JSON_VALUE)
+public class AuthController {
+
+  @Autowired
+  AuthUserDetailsService authService;
+
+   @PostMapping(path = "/login")
+  public ResponseEntity<?> login(@RequestBody AuthRequestDTO request) throws Exception {
+      return authService.login(request);    
+  }
+
+  @PostMapping(path="/register")
+  public ResponseEntity<?> register(@RequestBody RegistrationDTO regDTO) throws Exception {
+        return authService.register(regDTO);   
+  }
+
+}

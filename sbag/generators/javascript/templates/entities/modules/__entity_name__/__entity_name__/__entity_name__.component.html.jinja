@@ -1,0 +1,48 @@
+<!--
+Generated from {{ self._TemplateReference__context.name | get_template_name_from_path }} by SBAG (https://github.com/vtanja/JSD)
+on {{ date }}
+-->
+
+<div class="container" *ngIf = "!isLoading">
+	<div class="justify-content-center">
+		<div class="col justify-content-between">
+			<h1 class="h1">{{ entity.name }}</h1>
+            <a [routerLink]="['/{{ entity.name | lower }}', obj?.id, 'update']" class="btn btn-info m-2">Edit</a>
+            <a class="btn btn-danger m-2" (click)="open(mymodal)">Delete</a>
+		</div>
+		<div class="col">
+            {% for prop in entity.properties %}
+            {% if prop | get_property_type == 'base' %}
+			<p><strong>{{ prop.name }}</strong>: {{ '{{ obj?.' + prop.name + ' }}' }}</p>
+            {% elif prop | get_property_type == 'list' %}
+            <p><strong>{{ prop.name }}</strong>:</p>
+            <ul>
+                <li *ngFor="let item of obj?.{{ prop.name }}">
+                    <a [routerLink]="['/{{ prop.name }}', item.id]">{{ prop.name + ' {{ item.id }}' }}</a>
+                </li>
+            </ul>
+            {% else %}
+            <p><strong>{{ prop.name }}</strong>:
+                <a [routerLink]="['/{{ prop.name }}', {{ 'obj?.' + prop.name + '?.id' }}]">
+                    {{ prop.ptype.name + ' ({{obj?.' + prop.name + '?.id}})' }}</a></p>
+            {% endif %}
+            {% endfor %}
+		</div>
+    </div>
+</div>
+
+<ng-template #mymodal let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">Delete</h4>
+    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <h5 class="text-danger">Are you sure that you want to delete {{entity_name}}?</h5>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-danger" (click)="delete();modal.dismiss('Cross click')">Delete</button>
+    <button type="button" class="btn btn-secondary" (click)="modal.dismiss('Cross click')">Cancel</button>
+  </div>
+</ng-template>

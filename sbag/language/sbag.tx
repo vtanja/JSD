@@ -1,0 +1,57 @@
+
+SbagModel:
+    config=Config?
+    simple_types*=BaseType
+    entities+=Entity
+;
+
+Entity:
+    'entity' name=ID ':'
+    properties+=EntityProperty
+;
+
+EntityProperty:
+    Property | Association
+;
+
+Property:
+    name=ID ':' ptype=[BaseType] ';'
+;
+
+Association:
+    name=ID ':' ptype=[Entity] atype=AssociationType ';'
+;
+
+AssociationType:
+    OneToOne | OneToMany | ManyToOne | ManyToMany
+;
+
+OneToOne:
+    option='[1..1]'
+;
+
+OneToMany:
+    '[1..*' owner=ID? ']'
+;
+
+ManyToOne:
+    option='[*..1]'
+;
+
+ManyToMany:
+    '[*..*' owner=ID? ']'
+;
+
+BaseType:
+    'type' name=ID
+;
+
+Config:
+    ('project' ':' project=ID)?
+    ('group' ':' group=STRING)?
+    ('description' ':' description=STRING)?
+;
+
+Comment:
+    /\/\/.*$/
+;

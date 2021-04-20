@@ -1,0 +1,20 @@
+/// Generated from {{ self._TemplateReference__context.name | get_template_name_from_path }} by SBAG (https://github.com/vtanja/JSD)
+/// on {{ date }}
+
+package com.example.{{ app }}.dto;
+
+import lombok.NoArgsConstructor;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter @Setter
+@NoArgsConstructor
+@AllArgsConstructor
+public class {{ entity.name | capitalize }}DTO {
+    {% for property in entity.properties %}
+    {% if property | get_type == 'base' %}
+    private {{ property.ptype }} {{ property.name }};
+    {% endif %}
+    {% endfor %}
+}

@@ -1,0 +1,32 @@
+/// Generated from {{ self._TemplateReference__context.name | get_template_name_from_path }} by SBAG (https://github.com/vtanja/JSD)
+/// on {{ date }}
+
+import { NgModule } from '@angular/core';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common';
+{% set entity_name = entity.name | lower %}
+import { {{entity.name}}ListComponent } from './{{entity_name}}-list/{{entity_name}}-list.component';
+import { {{entity.name}}Component } from './{{entity_name}}/{{entity_name}}.component';
+import { {{entity.name}}FormComponent } from './{{entity_name}}-form/{{entity_name}}-form.component';
+import { {{entity.name}}RoutingModule } from './{{  entity.name | lower}}-routing.module';
+import { NgxPaginationModule } from 'ngx-pagination';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+
+@NgModule({
+  imports: [
+    FormsModule,
+    ReactiveFormsModule,
+    CommonModule,
+    {{ entity.name }}RoutingModule,
+    NgxPaginationModule,
+    NgbModule  
+  ],
+  declarations: 
+    [
+        {{entity.name}}ListComponent,
+        {{entity.name}}Component,
+        {{entity.name}}FormComponent,
+    ],
+  providers: []
+})
+export class {{entity.name}}Module {}

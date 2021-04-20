@@ -1,0 +1,20 @@
+/// Generated from {{ self._TemplateReference__context.name | get_template_name_from_path }} by SBAG (https://github.com/vtanja/JSD)
+/// on {{ date }}
+
+package com.example.{{ app }}.dto;
+import com.example.{{ app }}.model.Role;
+
+import lombok.AllArgsConstructor;
+import lombok.Data;
+
+import java.util.Set;
+
+@Data
+@AllArgsConstructor
+public class UserTokenStateDTO {
+    private String  accessToken;
+    private Integer expiresIn;
+    private String refreshToken;
+    private String username;
+    private String role;
+}

@@ -1,4 +1,3 @@
-from os.path import join
 from sbag.language import Entity, Path
 
 class EndPoint():
@@ -83,7 +82,7 @@ def endpoints_from_path(path, resource='', parameters=[]):
 
 def handle_subpath_endpoints(content, parameters, endpoints, resource):
     add_parameters_from_path(content, parameters)
-    endpoints.extend(endpoints_from_path(content, resource=join(resource, content.resource),
+    endpoints.extend(endpoints_from_path(content, resource='/'.join([resource, content.resource]),
                                          parameters=parameters))
     remove_added_parameters_from_path(content, parameters)
 

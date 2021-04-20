@@ -1,3 +1,6 @@
+/// Generated from {{ self._TemplateReference__context.name | get_template_name_from_path }} by SBAG (https://github.com/vtanja/JSD)
+/// on {{ date }}
+
 package com.example.{{ app }}.controller;
 
 import org.springframework.web.bind.annotation.*;
@@ -24,12 +27,8 @@ import com.example.{{ app }}.model.{{ ent }};
 @Slf4j
 @RequestMapping( path = "/{{ entity.name | lower }}")
 public class {{ controllerName }} {
-    private final {{ entity.name }}Service {{ entityService }};
-
     @Autowired
-    public {{ controllerName }}({{ entity.name }}Service service){
-        this.{{ entityService }} = service;
-    }
+    private {{ entity.name }}Service {{ entityService }};
 
     @GetMapping(path="/count")
     public ResponseEntity<Integer> get{{ entities }}Count() {
@@ -50,12 +49,12 @@ public class {{ controllerName }} {
     }
 
     @PostMapping()
-    public ResponseEntity<{{ DtoType }}> create(@RequestBody {{ DtoType }} {{ entityDto }}) {
+    public ResponseEntity<{{ DtoDetailType }}> create(@RequestBody {{ DtoDetailType }} {{ entityDto }}) {
         return {{ entityService }}.create({{ entityDto }});
     }
 
     @PutMapping(path = "/{id}")
-    public ResponseEntity<{{ DtoType }}> update(@PathVariable Long id, @RequestBody {{ DtoType }} {{ entityDto }}) {
+    public ResponseEntity<{{ DtoDetailType }}> update(@PathVariable Long id, @RequestBody {{ DtoDetailType }} {{ entityDto }}) {
         return {{ entityService }}.update{{ entity.name }}(id, {{ entityDto }});
     }
 
@@ -64,9 +63,14 @@ public class {{ controllerName }} {
         return {{ entityService }}.delete{{ entity.name }}(id);
     }
 
+    @GetMapping(path="/lists")
+    public ResponseEntity<String> getLists() {
+        return {{ entityService }}.getLists();
+    }
+
     {% for endpoint in controller_paths[entity.name] %}
     {% set comma_separator = joiner() %}
-    @{{ endpoint.method | capitalize }}Mapping(path = "/{{ endpoint.path }}")
+    @{{ endpoint.method | capitalize }}Mapping(path = "{{ endpoint.path }}")
     public ResponseEntity<{{ endpoint.get_correct_type() }}> {{ endpoint.function_name() }}({% for param in endpoint.parameters %}{{ comma_separator() }}@PathVariable String {{ param }}{% endfor %}{% if endpoint.method == 'post' %}, @RequestBody {{ endpoint.post_type }} requestObject{% endif %}) {
     {% set comma_separator = joiner() %}
         return {{ entityService }}.{{ endpoint.function_name() }}({% for param in endpoint.parameters %}{{ comma_separator() }}{{ param }}{% endfor %}{% if endpoint.method == 'post' %}, requestObject{% endif %});

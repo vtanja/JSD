@@ -1,11 +1,11 @@
 from os.path import join
-
 from sbag.language import Entity, Path
 
 
 class EndPoint():
 
     def __init__(self, method, path, rtype, post_type, rtype_list, parameters):
+        """Create instnaces of Endpoint which are used to generate controllers."""
         self.method = method
         self.path = path
         self.rtype = rtype
@@ -27,15 +27,17 @@ def setup_custom_paths_for_generation(config, model):
     entity_names = [ent.name.lower() for ent in model.entities]
     config['new_controllers'] = new_controllers(entity_names, model.paths)
     config['controller_paths'] = new_paths_for_existing_controllers(entity_names, model.paths)
-    config['controller_imports'] = new_imports_for_existing_controllers(config['controller_paths'])
+    config['controller_imports'] = new_imports_for_existing_controllers({**config['controller_paths'], **config['new_controllers']})
     extend_imports_with_post_object_types(config)
 
 
 def new_controllers(entity_names, paths):
-    new_controllers = []
+    new_controllers = {}
     for path in paths:
         if path.resource not in entity_names:
-            new_controllers.append(path)
+            if path not in new_controllers:
+                new_controllers[path.resource] = []
+            new_controllers[path.resource].extend(endpoints_from_path(path))
     return new_controllers
 
 
@@ -94,7 +96,7 @@ def endpoints_from_path(path, resource='', parameters=[]):
 
 def handle_subpath_endpoints(content, parameters, endpoints, resource):
     add_parameters_from_path(content, parameters)
-    endpoints.extend(endpoints_from_path(content, resource=join(resource, content.resource),
+    endpoints.extend(endpoints_from_path(content, resource='/'.join([resource, content.resource]),
                                          parameters=parameters))
     remove_added_parameters_from_path(content, parameters)
 
@@ -115,11 +117,12 @@ def resource_contains_parameter(resource):
 
 
 def extend_imports_with_post_object_types(config):
-    for controller in config['controller_paths']:
-        add_import_for_post_methods(controller, config)
+    controller_paths = {**config['controller_paths'], **config['new_controllers']}
+    for controller in controller_paths:
+        add_import_for_post_methods(controller, controller_paths[controller], config)
 
 
-def add_import_for_post_methods(controller, config):
-    for endpoint in config['controller_paths'][controller]:
+def add_import_for_post_methods(controller, controller_paths, config):
+    for endpoint in controller_paths:
         if endpoint.method == 'post':
             add_import_to_controller(endpoint.post_type, config['controller_imports'][controller])

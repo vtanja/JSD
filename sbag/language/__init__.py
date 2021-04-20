@@ -1,5 +1,5 @@
 import os
-from textx import language, metamodel_from_file
+from textx import language, metamodel_from_file, get_location, TextXSyntaxError
 from .builtins import *
 
 current_dir = os.path.dirname(__file__)

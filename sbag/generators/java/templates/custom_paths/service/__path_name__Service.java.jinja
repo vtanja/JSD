@@ -1,0 +1,26 @@
+package com.example.{{ app }}.service;
+
+import org.springframework.stereotype.Service;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+{% set path_lower = path_name | lower %}
+
+{% for ent in controller_imports[path_lower] %}
+import com.example.{{ app }}.model.{{ ent }};
+{% endfor %}
+
+{% set serviceName = path_name + 'Service' %}
+
+@Service
+public class {{ serviceName }} {
+
+    {% for endpoint in new_controllers[path_lower] %}
+    {% set comma_separator = joiner() %}
+    public ResponseEntity<{{ endpoint.get_correct_type() }}> {{ endpoint.function_name() }}({% for param in endpoint.parameters %}{{ comma_separator() }}String {{ param }}{% endfor %}{% if endpoint.parameters | length > 0 %}, {% endif %}{% if endpoint.method == 'post' %}{{ endpoint.post_type }} requestObject{% endif %}) {
+        throw new UnsupportedOperationException("Not implemented, yet.");
+    }
+
+    {% endfor %}
+
+}

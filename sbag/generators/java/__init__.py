@@ -1,10 +1,12 @@
+import os
 from os import mkdir, getcwd
 from os.path import dirname, exists, join
 
-from sbag.language import Config, BaseType, OneToMany, ManyToMany, ManyToOne, OneToOne
+from sbag.language import Config, BaseType, Entity, OneToMany, ManyToMany, ManyToOne, OneToOne
 from textx import generator
 from textxjinja import textx_jinja_generator
 from .custom_paths import setup_custom_paths_for_generation
+import datetime
 
 
 def plural(entity: str):
@@ -38,14 +40,45 @@ def get_association_type(prop):
     """
     Based on property returns string saying if its OneToMany, ManyToMany, OneToOne or ManyToOne association
     """
-    if isinstance(prop, OneToMany):
+    if isinstance(prop.atype, OneToMany):
         return 'OneToMany'
-    elif isinstance(prop, ManyToMany):
+    elif isinstance(prop.atype, ManyToMany):
         return 'ManyToMany'
-    elif isinstance(prop, OneToOne):
+    elif isinstance(prop.atype, OneToOne):
         return 'OneToOne'
-    elif isinstance(prop, ManyToOne):
+    elif isinstance(prop.atype, ManyToOne):
         return 'ManyToOne'
+
+
+def capitalize_first_letter(prop: str):
+    return prop[0].upper() + prop[1:]
+
+
+def first_letter_lower(string: str):
+    return string[0].lower() + string[1:]
+
+
+def has_associations(entity: Entity):
+    """
+    Returns true if entity has any associations as properties
+    """
+    for prop in entity.properties:
+        if hasattr(prop, "atype"):
+            return True
+    return False
+
+
+def get_unique_properties(entity):
+    ret = set()
+    for prop in entity.properties:
+        if hasattr(prop, "atype"):
+            ret.add(prop.ptype.name)
+    return ret
+
+
+def get_template_name_from_path(path: str):
+    tail = os.path.split(path)[-1]
+    return tail
 
 
 @generator('sbag', 'java')
@@ -60,6 +93,7 @@ def sbag_generate_java(metamodel, model, output_path, overwrite, debug, **custom
     config['config'] = model.config
     config['project'] = model.config.project.capitalize()
     config['app'] = model.config.project.lower()
+    config['date'] = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
     setup_custom_paths_for_generation(config, model)
     # If output path is not specified take the current working directory
@@ -76,15 +110,20 @@ def sbag_generate_java(metamodel, model, output_path, overwrite, debug, **custom
     filters = {
         'plural': plural,
         'get_type': get_type,
-        'get_association_type': get_association_type
+        'get_association_type': get_association_type,
+        'capitalize_first_letter': capitalize_first_letter,
+        'first_letter_lower': first_letter_lower,
+        'has_associations': has_associations,
+        'get_unique_properties': get_unique_properties,
+        'get_template_name_from_path': get_template_name_from_path
     }
 
     # Run Jinja generator
-    for entity in model.entities:
-        config['entity'] = entity
-        config['entity_name'] = entity.name
-        textx_jinja_generator(template_folder, output_path, config,
-                              overwrite, filters)
+    generate_entity_based_files(config, model, template_folder, output_path,
+                                overwrite, filters)
+
+    generate_custom_path_files(config, template_folder, output_path,
+                                overwrite, filters)
 
 
 def check_and_setup_config(model):
@@ -96,3 +135,22 @@ def check_and_setup_config(model):
         model.config.group = 'com.example'
     if model.config.description == '':
         model.config.description = 'Describe your project here'
+
+def generate_entity_based_files(config, model, template_folder, output_path, overwrite, filters):
+    project_folder = join(template_folder, '__project__', '')
+    project_output = join(output_path, '__project__', '')
+    for entity in model.entities:
+        config['entity'] = entity
+        config['entity_name'] = entity.name
+        textx_jinja_generator(project_folder, project_output, config,
+                              overwrite, filters)
+
+def generate_custom_path_files(config, template_folder, output_path,
+                                overwrite, filters):
+    custom_paths_folder = join(template_folder, 'custom_paths')
+    custom_paths_output= join(output_path, '__project__', 'src', 'main', \
+                              'java', 'com', 'example', '__app__', '')
+    for path in config['new_controllers']:
+        config['path_name'] = path.capitalize()
+        textx_jinja_generator(custom_paths_folder, custom_paths_output, config,
+                              overwrite, filters)

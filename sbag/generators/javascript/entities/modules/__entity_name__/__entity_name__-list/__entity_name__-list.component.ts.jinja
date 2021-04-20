@@ -1,3 +1,6 @@
+/// Generated from {{ self._TemplateReference__context.name | get_template_name_from_path }} by SBAG (https://github.com/vtanja/JSD)
+/// on {{ date }}
+
 import { Component, OnInit } from '@angular/core';
 {% set entity_name = entity.name | lower %}
 {% set entity_name_plural = entity.name | plural %}
@@ -8,6 +11,9 @@ import { Component, OnInit } from '@angular/core';
 
 import { {{service_type}} } from '../{{entity_name}}.service';
 import { {{ model }} } from '../../../shared/model/{{entity_name}}.model';
+import { Router } from '@angular/router';
+import { NgbModal, ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
+import { SharedService } from 'src/app/shared/shared.service';
 
 @Component({
 	selector: 'app-{{entity_name}}-list',
@@ -22,9 +28,18 @@ export class {{entity.name}}ListComponent implements OnInit {
 	page:number = 1;
 	elementsPerPage = 5;
 	options:number[] = [5, 10, 15];
+	idToDelete: any;
+	isLoading: boolean = true;
+
+	isDisabled: boolean = false;
+
+	closeResult: string = '';
 
     constructor(
 		private {{service_field}}: {{service_type}},
+		private router: Router,
+		private modalService: NgbModal,
+		private sharedService: SharedService
 	){}
 
 	ngOnInit(){
@@ -34,6 +49,8 @@ export class {{entity.name}}ListComponent implements OnInit {
 				this.{{service_field}}.get{{entity_name_plural}}(this.page-1, this.elementsPerPage).subscribe(
 					(data: {{model}}[] ) => {
 						this.{{entity_list_field}} = data;
+						this.sharedService.isLoading(false);
+						this.isLoading = false;
 					},
 					(error) => alert(error.error)
 				);
@@ -48,12 +65,50 @@ export class {{entity.name}}ListComponent implements OnInit {
 	}
 
 	changePage(page: number){
+		this.sharedService.isLoading(true);
+		this.isLoading = true;
 		this.page = page;
 		this.{{service_field}}.get{{entity_name_plural}}(this.page-1, this.elementsPerPage).subscribe(
 			(data: {{model}}[] ) => {
 				this.{{entity_list_field}} = data;
+				this.sharedService.isLoading(false);
+				this.isLoading = false;
 			},
 			(error) => alert(error.error)
     	);
+	}
+
+	delete{{entity_name|capitalize}}(id: number){
+		this.{{service_field}}.delete{{entity_name|capitalize}}(id).subscribe(
+			data =>{
+				alert("{{entity.name}} has been successfully deleted!");
+			},
+			error => {
+				alert("Something went wrong while deleting {{entity_name}}!");
+			}
+		);
+		let path = '/{{entity_name}}';
+
+		this.router.navigateByUrl('', { skipLocationChange: true }).then(() => {
+			this.router.navigate([path]);
+		});
+	}
+
+	open(content:any) {
+		this.modalService.open(content, {ariaLabelledBy: 'modal-basic-title'}).result.then((result) => {
+		this.closeResult = `Closed with: ${result}`;
+		}, (reason) => {
+		this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
+		});
+	}
+
+	private getDismissReason(reason: any): string {
+		if (reason === ModalDismissReasons.ESC) {
+		return 'by pressing ESC';
+		} else if (reason === ModalDismissReasons.BACKDROP_CLICK) {
+		return 'by clicking on a backdrop';
+		} else {
+		return `with: ${reason}`;
+		}
 	}
 }

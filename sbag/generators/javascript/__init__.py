@@ -1,19 +1,19 @@
 from os import mkdir, getcwd
 from os.path import dirname, exists, join
-
 from sbag.generators.java.custom_paths import new_paths_for_existing_controllers
-from sbag.language import Entity
+from sbag.language import Entity, BaseType
 from sbag.generators.java import get_type as get_property_type
-from sbag.generators.java import plural
+from sbag.generators.java import plural, first_letter_lower, has_associations, capitalize_first_letter, get_unique_properties, get_template_name_from_path
 from textx import generator
 from textxjinja import textx_jinja_generator
 import re
+import datetime
 
 
 def get_correct_type(prop):
     """
-       Returns correct java type if prop type is BaseType or returns correct entity DTO.
-       """
+    Returns correct java type if prop type is BaseType or returns correct entity DTO.
+    """
     if isinstance(prop.ptype, Entity):
         return 'I{}'.format(prop.ptype.name.capitalize())
     else:
@@ -29,8 +29,22 @@ def format_property(prop: str):
     return re.sub(r"(\w)([A-Z])", r"\1 \2", prop)
 
 
+
 def first_letter_lower(string: str):
     return string[0].lower() + string[1:]
+
+def get_form_input_type(prop):
+    """
+    Returns correct form input type for given property type
+    """
+    if isinstance(prop.ptype, BaseType):
+       return {
+            'int': 'number',
+            'float': 'number',
+            'string': 'text',
+            'boolean': 'checkbox'
+        }.get(prop.ptype.name, prop.ptype.name)
+
 
 
 @generator('sbag', 'javascript')
@@ -57,12 +71,18 @@ def sbag_generate_javascript(metamodel, model, output_path, overwrite, debug, **
         'plural': plural,
         'format_property': format_property,
         'first_letter_lower': first_letter_lower,
-        'get_property_type': get_property_type
+        'get_property_type': get_property_type,
+        'get_form_input_type': get_form_input_type,
+        'has_associations': has_associations,
+        'capitalize_first_letter': capitalize_first_letter,
+        'get_unique_properties': get_unique_properties,
+        'get_template_name_from_path': get_template_name_from_path
     }
 
     config['entities'] = model.entities
     entity_names = [ent.name.lower() for ent in model.entities]
     config['controller_paths'] = new_paths_for_existing_controllers(entity_names, model.paths)
+    config['date'] = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
     textx_jinja_generator(template_folder, output_path, config, overwrite, filters)
 
@@ -73,5 +93,7 @@ def sbag_generate_javascript(metamodel, model, output_path, overwrite, debug, **
         config['properties'] = entity.properties
         config['entity'] = entity
         config['entity_name'] = entity.name.lower()
+        if model.config.project != None:
+            config['app_name'] =  model.config.project
         textx_jinja_generator(entities_folder, output_path, config, overwrite,
                               filters)

@@ -29,8 +29,7 @@ def setup_custom_paths_for_generation(config, model):
     entity_names = [ent.name.lower() for ent in model.entities]
     config['new_controllers'] = new_controllers(entity_names, model.paths)
     config['controller_paths'] = new_paths_for_existing_controllers(entity_names, model.paths)
-    config['controller_imports'] = new_imports_for_existing_controllers({**config['controller_paths'], **config['new_controllers']})
-    extend_imports_with_post_object_types(config)
+    config['controller_imports'] = generate_imports_for_controllers(config)
 
 def new_controllers(entity_names, paths):
     new_controllers = {}
@@ -56,9 +55,11 @@ def create_controller_if_doesnt_exist(path, controller_paths):
     if path.resource.capitalize() not in controller_paths:
         controller_paths[path.resource.capitalize()] = []
 
-def new_imports_for_existing_controllers(controller_paths):
+def generate_imports_for_controllers(config):
+    controller_paths = {**config['controller_paths'], **config['new_controllers']}
     controller_imports = {controller:generate_imports_for_controller(controller_paths[controller]) \
                           for controller in controller_paths}
+    extend_imports_with_request_object_types(controller_paths, controller_imports)
     return controller_imports
 
 def generate_imports_for_controller(controller_paths):
@@ -103,12 +104,11 @@ def remove_added_parameters_from_path(content, parameters):
 def resource_contains_parameter(resource):
     return resource[0] == '{' and resource[-1] == '}'
 
-def extend_imports_with_post_object_types(config):
-    controller_paths = {**config['controller_paths'], **config['new_controllers']}
+def extend_imports_with_request_object_types(controller_paths, controller_imports):
     for controller in controller_paths:
-        add_import_for_post_methods(controller, controller_paths[controller], config)
+        add_imports_for_request_objects(controller, controller_paths[controller], controller_imports)
 
-def add_import_for_post_methods(controller, controller_paths, config):
+def add_imports_for_request_objects(controller, controller_paths, controller_imports):
     for endpoint in controller_paths:
-        if endpoint.method == 'post':
-            add_import_to_controller(endpoint.post_type, config['controller_imports'][controller])
+        if endpoint.post_type != '' and endpoint.post_type is not None:
+            add_import_to_controller(endpoint.post_type, controller_imports[controller])

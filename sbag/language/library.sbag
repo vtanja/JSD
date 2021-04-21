@@ -26,3 +26,20 @@ entity Address:
     city: String;
     street: String;
     number: int;
+
+/author
+    /book
+        get:
+            return: Book[]
+        /{id}
+            get:
+                return: Book
+        ;
+    ;
+;
+/address
+    /publisher
+        get:
+            return: Publisher[]
+    ;
+;

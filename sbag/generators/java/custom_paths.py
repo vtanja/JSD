@@ -12,7 +12,12 @@ class EndPoint():
         self.parameters = [param for param in parameters]
 
     def get_correct_type(self):
-        return self.rtype if self.rtype_list == '' else 'List<{}>'.format(str(self.rtype))
+        response_type = {
+            'int': 'Integer',
+            'long': 'Long',
+            'double': 'Double',
+        }.get(self.rtype.name, self.rtype)
+        return response_type if self.rtype_list == '' else 'List<{}>'.format(response_type)
 
     def function_name(self):
         function_name = ''

@@ -76,8 +76,9 @@ def add_import_to_controller(entity, controller_imports):
 def import_already_added(entity, controller_imports):
     return entity not in controller_imports
 
-def endpoints_from_path(path, resource='', parameters=[]):
+def endpoints_from_path(path, resource='', parameters=None):
     endpoints = []
+    if parameters is None: parameters = []
     for content in path.content:
         if isinstance(content, Path):
             handle_subpath_endpoints(content, parameters, endpoints, resource)

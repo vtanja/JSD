@@ -1,6 +1,7 @@
 import os
 from textx import language, metamodel_from_file, get_location, TextXSyntaxError
-from .builtins import *
+from .builtins import BaseType, Entity, Config, Property, \
+                      OneToOne, OneToMany, ManyToOne, ManyToMany, Path, Method
 
 current_dir = os.path.dirname(__file__)
 

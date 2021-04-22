@@ -1,6 +1,7 @@
 from os import mkdir, getcwd
 from os.path import dirname, exists, join
-from sbag.generators.java.custom_paths import new_paths_for_existing_controllers, new_imports_for_existing_controllers
+from sbag.generators.java.custom_paths import new_paths_for_existing_controllers, generate_imports_for_controllers, \
+    new_controllers
 from sbag.language import Entity, BaseType
 from sbag.generators.java import get_type as get_property_type
 from sbag.generators.java import plural, first_letter_lower, has_associations, capitalize_first_letter, \
@@ -65,7 +66,6 @@ def get_path_parameters(endpoint):
     return ret
 
 
-
 @generator('sbag', 'javascript')
 def sbag_generate_javascript(metamodel, model, output_path, overwrite, debug, **custom_args):
     "Generator for generating java from sbag descriptions"
@@ -102,10 +102,10 @@ def sbag_generate_javascript(metamodel, model, output_path, overwrite, debug, **
 
     config['entities'] = model.entities
     entity_names = [ent.name.lower() for ent in model.entities]
+    config['new_controllers'] = new_controllers(entity_names, model.paths)
     config['controller_paths'] = new_paths_for_existing_controllers(entity_names, model.paths)
-    config['controller_imports'] = new_imports_for_existing_controllers(config['controller_paths'])
+    config['controller_imports'] = generate_imports_for_controllers(config)
     config['date'] = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-
 
     generate_base_angular_projct(template_folder, output_path, config)
 
@@ -119,10 +119,12 @@ def generate_base_angular_projct(template_folder, output_path, config):
     base_output_path = join(output_path, 'app', '')
     textx_jinja_generator(base_project_template, base_output_path, config)
 
-def generate_src_folder(template_folder, output_path, config, overwrite,filters):
+
+def generate_src_folder(template_folder, output_path, config, overwrite, filters):
     src_template = join(template_folder, 'src', '')
     src_output_path = join(output_path, 'app', 'src', '')
     textx_jinja_generator(src_template, src_output_path, config, overwrite, filters)
+
 
 def generate_components(template_folder, output_path, model, config, overwrite, filters):
     entities_folder = join(template_folder, 'entities', '')

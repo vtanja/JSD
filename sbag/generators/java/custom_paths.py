@@ -1,4 +1,3 @@
-from os.path import join
 from sbag.language import Entity, Path
 
 

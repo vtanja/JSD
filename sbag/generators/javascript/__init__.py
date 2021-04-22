@@ -31,10 +31,6 @@ def format_property(prop: str):
     return re.sub(r"(\w)([A-Z])", r"\1 \2", prop)
 
 
-def first_letter_lower(string: str):
-    return string[0].lower() + string[1:]
-
-
 def get_form_input_type(prop):
     """
     Returns correct form input type for given property type

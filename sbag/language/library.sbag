@@ -30,12 +30,15 @@ entity Address:
 /author
     /book
         get: Book[]
-        post(Book): Book
+        post(Publisher): Long
+        put(Genre): int
+        delete: String
         /{id}
             get: Book
             post(Book): Book
             /{ud}
                 get: String
+                put(Author): String
             ;
         ;
     ;

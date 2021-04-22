@@ -3,21 +3,45 @@
 
 package com.example.{{ app }}.security;
 
+import org.springframework.context.annotation.Lazy;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import com.example.{{ app }}.model.User;
-import com.example.{{ app }}.repository.UserRepository;
 
+import com.example.{{ app }}.model.User;
+import com.example.{{ app }}.model.Role;
+import com.example.{{ app }}.repository.UserRepository;
+import com.example.{{ app }}.repository.RoleRepository;
+import com.example.{{ app }}.dto.AuthRequestDTO;
+import com.example.{{ app }}.dto.UserTokenStateDTO;
+import com.example.{{ app }}.dto.RegistrationDTO;
+
+import java.util.HashSet;
+import java.util.Set;
 
 @Service("userDetailsService")
-@Transactional
 public class AuthUserDetailsService implements UserDetailsService {
 
   @Autowired private UserRepository userRepository;
+  
+  @Lazy @Autowired AuthenticationManager authenticationManager;
+
+  @Autowired JwtTokenUtils jwtTokenUtils;
+
+  @Lazy @Autowired PasswordEncoder passwordEncoder;
+
+  @Autowired
+  RoleRepository roleRepository;
 
   @Override
   public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -27,5 +51,52 @@ public class AuthUserDetailsService implements UserDetailsService {
    if (user == null) throw new UsernameNotFoundException("Could not find user with given username/email");
 
    return user;
+  }
+
+  public ResponseEntity<?> login(AuthRequestDTO request) throws Exception {
+    try {
+      Authentication authenticate =
+          authenticationManager.authenticate(
+              new UsernamePasswordAuthenticationToken(
+                  request.getUsername(), request.getPassword()));
+
+      SecurityContextHolder.getContext().setAuthentication(authenticate);
+
+      Authentication loggedInUser = SecurityContextHolder.getContext().getAuthentication();
+
+      User user = userRepository.findByUsername(loggedInUser.getName());
+      String jwt = jwtTokenUtils.generateToken(user.getUsername());
+      int experiesIn = jwtTokenUtils.getExpiredIn();
+      String refresh = jwtTokenUtils.generateRefreshToken(user.getUsername());
+      UserTokenStateDTO userTokenStateDTO = new UserTokenStateDTO(jwt,experiesIn,refresh, user.getUsername(), user.getRoles().iterator().next().getName());
+
+      return new ResponseEntity<>(
+              userTokenStateDTO, HttpStatus.ACCEPTED);
+    } catch (Exception ex) {
+        return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+    }
+  }
+
+  public ResponseEntity<?> register(RegistrationDTO regDTO) throws Exception {
+        var uUsername = userRepository.findByUsername(regDTO.getUsername());
+        var uEmail = userRepository.findByEmail(regDTO.getEmail());
+        if(uUsername != null || uEmail != null) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+        User user = new User();
+        user.setEmail(regDTO.getEmail());
+        user.setUsername(regDTO.getUsername());
+        user.setPassword(passwordEncoder.encode(regDTO.getPassword()));
+
+        Set<Role> rolesSet = new HashSet<>();
+
+        // TODO: Assign role to new user
+        
+        
+        user.setRoles(rolesSet);
+
+        this.userRepository.save(user);
+
+        return new ResponseEntity<>(HttpStatus.OK);
   }
 }

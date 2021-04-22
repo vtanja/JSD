@@ -1,6 +1,7 @@
 import os
 from textx import language, metamodel_from_file, get_location, TextXSyntaxError
-from .builtins import *
+from .builtins import BaseType, Entity, Config, Property, \
+                      OneToOne, OneToMany, ManyToOne, ManyToMany, Path, Method
 
 current_dir = os.path.dirname(__file__)
 
@@ -8,10 +9,8 @@ current_dir = os.path.dirname(__file__)
 def method_object_processor(method):
     if method.name not in ['get', 'post', 'head', 'put', 'patch', 'delete']:
         raise TextXSyntaxError('Method name: "{}" not valid.'.format(method.name), **get_location(method))
-    if method.name != 'post' and method.post_type is not None:
-        raise TextXSyntaxError('Unexpected type after method name.', get_location(method))
-    if method.name == 'post' and method.post_type is None:
-        raise TextXSyntaxError('Method post missing required request object type.', get_location(method))
+    if method.name in ['post', 'put'] and method.post_type is None:
+        raise TextXSyntaxError('Method {} missing required request object type.'.format(method.name), get_location(method))
 
 
 @language('sbag', '*.sbag')

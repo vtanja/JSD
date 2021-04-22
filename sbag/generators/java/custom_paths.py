@@ -14,7 +14,12 @@ class EndPoint():
         self.parameters = [param for param in parameters]
 
     def get_correct_type(self):
-        return self.rtype if self.rtype_list == '' else 'List<{}>'.format(str(self.rtype))
+        response_type = {
+            'int': 'Integer',
+            'long': 'Long',
+            'double': 'Double',
+        }.get(self.rtype.name, self.rtype)
+        return response_type if self.rtype_list == '' else 'List<{}>'.format(response_type)
 
     def function_name(self):
         function_name = ''
@@ -27,8 +32,7 @@ def setup_custom_paths_for_generation(config, model):
     entity_names = [ent.name.lower() for ent in model.entities]
     config['new_controllers'] = new_controllers(entity_names, model.paths)
     config['controller_paths'] = new_paths_for_existing_controllers(entity_names, model.paths)
-    config['controller_imports'] = new_imports_for_existing_controllers({**config['controller_paths'], **config['new_controllers']})
-    extend_imports_with_post_object_types(config)
+    config['controller_imports'] = generate_imports_for_controllers(config)
 
 
 def new_controllers(entity_names, paths):
@@ -59,9 +63,11 @@ def create_controller_if_doesnt_exist(path, controller_paths):
         controller_paths[path.resource.capitalize()] = []
 
 
-def new_imports_for_existing_controllers(controller_paths):
-    controller_imports = {controller: generate_imports_for_controller(controller_paths[controller]) \
+def generate_imports_for_controllers(config):
+    controller_paths = {**config['controller_paths'], **config['new_controllers']}
+    controller_imports = {controller:generate_imports_for_controller(controller_paths[controller]) \
                           for controller in controller_paths}
+    extend_imports_with_request_object_types(controller_paths, controller_imports)
     return controller_imports
 
 
@@ -82,8 +88,9 @@ def import_already_added(entity, controller_imports):
     return entity not in controller_imports
 
 
-def endpoints_from_path(path, resource='', parameters=[]):
+def endpoints_from_path(path, resource='', parameters=None):
     endpoints = []
+    if parameters is None: parameters = []
     for content in path.content:
         if isinstance(content, Path):
             handle_subpath_endpoints(content, parameters, endpoints, resource)
@@ -116,13 +123,15 @@ def resource_contains_parameter(resource):
     return resource[0] == '{' and resource[-1] == '}'
 
 
-def extend_imports_with_post_object_types(config):
-    controller_paths = {**config['controller_paths'], **config['new_controllers']}
+def extend_imports_with_request_object_types(controller_paths, controller_imports):
+
     for controller in controller_paths:
-        add_import_for_post_methods(controller, controller_paths[controller], config)
+        add_imports_for_request_objects(controller, controller_paths[controller], controller_imports)
 
 
-def add_import_for_post_methods(controller, controller_paths, config):
+
+
+def add_imports_for_request_objects(controller, controller_paths, controller_imports):
     for endpoint in controller_paths:
-        if endpoint.method == 'post':
-            add_import_to_controller(endpoint.post_type, config['controller_imports'][controller])
+        if endpoint.post_type != '' and endpoint.post_type is not None:
+            add_import_to_controller(endpoint.post_type, controller_imports[controller])

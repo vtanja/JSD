@@ -1,0 +1,89 @@
+/// Generated from {{ self._TemplateReference__context.name | get_template_name_from_path }} by SBAG (https://github.com/vtanja/JSD)
+/// on {{ date }}
+
+package com.example.{{ app }}.controller;
+
+import org.springframework.web.bind.annotation.*;
+import org.springframework.http.ResponseEntity;
+import org.springframework.beans.factory.annotation.Autowired;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.access.prepost.PreAuthorize;
+import java.util.List;
+import com.example.{{ app }}.dto.{{entity.name}}DTO;
+import com.example.{{ app }}.dto.{{entity.name}}DetailDTO;
+import com.example.{{ app }}.service.{{entity.name}}Service;
+{% for ent in controller_imports[entity.name] %}
+import com.example.{{ app }}.model.{{ ent }};
+{% endfor %}
+
+{% set controllerName = (entity.name | capitalize) + 'Controller' %}
+{% set DtoType = entity.name + 'DTO' %}
+{% set DtoDetailType = entity.name + 'DetailDTO' %}
+{% set entityDto = (entity.name | lower) + 'Dto' %}
+{% set entityService = (entity.name | lower) + 'Service' %}
+{% set entities = (entity.name | plural) %}
+
+@CrossOrigin
+@RestController
+@Slf4j
+@RequestMapping( path = "/{{ entity.name | lower }}")
+public class {{ controllerName }} {
+    @Autowired
+    private {{ entity.name }}Service {{ entityService }};
+
+    @PreAuthorize("hasAuthority('ADMIN')")
+    @GetMapping(path="/count")
+    public ResponseEntity<Integer> get{{ entities }}Count() {
+
+        return {{ entityService }}.get{{entity.name | plural}}Count();
+    }
+
+    @PreAuthorize("hasAuthority('ADMIN')")
+    @GetMapping(path="/{pageNo}/{pageSize}")
+    public ResponseEntity<List<{{ DtoType }}>> getAll{{ entities }}(@PathVariable int pageNo, @PathVariable int pageSize) {
+
+        return {{ entityService }}.get{{entity.name | plural}}(pageNo, pageSize);
+    }
+
+    @PreAuthorize("hasAuthority('ADMIN')")
+    @GetMapping(path="/{id}")
+    public ResponseEntity<{{ DtoDetailType }}> get{{ entity.name }}(@PathVariable Long id) {
+
+        return {{ entityService }}.get{{entity.name}}(id);
+    }
+
+    @PreAuthorize("hasAuthority('ADMIN')")
+    @PostMapping()
+    public ResponseEntity<{{ DtoDetailType }}> create(@RequestBody {{ DtoDetailType }} {{ entityDto }}) {
+        return {{ entityService }}.create({{ entityDto }});
+    }
+
+    @PreAuthorize("hasAuthority('ADMIN')")
+    @PutMapping(path = "/{id}")
+    public ResponseEntity<{{ DtoDetailType }}> update(@PathVariable Long id, @RequestBody {{ DtoDetailType }} {{ entityDto }}) {
+        return {{ entityService }}.update{{ entity.name }}(id, {{ entityDto }});
+    }
+
+    @PreAuthorize("hasAuthority('ADMIN')")
+    @DeleteMapping(path = "/{id}")
+    public ResponseEntity<?> delete(@PathVariable Long id) {
+        return {{ entityService }}.delete{{ entity.name }}(id);
+    }
+
+    @PreAuthorize("hasAuthority('ADMIN')")
+    @GetMapping(path="/lists")
+    public ResponseEntity<String> getLists() {
+        return {{ entityService }}.getLists();
+    }
+
+    {% for endpoint in controller_paths[entity.name] %}
+    {% set comma_separator = joiner() %}
+    @{{ endpoint.method | capitalize }}Mapping(path = "{{ endpoint.path }}")
+    public ResponseEntity<{{ endpoint.get_correct_type() }}> {{ endpoint.function_name() }}({% for param in endpoint.parameters %}{{ comma_separator() }}@PathVariable String {{ param }}{% endfor %}{% if endpoint.post_type is not none %}{% if endpoint.parameters | length > 0 %}, {% endif %}@RequestBody {{ endpoint.post_type }} requestObject{% endif %}) {
+    {% set comma_separator = joiner() %}
+        return {{ entityService }}.{{ endpoint.function_name() }}({% for param in endpoint.parameters %}{{ comma_separator() }}{{ param }}{% endfor %}{% if endpoint.post_type is not none %}{% if endpoint.parameters | length > 0 %}, {% endif %}requestObject{% endif %});
+    }
+
+    {% endfor %}
+
+}

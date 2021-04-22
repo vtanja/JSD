@@ -106,9 +106,26 @@ def sbag_generate_javascript(metamodel, model, output_path, overwrite, debug, **
     config['controller_imports'] = new_imports_for_existing_controllers(config['controller_paths'])
     config['date'] = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
-    textx_jinja_generator(template_folder, output_path, config, overwrite, filters)
 
-    entities_folder = join(this_folder, 'entities')
+    generate_base_angular_projct(template_folder, output_path, config)
+
+    generate_src_folder(template_folder, output_path, config, overwrite, filters)
+
+    generate_components(template_folder, output_path, model, config, overwrite, filters)
+
+
+def generate_base_angular_projct(template_folder, output_path, config):
+    base_project_template = join(template_folder, 'app', '')
+    base_output_path = join(output_path, 'app', '')
+    textx_jinja_generator(base_project_template, base_output_path, config)
+
+def generate_src_folder(template_folder, output_path, config, overwrite,filters):
+    src_template = join(template_folder, 'src', '')
+    src_output_path = join(output_path, 'app', 'src', '')
+    textx_jinja_generator(src_template, src_output_path, config, overwrite, filters)
+
+def generate_components(template_folder, output_path, model, config, overwrite, filters):
+    entities_folder = join(template_folder, 'entities', '')
     output_path = join(output_path, 'app', 'src', 'app', '')
 
     for entity in model.entities:

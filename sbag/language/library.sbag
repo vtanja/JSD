@@ -29,17 +29,26 @@ entity Address:
 
 /author
     /book
-        get:
-            return: Book[]
+        get: Book[]
+        post(Publisher): Long
+        put(Genre): int
+        delete: String
         /{id}
-            get:
-                return: Book
+            get: Book
+            post(Book): Book
+            /{ud}
+                get: String
+                put(Author): String
+            ;
         ;
     ;
 ;
 /address
     /publisher
-        get:
-            return: Publisher[]
+        get: Publisher[]
     ;
+;
+/custom
+    get: String
+    post(Book): String
 ;

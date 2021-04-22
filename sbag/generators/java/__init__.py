@@ -5,6 +5,7 @@ from os.path import dirname, exists, join
 from sbag.language import Config, BaseType, Entity, OneToMany, ManyToMany, ManyToOne, OneToOne
 from textx import generator
 from textxjinja import textx_jinja_generator
+from .custom_paths import setup_custom_paths_for_generation
 import datetime
 
 
@@ -37,8 +38,8 @@ def get_type(prop):
 
 def get_association_type(prop):
     """
-        Based on property returns string saying if its OneToMany, ManyToMany, OneToOne or ManyToOne association
-        """
+    Based on property returns string saying if its OneToMany, ManyToMany, OneToOne or ManyToOne association
+    """
     if isinstance(prop.atype, OneToMany):
         return 'OneToMany'
     elif isinstance(prop.atype, ManyToMany):
@@ -94,6 +95,7 @@ def sbag_generate_java(metamodel, model, output_path, overwrite, debug, **custom
     config['app'] = model.config.project.lower()
     config['date'] = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
+    setup_custom_paths_for_generation(config, model)
     # If output path is not specified take the current working directory
     if output_path is None:
         output_path = getcwd()
@@ -123,6 +125,19 @@ def sbag_generate_java(metamodel, model, output_path, overwrite, debug, **custom
     generate_entity_based_files(template_folder, output_path, config, model,
                                 overwrite, filters)
 
+    generate_custom_path_files(config, template_folder, output_path,
+                                overwrite, filters)
+
+def check_and_setup_config(model):
+    if model.config is None:
+        model.config = Config('demo', 'com.example', 'Describe your project here', model)
+    if model.config.project == '':
+        model.config.project = 'demo'
+    if model.config.group == '':
+        model.config.group = 'com.example'
+    if model.config.description == '':
+        model.config.description = 'Describe your project here'
+
 def generate_base_project_structure(template_folder, output_path, config, overwrite, filters):
     project_template = join(template_folder, '__project__', '')
     project_output = join(output_path, '__project__', '')
@@ -140,12 +155,12 @@ def generate_entity_based_files(template_folder, output_path, config, model,
         textx_jinja_generator(entities_template, entities_output, config,
                               overwrite, filters)
 
-def check_and_setup_config(model):
-    if model.config is None:
-        model.config = Config('demo', 'com.example', 'Describe your project here', model)
-    if model.config.project == '':
-        model.config.project = 'demo'
-    if model.config.group == '':
-        model.config.group = 'com.example'
-    if model.config.description == '':
-        model.config.description = 'Describe your project here'
+def generate_custom_path_files(config, template_folder, output_path,
+                                overwrite, filters):
+    custom_paths_folder = join(template_folder, 'custom_paths')
+    custom_paths_output= join(output_path, '__project__', 'src', 'main', \
+                              'java', 'com', 'example', '__app__', '')
+    for path in config['new_controllers']:
+        config['path_name'] = path.capitalize()
+        textx_jinja_generator(custom_paths_folder, custom_paths_output, config,
+                              overwrite, filters)

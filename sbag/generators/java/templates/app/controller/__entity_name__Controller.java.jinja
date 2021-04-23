@@ -16,7 +16,7 @@ import com.example.{{ app }}.service.{{entity.name}}Service;
 import com.example.{{ app }}.model.{{ ent }};
 {% endfor %}
 
-{% set controllerName = (entity.name | capitalize) + 'Controller' %}
+{% set controllerName = (entity.name) + 'Controller' %}
 {% set DtoType = entity.name + 'DTO' %}
 {% set DtoDetailType = entity.name + 'DetailDTO' %}
 {% set entityDto = (entity.name | lower) + 'Dto' %}

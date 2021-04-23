@@ -4,6 +4,7 @@ from os.path import dirname, exists, join
 from sbag.language import Entity, BaseType
 from sbag.generators.java import get_type as get_property_type
 from sbag.generators.java import plural, first_letter_lower, has_associations, capitalize_first_letter, get_unique_properties, get_template_name_from_path
+from sbag.generators.java import setup_custom_paths_for_generation
 from textx import generator
 from textxjinja import textx_jinja_generator
 import re
@@ -49,6 +50,11 @@ def sbag_generate_javascript(metamodel, model, output_path, overwrite, debug, **
     config = {}
     config['config'] = model.config
 
+    config['entities'] = model.entities
+    config['date'] = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+
+    setup_custom_paths_for_generation(config, model)
+
     # If output path is not specified take the current working directory
     if output_path is None:
         output_path = getcwd()
@@ -73,15 +79,13 @@ def sbag_generate_javascript(metamodel, model, output_path, overwrite, debug, **
         'get_template_name_from_path': get_template_name_from_path
     }
 
-    config['entities'] = model.entities
-    config['date'] = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-
-
     generate_base_angular_projct(template_folder, output_path, config)
 
     generate_src_folder(template_folder, output_path, config, overwrite, filters)
 
     generate_components(template_folder, output_path, model, config, overwrite, filters)
+
+    generate_custom_path_services(template_folder, output_path, overwrite, filters, config)
 
 
 def generate_base_angular_projct(template_folder, output_path, config):
@@ -106,3 +110,11 @@ def generate_components(template_folder, output_path, model, config, overwrite, 
             config['app_name'] =  model.config.project
         textx_jinja_generator(entities_folder, output_path, config, overwrite,
                               filters)
+
+def generate_custom_path_services(template_folder, output_path, overwrite, filters, config):
+    custom_paths_folder = join(template_folder, 'custom_path')
+    custom_paths_output= join(output_path, 'app', 'src', 'app', 'shared', 'service', '')
+    for path in config['new_controllers']:
+        config['path_name'] = path[0].lower() + path[1:]
+        textx_jinja_generator(custom_paths_folder, custom_paths_output, config,
+                              overwrite, filters)

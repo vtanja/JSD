@@ -26,7 +26,7 @@ import com.example.{{ app }}.model.{{ ent }};
 @CrossOrigin
 @RestController
 @Slf4j
-@RequestMapping( path = "/{{ entity.name | lower }}")
+@RequestMapping( path = "/{{ entity.name | format_file_name }}")
 public class {{ controllerName }} {
     @Autowired
     private {{ entity.name }}Service {{ entityService }};

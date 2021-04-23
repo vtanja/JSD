@@ -7,12 +7,31 @@ import { environment } from 'src/environments/environment';
 
 {% set path = path_name | capitalize_first_letter %}
 {% set service_name = path + 'Service' %}
+{% set path_lower = path_name | lower %}
+
+
 
 @Injectable({
   providedIn: 'root'
 })
 export class {{service_name}} {
  
-  constructor(private http: HttpClient) { }
+    constructor(private http: HttpClient) { }
+
+    {% for endpoint in new_controllers[path_lower] %}
+
+    {{ endpoint.function_name() }}{{endpoint.rtype.name}}({% for param in endpoint.parameters %}{{ param }}{% endfor %}){
+    {%if endpoint.function_name() == 'get' %}
+        return this.http.{{ endpoint.function_name() }}<{{ endpoint | get_correct_type_custom_paths }}>(environment.api + '/{{ path_lower }}/{{ endpoint.path }}');
+    {%elif  endpoint.function_name() == 'post'%}
+        //post
+    {%elif  endpoint.function_name() == 'put'%}
+        //put
+    {%elif  endpoint.function_name() == 'delete'%}
+        //delete
+    {%endif%}
+    }
+
+    {% endfor %}
 
 }

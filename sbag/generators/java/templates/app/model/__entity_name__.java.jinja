@@ -19,7 +19,7 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-public class {{ entity.name | capitalize }} {
+public class {{ entity.name }} {
 
     {% for property in entity.properties %}
     {% if property | get_type != 'base' %}

@@ -9,16 +9,16 @@ import { Component, OnInit } from '@angular/core';
 {% set service_type = (entity.name) + 'Service' %}
 {% set model = 'I' + (entity.name) %}
 
-import { {{service_type}} } from '../{{entity_name}}.service';
-import { {{ model }} } from '../../../shared/model/{{entity_name}}.model';
+import { {{service_type}} } from '../{{entity.name|format_file_name}}.service';
+import { {{ model }} } from '../../../shared/model/{{entity.name|format_file_name}}.model';
 import { Router } from '@angular/router';
 import { NgbModal, ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
 import { SharedService } from 'src/app/shared/shared.service';
 
 @Component({
-	selector: 'app-{{entity_name}}-list',
-	templateUrl: './{{entity_name}}-list.component.html',
-	styleUrls: ['./{{entity_name}}-list.component.css'],
+	selector: 'app-{{entity.name| format_file_name}}-list',
+	templateUrl: './{{entity.name| format_file_name}}-list.component.html',
+	styleUrls: ['./{{entity.name| format_file_name}}-list.component.css'],
 })
 export class {{entity.name}}ListComponent implements OnInit {
 	
@@ -93,8 +93,8 @@ export class {{entity.name}}ListComponent implements OnInit {
     	);
 	}
 
-	delete{{entity_name|capitalize}}(id: number){
-		this.{{service_field}}.delete{{entity_name|capitalize}}(id).subscribe(
+	delete{{entity.name}}(id: number){
+		this.{{service_field}}.delete{{entity.name}}(id).subscribe(
 			data =>{
 				alert("{{entity.name}} has been successfully deleted!");
 			},
@@ -105,7 +105,7 @@ export class {{entity.name}}ListComponent implements OnInit {
 					alert("Something went wrong while deleting {{entity_name}}!");
 			}
 		);
-		let path = '/{{entity_name}}';
+		let path = '/{{entity.name|format_file_name}}';
 
 		this.router.navigateByUrl('', { skipLocationChange: true }).then(() => {
 			this.router.navigate([path]);

@@ -5,7 +5,7 @@ from sbag.generators.java.custom_paths import new_paths_for_existing_controllers
 from sbag.language import Entity, BaseType
 from sbag.generators.java import get_type as get_property_type
 from sbag.generators.java import plural, first_letter_lower, has_associations, capitalize_first_letter, \
-    get_unique_properties, get_template_name_from_path
+    get_unique_properties, get_template_name_from_path, format_file_name
 from textx import generator
 from textxjinja import textx_jinja_generator
 import re
@@ -17,7 +17,7 @@ def get_correct_type(prop):
     Returns correct java type if prop type is BaseType or returns correct entity DTO.
     """
     if isinstance(prop.ptype, Entity):
-        return 'I{}'.format(prop.ptype.name.capitalize())
+        return 'I{}'.format(prop.ptype.name)
     else:
         return {
             'int': 'number',
@@ -92,6 +92,7 @@ def sbag_generate_javascript(metamodel, model, output_path, overwrite, debug, **
         'capitalize_first_letter': capitalize_first_letter,
         'get_unique_properties': get_unique_properties,
         'get_template_name_from_path': get_template_name_from_path,
+        'format_file_name': format_file_name
         'get_path_for_methods': get_path_for_methods,
         'get_path_parameters': get_path_parameters,
     }
@@ -129,7 +130,7 @@ def generate_components(template_folder, output_path, model, config, overwrite, 
     for entity in model.entities:
         config['properties'] = entity.properties
         config['entity'] = entity
-        config['entity_name'] = entity.name.lower()
+        config['entity_name'] = format_file_name(entity.name)
         if model.config.project != None:
             config['app_name'] = model.config.project
         textx_jinja_generator(entities_folder, output_path, config, overwrite,

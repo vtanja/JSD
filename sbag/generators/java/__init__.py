@@ -6,8 +6,13 @@ from sbag.language import Config, BaseType, Entity, OneToMany, ManyToMany, ManyT
 from textx import generator
 from textxjinja import textx_jinja_generator
 from .custom_paths import setup_custom_paths_for_generation
-import datetime
+import datetime, re
 
+
+def format_file_name(entity_name):
+    s1 = re.sub('(.)([A-Z][a-z]+)', r'\1-\2', entity_name)
+    ret = re.sub('([a-z0-9])([A-Z])', r'\1-\2', s1).lower()
+    return ret
 
 def plural(entity: str):
     if entity[-2:] in ['ch', 'sh', 'ss', 'es']:
@@ -21,7 +26,7 @@ def plural(entity: str):
             entity = entity[: -1] + 'ies'
     else:
         entity += 's'
-    return entity.capitalize()
+    return capitalize_first_letter(entity)
 
 
 def get_type(prop):
@@ -115,7 +120,8 @@ def sbag_generate_java(metamodel, model, output_path, overwrite, debug, **custom
         'first_letter_lower': first_letter_lower,
         'has_associations': has_associations,
         'get_unique_properties': get_unique_properties,
-        'get_template_name_from_path': get_template_name_from_path
+        'get_template_name_from_path': get_template_name_from_path,
+        'format_file_name': format_file_name
     }
 
     # Run Jinja generator

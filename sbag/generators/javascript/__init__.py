@@ -3,20 +3,12 @@ from os.path import dirname, exists, join
 
 from sbag.language import Entity, BaseType
 from sbag.generators.java import get_type as get_property_type
-from sbag.generators.java import plural, first_letter_lower, has_associations, capitalize_first_letter, get_unique_properties, get_template_name_from_path
+from sbag.generators.java import plural, first_letter_lower, has_associations, capitalize_first_letter, get_unique_properties, get_template_name_from_path, format_file_name
 from textx import generator
 from textxjinja import textx_jinja_generator
 import re
 import datetime
 
-def format_file_name(entity_name):
-    s1 = re.sub('(.)([A-Z][a-z]+)', r'\1-\2', entity_name)
-    ret = re.sub('([a-z0-9])([A-Z])', r'\1-\2', s1).lower()
-    # if entity_name == 'PersonalInformation':
-    #     import pdb; pdb.set_trace()
-    #     s1 = re.sub('(.)([A-Z][a-z]+)', r'\1-\2', entity_name)
-    #     ret = re.sub('([a-z0-9])([A-Z])', r'\1-\2', s1).lower()
-    return ret
 
 def get_correct_type(prop):
     """

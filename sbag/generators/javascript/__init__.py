@@ -15,7 +15,6 @@ def get_correct_type(prop):
     Returns correct java type if prop type is BaseType or returns correct entity DTO.
     """
     if isinstance(prop.ptype, Entity):
-        # import pdb; pdb.set_trace()
         return 'I{}'.format(prop.ptype.name)
     else:
         return {

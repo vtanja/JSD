@@ -92,7 +92,7 @@ def sbag_generate_javascript(metamodel, model, output_path, overwrite, debug, **
         'capitalize_first_letter': capitalize_first_letter,
         'get_unique_properties': get_unique_properties,
         'get_template_name_from_path': get_template_name_from_path,
-        'format_file_name': format_file_name
+        'format_file_name': format_file_name,
         'get_path_for_methods': get_path_for_methods,
         'get_path_parameters': get_path_parameters,
     }

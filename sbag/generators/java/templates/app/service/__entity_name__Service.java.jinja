@@ -40,7 +40,7 @@ import java.util.*;
 {% set dtoFieldList = (entity.name|lower) + 'DTOS' %}
 {% set serviceName = (entity.name) + 'Service' %}
 {% set repositoryName = (entity.name) + 'Repository' %}
-{% set repositoryFieldName = (entity.name | lower) + 'Repository' %}
+{% set repositoryFieldName = (entity.name | first_letter_lower) + 'Repository' %}
 
 @Service
 public class {{serviceName}} {
@@ -92,7 +92,7 @@ public class {{serviceName}} {
 
     public ResponseEntity<{{ dtoDetailType }}> update{{entity.name}}(Long id, {{ dtoDetailType }} {{ dtoField }}){
         ModelMapper modelMapper = new ModelMapper();
-        {{ entity.name }} {{ entity.name | lower }} = {{entity.name | lower}}Repository.find{{ entity.name }}ById(id);
+        {{ entity.name }} {{ entity.name | lower }} = {{repositoryFieldName}}.find{{ entity.name }}ById(id);
         if({{ entity.name | lower }} == null) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST); 
         }
@@ -155,7 +155,7 @@ public class {{serviceName}} {
         {% endif %}
         {% endif %}
     {% endfor %}
-            {{entity.name | lower}}Repository.save({{entity.name | lower}});
+            {{repositoryFieldName}}.save({{entity.name | lower}});
             {{ dtoDetailType }} retDto = modelMapper.map({{ entity.name | lower }}, {{ dtoDetailType }}.class);
             return new ResponseEntity<>(retDto, HttpStatus.OK); 
         }
@@ -190,7 +190,7 @@ public class {{serviceName}} {
     {% endif %}
 	{% endif %}
     {% endfor %}
-        {{entity.name | lower}}Repository.save({{entity.name | lower}});
+        {{repositoryFieldName}}.save({{entity.name | lower}});
 
     {% for property in entity.properties %}
     {% if property | get_type == 'list' %}
@@ -256,7 +256,7 @@ public class {{serviceName}} {
     }
 
     public void Save({{classType}} {{field}}){
-        {{entity.name | lower}}Repository.save({{field}});
+        {{repositoryFieldName}}.save({{field}});
     }
 
     {% for endpoint in controller_paths[entity.name] %}

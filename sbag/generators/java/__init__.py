@@ -26,7 +26,7 @@ def plural(entity: str):
             entity = entity[: -1] + 'ies'
     else:
         entity += 's'
-    return entity.capitalize()
+    return capitalize_first_letter(entity)
 
 
 def get_type(prop):

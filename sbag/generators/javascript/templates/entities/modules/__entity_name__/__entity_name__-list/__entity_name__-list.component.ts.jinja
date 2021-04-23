@@ -105,7 +105,7 @@ export class {{entity.name}}ListComponent implements OnInit {
 					alert("Something went wrong while deleting {{entity_name}}!");
 			}
 		);
-		let path = '/{{entity_name}}';
+		let path = '/{{entity.name|format_file_name}}';
 
 		this.router.navigateByUrl('', { skipLocationChange: true }).then(() => {
 			this.router.navigate([path]);

@@ -30,7 +30,7 @@ export class {{entity.name}}Component {
         this.activatedRoute.paramMap.subscribe(params => {
             let param = params.get('id');
             if (param == null) {
-                this.router.navigate(['/{{ entity_name }}']);
+                this.router.navigate(['/{{ entity.name|format_file_name }}']);
             }
             this.{{ entity_name }}Service.get{{ entity.name }}(parseInt(param!)).subscribe(
                 data => { 
@@ -61,7 +61,7 @@ export class {{entity.name}}Component {
 					alert("Something went wrong while deleting {{entity_name}}!");
 			});
 
-            let path = '/{{entity_name}}';
+            let path = '/{{entity.name|format_file_name}}';
 
             this.router.navigateByUrl('', { skipLocationChange: true }).then(() => {
                 this.router.navigate([path]);

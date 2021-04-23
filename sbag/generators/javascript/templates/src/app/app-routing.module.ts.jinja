@@ -11,7 +11,7 @@ const routes: Routes = [
   {% for entity in entities %}
   {
     path: '{{ entity.name | lower }}',
-    loadChildren: () => import('./modules/{{ entity.name | lower }}/{{ entity.name | lower }}.module').then (
+    loadChildren: () => import('./modules/{{ entity.name | format_file_name }}/{{ entity.name | format_file_name }}.module').then (
       module => module.{{ entity.name }}Module
     )
   },

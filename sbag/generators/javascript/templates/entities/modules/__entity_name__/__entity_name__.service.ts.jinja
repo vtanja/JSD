@@ -12,9 +12,9 @@ import { environment } from 'src/environments/environment';
 {% set entity_plural = entity.name | plural %}
 {% set selectLists = 'ISelectLists' %}
 
-import { {{interface_name}} } from 'src/app/shared/model/{{entity_name}}.model';
+import { {{interface_name}} } from 'src/app/shared/model/{{entity.name|format_file_name}}.model';
 {% for property in entity | get_unique_properties %}
-import { I{{ property }} } from 'src/app/shared/model/{{property | lower}}.model';
+import { I{{ property }} } from 'src/app/shared/model/{{property | format_file_name}}.model';
 {% endfor %}
 
 interface {{ selectLists }} {

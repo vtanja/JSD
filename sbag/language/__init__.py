@@ -5,11 +5,13 @@ from .builtins import BaseType, Entity, Config, Property, \
 
 current_dir = os.path.dirname(__file__)
 
+
 def method_object_processor(method):
     if method.name not in ['get', 'post', 'head', 'put', 'patch', 'delete']:
         raise TextXSyntaxError('Method name: "{}" not valid.'.format(method.name), **get_location(method))
     if method.name in ['post', 'put'] and method.post_type is None:
         raise TextXSyntaxError('Method {} missing required request object type.'.format(method.name), get_location(method))
+
 
 @language('sbag', '*.sbag')
 def sbag_language():

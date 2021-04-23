@@ -24,6 +24,21 @@ def get_correct_type(prop):
             'Long': 'number'
         }.get(prop.ptype.name, prop.ptype.name)
 
+        
+def get_correct_type_custom_paths(endpoint):
+    """
+    Returns correct type if endpoint type is BaseType or returns correct entity DTO.
+    """
+    if isinstance(endpoint.rtype, Entity):
+        return 'I{}'.format(endpoint.rtype.name.capitalize())
+    else:
+        return {
+            'int': 'number',
+            'float': 'number',
+            'String': 'string',
+            'Long': 'number'
+        }.get(endpoint.rtype.name, endpoint.rtype.name)
+
 
 def format_property(prop: str):
     return re.sub(r"(\w)([A-Z])", r"\1 \2", prop)
@@ -76,7 +91,8 @@ def sbag_generate_javascript(metamodel, model, output_path, overwrite, debug, **
         'has_associations': has_associations,
         'capitalize_first_letter': capitalize_first_letter,
         'get_unique_properties': get_unique_properties,
-        'get_template_name_from_path': get_template_name_from_path
+        'get_template_name_from_path': get_template_name_from_path,
+        'get_correct_type_custom_paths': get_correct_type_custom_paths
     }
 
     generate_base_angular_projct(template_folder, output_path, config)

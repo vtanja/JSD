@@ -13,7 +13,7 @@ import java.util.List;
 @Getter @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class {{ entity.name | capitalize }}DetailDTO {
+public class {{ entity.name }}DetailDTO {
     {% for property in entity.properties %}
     {% if property | get_type == 'base' %}
     private {{ property.ptype }} {{ property.name }};

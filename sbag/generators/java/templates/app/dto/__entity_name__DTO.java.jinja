@@ -11,7 +11,7 @@ import lombok.Setter;
 @Getter @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class {{ entity.name | capitalize }}DTO {
+public class {{ entity.name }}DTO {
     {% for property in entity.properties %}
     {% if property | get_type == 'base' %}
     private {{ property.ptype }} {{ property.name }};

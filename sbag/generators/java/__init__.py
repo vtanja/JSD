@@ -6,8 +6,13 @@ from sbag.language import Config, BaseType, Entity, OneToMany, ManyToMany, ManyT
 from textx import generator
 from textxjinja import textx_jinja_generator
 from .custom_paths import add_import_to_controller, create_controller_if_doesnt_exist, setup_custom_paths_for_generation
-import datetime
+import datetime, re
 
+
+def format_file_name(entity_name):
+    s1 = re.sub('(.)([A-Z][a-z]+)', r'\1-\2', entity_name)
+    ret = re.sub('([a-z0-9])([A-Z])', r'\1-\2', s1).lower()
+    return ret
 
 def plural(entity: str):
     if entity[-2:] in ['ch', 'sh', 'ss', 'es']:
@@ -21,7 +26,7 @@ def plural(entity: str):
             entity = entity[: -1] + 'ies'
     else:
         entity += 's'
-    return entity.capitalize()
+    return capitalize_first_letter(entity)
 
 
 def get_type(prop):
@@ -117,7 +122,8 @@ def sbag_generate_java(metamodel, model, output_path, overwrite, debug, **custom
         'first_letter_lower': first_letter_lower,
         'has_associations': has_associations,
         'get_unique_properties': get_unique_properties,
-        'get_template_name_from_path': get_template_name_from_path
+        'get_template_name_from_path': get_template_name_from_path,
+        'format_file_name': format_file_name
     }
 
     # Run Jinja generator
@@ -128,7 +134,8 @@ def sbag_generate_java(metamodel, model, output_path, overwrite, debug, **custom
                                 overwrite, filters)
 
     generate_custom_path_files(config, template_folder, output_path,
-                                overwrite, filters)
+                               overwrite, filters)
+
 
 def check_and_setup_config(model):
     if model.config is None:
@@ -140,11 +147,13 @@ def check_and_setup_config(model):
     if model.config.description == '':
         model.config.description = 'Describe your project here'
 
+
 def generate_base_project_structure(template_folder, output_path, config, overwrite, filters):
     project_template = join(template_folder, '__project__', '')
     project_output = join(output_path, '__project__', '')
     textx_jinja_generator(project_template, project_output, config,
                           overwrite, filters)
+
 
 def generate_entity_based_files(template_folder, output_path, config, model,
                                 overwrite, filters):
@@ -157,11 +166,11 @@ def generate_entity_based_files(template_folder, output_path, config, model,
         textx_jinja_generator(entities_template, entities_output, config,
                               overwrite, filters)
 
+
 def generate_custom_path_files(config, template_folder, output_path,
-                                overwrite, filters):
+                               overwrite, filters):
     custom_paths_folder = join(template_folder, 'custom_paths')
-    custom_paths_output= join(output_path, '__project__', 'src', 'main', \
-                              'java', 'com', 'example', '__app__', '')
+    custom_paths_output = join(output_path, '__project__', 'src', 'main', 'java', 'com', 'example', '__app__', '')
     for path in config['new_controllers']:
         config['path_name'] = path.capitalize()
         textx_jinja_generator(custom_paths_folder, custom_paths_output, config,

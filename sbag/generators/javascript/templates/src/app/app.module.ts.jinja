@@ -12,7 +12,7 @@ import { CoreModule } from './core/core.module';
 import { SharedModule } from './shared/shared.module';
 
 {% for entity in entities%}
-import { {{entity.name}}Module } from './modules/{{entity.name|lower}}/{{entity.name|lower}}.module';
+import { {{entity.name}}Module } from './modules/{{entity.name|format_file_name}}/{{entity.name|format_file_name}}.module';
 {% endfor %}
 
 @NgModule({

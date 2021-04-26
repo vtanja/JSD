@@ -96,6 +96,7 @@ def sbag_generate_java(metamodel, model, output_path, overwrite, debug, **custom
     config['date'] = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
     setup_custom_paths_for_generation(config, model)
+
     # If output path is not specified take the current working directory
     if output_path is None:
         output_path = getcwd()

@@ -5,7 +5,7 @@ from os.path import dirname, exists, join
 from sbag.language import Config, BaseType, Entity, OneToMany, ManyToMany, ManyToOne, OneToOne
 from textx import generator
 from textxjinja import textx_jinja_generator
-from .custom_paths import setup_custom_paths_for_generation
+from .custom_paths import add_import_to_controller, create_controller_if_doesnt_exist, setup_custom_paths_for_generation
 import datetime
 
 
@@ -96,6 +96,7 @@ def sbag_generate_java(metamodel, model, output_path, overwrite, debug, **custom
     config['date'] = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
     setup_custom_paths_for_generation(config, model)
+    config['model_imports'] = create_imports_for_models(model)
 
     # If output path is not specified take the current working directory
     if output_path is None:
@@ -165,3 +166,15 @@ def generate_custom_path_files(config, template_folder, output_path,
         config['path_name'] = path.capitalize()
         textx_jinja_generator(custom_paths_folder, custom_paths_output, config,
                               overwrite, filters)
+
+def create_imports_for_models(model):
+    imports_dictionary = {}
+    for ent in model.entities:
+        create_controller_if_doesnt_exist(ent.name, imports_dictionary)
+        add_imports_for_entity_properties(ent, imports_dictionary)
+    return imports_dictionary
+
+def add_imports_for_entity_properties(entity, imports_dictionary):
+    for prop in entity.properties:
+        if not isinstance(prop.ptype, BaseType) and prop.ptype.name != entity.name:
+            add_import_to_controller(prop.ptype, imports_dictionary[entity.name])

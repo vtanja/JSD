@@ -101,7 +101,6 @@ def sbag_generate_java(metamodel, model, output_path, overwrite, debug, **custom
     config['date'] = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
     setup_custom_paths_for_generation(config, model)
-    config['model_imports'] = create_imports_for_models(model)
 
     # If output path is not specified take the current working directory
     if output_path is None:
@@ -176,8 +175,8 @@ def generate_custom_path_files(config, template_folder, output_path,
         textx_jinja_generator(custom_paths_folder, custom_paths_output, config,
                               overwrite, filters)
 
-def create_imports_for_models(model):
-    imports_dictionary = {}
+def create_imports_for_models(config, model):
+    imports_dictionary = config['controller_imports']
     for ent in model.entities:
         create_controller_if_doesnt_exist(ent.name, imports_dictionary)
         add_imports_for_entity_properties(ent, imports_dictionary)

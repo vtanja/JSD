@@ -53,7 +53,7 @@ entity Address:
     post(Book): Publisher
     put(Author): Author
 ;
-/custom2
+/example
     get: Book[]
     post(Publisher): Long
     put(Genre): int

@@ -43,24 +43,20 @@ entity Address:
    number: int;
 
 /book
-   get:
-         return: Book[]
+   get: Book[]
    /{id}
-      get:
-         return: Book
+      get: Book
 
 /author
-   get:
-      return: Author[]
+   get: Author[]
    /{id}
-      get:
-         return: Author
+      get: Author
       /book
-         get: return: Book[]
-         post: return: Book
+         get: Book[]
+         post(Book): Book
          
 /custom
-   get: return String
+   get: String
 ```
 
 ## Generation
@@ -91,6 +87,8 @@ When defining entities you will need to specify associations between them. This 
   - if root path name is an entity name, path will be generated in that entity's controller
   - else a new controller will be created for that root path, and every subpath will be generated in that conroller
   For each path, an empty method is generated in appropriate service for frontend and backend services.
+
+You can define route by writing it's name after "/". Custom route can contain other routes or methods. Method has name, which is HTTP method name, followed by it's return value. If method name is POST or PUT, you have to state what entity type that method is sending to server.
 
 # Credits
 

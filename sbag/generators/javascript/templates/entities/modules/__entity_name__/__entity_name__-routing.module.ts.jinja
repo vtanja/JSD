@@ -4,9 +4,9 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 {% set entity_name = entity.name | lower %}
-import { {{ entity.name }}Component } from './{{ entity_name }}/{{ entity_name }}.component';
-import { {{ entity.name }}ListComponent } from './{{ entity_name }}-list/{{ entity_name }}-list.component';
-import { {{ entity.name }}FormComponent } from './{{ entity_name }}-form/{{ entity_name }}-form.component';
+import { {{ entity.name }}Component } from './{{ entity.name | format_file_name}}/{{ entity.name | format_file_name}}.component';
+import { {{ entity.name }}ListComponent } from './{{ entity.name | format_file_name}}-list/{{ entity.name | format_file_name }}-list.component';
+import { {{ entity.name }}FormComponent } from './{{ entity.name | format_file_name }}-form/{{ entity.name | format_file_name}}-form.component';
 
 const routes: Routes = [
   { path: 'create', component: {{ entity.name }}FormComponent },

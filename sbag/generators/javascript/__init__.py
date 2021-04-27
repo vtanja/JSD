@@ -91,7 +91,7 @@ def get_custom_path_imports(path):
     ret = set()
     for endpoint in path:
         if isinstance(endpoint.post_type, Entity):
-            ret.add(endpoint.post_type.name)
+            ret.add(endpoint.post_type)
     return ret
 
 
@@ -135,6 +135,7 @@ def sbag_generate_javascript(metamodel, model, output_path, overwrite, debug, **
         'get_path_for_methods': get_path_for_methods,
         'get_path_parameters': get_path_parameters,
         'get_path_parameters2': get_path_parameters2,
+        'get_custom_path_imports': get_custom_path_imports,
     }
 
     config['model_imports'] = create_imports_for_models(config, model)

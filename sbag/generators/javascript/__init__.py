@@ -71,14 +71,6 @@ def get_path_for_methods(endpoint):
 
 def get_path_parameters(endpoint):
     ret = ''
-    for param in endpoint.parameters:
-        ret = ret + ' + ' + param + ' + ' + "'/'"
-
-    return ret
-
-
-def get_path_parameters2(endpoint):
-    ret = ''
     if '{' in endpoint.path and '}' in endpoint.path:
         for param in endpoint.parameters:
             ret = ret + ' + ' + param + ' + ' + "'/'"
@@ -134,7 +126,6 @@ def sbag_generate_javascript(metamodel, model, output_path, overwrite, debug, **
         'format_file_name': format_file_name,
         'get_path_for_methods': get_path_for_methods,
         'get_path_parameters': get_path_parameters,
-        'get_path_parameters2': get_path_parameters2,
         'get_custom_path_imports': get_custom_path_imports,
     }
 

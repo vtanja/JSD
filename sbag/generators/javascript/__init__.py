@@ -1,7 +1,6 @@
 from os import mkdir, getcwd
 from os.path import dirname, exists, join
-from sbag.generators.java.custom_paths import new_paths_for_existing_controllers, generate_imports_for_controllers, \
-    new_controllers
+from sbag.generators.java.custom_paths import generate_imports_for_controllers, new_controllers
 from sbag.language import Entity, BaseType
 from sbag.generators.java import get_type as get_property_type
 from sbag.generators.java import plural, first_letter_lower, has_associations, capitalize_first_letter, \

@@ -74,9 +74,7 @@ def get_path_parameters(endpoint):
     if '{' in endpoint.path and '}' in endpoint.path:
         for param in endpoint.parameters:
             ret = ret + ' + ' + param + ' + ' + "'/'"
-        return ret
-    else:
-        return ret
+    return ret
 
 
 def get_custom_path_imports(path):

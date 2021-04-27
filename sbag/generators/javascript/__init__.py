@@ -26,7 +26,7 @@ def get_correct_type(prop):
             'Long': 'number'
         }.get(prop.ptype.name, prop.ptype.name)
 
-        
+
 def get_correct_type_custom_paths(endpoint):
     """
     Returns correct type if endpoint type is BaseType or returns correct entity DTO.

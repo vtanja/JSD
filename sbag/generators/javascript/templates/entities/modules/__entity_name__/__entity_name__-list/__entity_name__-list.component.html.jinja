@@ -34,7 +34,7 @@ on {{ date }}
           {% endif %}
           {% endfor %}
           <td style="width: 20%;">
-              <button type="button" class="btn btn-warning" (click)="isDisabled=true;" [routerLink]="['/{{ entity.name|format_file_name }}', {{ entity_name }}.id, 'update']">Update {{ entity.name|format_property|lower }}</button>
+              <button type="button" class="btn btn-warning" (click)="isDisabled=true;" [routerLink]="['/{{ entity.name|format_file_name }}', {{ entity_name }}.id, 'update']">Edit {{ entity.name|format_property|lower }}</button>
           </td>
           <td style="width: 20%;">
               <button type="button" class="btn btn-danger" (click)="isDisabled=true;idToDelete={{entity_name}}.id;open(mymodal)">Delete {{ entity.name|format_property|lower }}</button>

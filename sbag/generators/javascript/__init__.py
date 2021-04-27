@@ -5,7 +5,7 @@ from sbag.generators.java.custom_paths import new_paths_for_existing_controllers
 from sbag.language import Entity, BaseType
 from sbag.generators.java import get_type as get_property_type
 from sbag.generators.java import plural, first_letter_lower, has_associations, capitalize_first_letter, \
-    get_unique_properties, get_template_name_from_path, format_file_name
+    get_unique_properties, get_template_name_from_path, format_file_name, create_imports_for_models
 from textx import generator
 from textxjinja import textx_jinja_generator
 import re
@@ -102,6 +102,7 @@ def sbag_generate_javascript(metamodel, model, output_path, overwrite, debug, **
     config['new_controllers'] = new_controllers(entity_names, model.paths)
     config['controller_paths'] = new_paths_for_existing_controllers(entity_names, model.paths)
     config['controller_imports'] = generate_imports_for_controllers(config)
+    config['model_imports'] = create_imports_for_models(config, model)
     config['date'] = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
     generate_base_angular_projct(template_folder, output_path, config)

@@ -5,8 +5,7 @@ from sbag.generators.java.custom_paths import new_paths_for_existing_controllers
 from sbag.language import Entity, BaseType
 from sbag.generators.java import get_type as get_property_type
 from sbag.generators.java import plural, first_letter_lower, has_associations, capitalize_first_letter, \
-    get_unique_properties, get_template_name_from_path, format_file_name, create_imports_for_models, \ 
-    setup_custom_paths_for_generation
+    get_unique_properties, get_template_name_from_path, format_file_name, create_imports_for_models, setup_custom_paths_for_generation
 from textx import generator
 from textxjinja import textx_jinja_generator
 import re
@@ -32,15 +31,15 @@ def get_correct_type_custom_paths(endpoint):
     """
     Returns correct type if endpoint type is BaseType or returns correct entity DTO.
     """
-    if isinstance(endpoint.rtype, Entity):
-        return 'I{}'.format(endpoint.rtype.name.capitalize())
+    if isinstance(endpoint.post_type, Entity):
+        return 'I{}'.format(endpoint.post_type.name.capitalize())
     else:
         return {
             'int': 'number',
             'float': 'number',
             'String': 'string',
             'Long': 'number'
-        }.get(endpoint.rtype.name, endpoint.rtype.name)
+        }.get(endpoint.post_type.name, endpoint.post_type.name)
 
 
 def format_property(prop: str):
@@ -113,19 +112,13 @@ def sbag_generate_javascript(metamodel, model, output_path, overwrite, debug, **
         'capitalize_first_letter': capitalize_first_letter,
         'get_unique_properties': get_unique_properties,
         'get_template_name_from_path': get_template_name_from_path,
-        'get_correct_type_custom_paths': get_correct_type_custom_paths
+        'get_correct_type_custom_paths': get_correct_type_custom_paths,
         'format_file_name': format_file_name,
         'get_path_for_methods': get_path_for_methods,
         'get_path_parameters': get_path_parameters,
     }
 
-    config['entities'] = model.entities
-    entity_names = [ent.name.lower() for ent in model.entities]
-    config['new_controllers'] = new_controllers(entity_names, model.paths)
-    config['controller_paths'] = new_paths_for_existing_controllers(entity_names, model.paths)
-    config['controller_imports'] = generate_imports_for_controllers(config)
     config['model_imports'] = create_imports_for_models(config, model)
-    config['date'] = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
     generate_base_angular_projct(template_folder, output_path, config)
 

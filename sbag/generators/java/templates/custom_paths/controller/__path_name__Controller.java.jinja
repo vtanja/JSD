@@ -5,12 +5,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import lombok.extern.slf4j.Slf4j;
 import java.util.List;
-{% set path_lower = path_name | lower %}
+{% set path_lower = path_name | first_letter_lower %}
 import com.example.{{ app }}.service.{{ path_name }}Service;
-{% for ent in controller_imports[path_lower] %}
+{% for ent in controller_imports[path_name] %}
 import com.example.{{ app }}.model.{{ ent }};
 {% endfor %}
-{% set path = new_controllers[path_lower] %}
+{% set path = new_controllers[path_name] %}
 
 @CrossOrigin
 @RestController

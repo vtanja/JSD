@@ -1,14 +1,16 @@
+"""Base module for generating javascript Angular application."""
+import datetime
+import re
 from os import mkdir, getcwd
 from os.path import dirname, exists, join
-from sbag.generators.java.custom_paths import generate_imports_for_controllers, new_controllers
-from sbag.language import Entity, BaseType
-from sbag.generators.java import get_type as get_property_type
-from sbag.generators.java import plural, first_letter_lower, has_associations, capitalize_first_letter, \
-    get_unique_properties, get_template_name_from_path, format_file_name, create_imports_for_models, setup_custom_paths_for_generation
 from textx import generator
 from textxjinja import textx_jinja_generator
-import re
-import datetime
+
+from sbag.generators.java import get_type as get_property_type
+from sbag.generators.java import plural, first_letter_lower, has_associations, capitalize_first_letter, \
+    get_unique_properties, get_template_name_from_path, format_file_name, create_imports_for_models, \
+    setup_custom_paths_for_generation
+from sbag.language import Entity, BaseType
 
 
 def get_correct_type(prop):

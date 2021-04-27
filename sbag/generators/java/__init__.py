@@ -1,12 +1,14 @@
+"""Base module for generating java Spring boot application."""
+import datetime
 import os
+import re
 from os import mkdir, getcwd
 from os.path import dirname, exists, join
-
-from sbag.language import Config, BaseType, Entity, OneToMany, ManyToMany, ManyToOne, OneToOne
 from textx import generator
 from textxjinja import textx_jinja_generator
+
+from sbag.language import Config, BaseType, Entity, OneToMany, ManyToMany, ManyToOne, OneToOne
 from .custom_paths import add_import_to_controller, create_controller_if_doesnt_exist, setup_custom_paths_for_generation
-import datetime, re
 
 
 def format_file_name(entity_name):

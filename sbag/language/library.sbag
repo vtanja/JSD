@@ -49,6 +49,15 @@ entity Address:
     ;
 ;
 /custom
+    get: Book
+    post(Book): Publisher
+    put(Author): Author
+;
+/custom2
+    get: String
+    post(Book): String
+;
+/custom3
     get: String
     post(Book): String
 ;

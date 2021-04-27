@@ -4,10 +4,12 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
-
 {% set path_lower = path_name | first_letter_lower %}
 {% set path_cap = path_name | capitalize %}
 {% set service_name = path_lower + 'Service' %}
+{% for entity in (new_controllers[path_cap] | get_custom_path_imports) %}
+import { I{{ entity.name }} } from 'src/app/shared/model/{{entity.name | format_file_name}}.model';
+{% endfor %}
 
 @Injectable({
   providedIn: 'root'

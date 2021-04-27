@@ -54,10 +54,16 @@ entity Address:
     put(Author): Author
 ;
 /custom2
-    get: String
-    post(Book): String
-;
-/custom3
-    get: String
-    post(Book): String
+    get: Book[]
+    post(Publisher): Long
+    put(Genre): int
+    /{id}
+        get: Book
+        post(Book): Book
+        delete: String
+        /{ud}
+            get: String
+            put(Author): String
+        ;
+    ;
 ;

@@ -5,11 +5,9 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
 
-{% set path = path_name | capitalize_first_letter %}
-{% set service_name = path + 'Service' %}
-{% set path_lower = path_name | lower %}
-
-
+{% set path_lower = path_name | first_letter_lower %}
+{% set path_cap = path_name | capitalize %}
+{% set service_name = path_lower + 'Service' %}
 
 @Injectable({
   providedIn: 'root'
@@ -18,21 +16,31 @@ export class {{service_name}} {
  
     constructor(private http: HttpClient) { }
 
-    {% for endpoint in new_controllers[path_lower] %}
+    {% for endpoint in new_controllers[path_cap] %}
     {% set comma_separator = joiner() %}
-
-    {{ endpoint.function_name() }}({% for param in endpoint.parameters %}{{ comma_separator() }}String {{ param }}{% endfor %}{% if endpoint.post_type is not none %}{% if endpoint.parameters | length > 0 %}, {% endif %}requestObject: I{{ endpoint.post_type }} {% endif %}){
-    {%if endpoint.function_name() == 'get' %}
-        return this.http.{{ endpoint.function_name() }}<{{ endpoint | get_correct_type_custom_paths }}>(environment.api + '/{{ path_lower }}/{{ endpoint.path }}');
-    {%elif  endpoint.function_name() == 'post'%}
-        //post
-    {%elif  endpoint.function_name() == 'put'%}
-        //put
-    {%elif  endpoint.function_name() == 'delete'%}
-        //delete
-    {%endif%}
+    {{ endpoint.function_name() }}({% for param in endpoint.parameters %}{{ comma_separator() }}String {{ param }}{% endfor %}{% if endpoint.post_type is not none %}{% if endpoint.parameters | length > 0 %}, {% endif %}value: {{ endpoint | get_correct_type_custom_paths }}{% endif %}) {
+    {% if endpoint.method == 'get'%}
+        {% if '{' in endpoint.path and '}' in endpoint.path %}
+        return this.http.get(environment.api + '{{endpoint | get_path_for_methods}}' {{endpoint | get_path_parameters}});
+        {% else %}
+        return this.http.get(environment.api + '{{endpoint.path}}');
+        {% endif %}
+    {% elif endpoint.method == 'post' %}
+        {% if '{' in endpoint.path and '}' in endpoint.path %}
+        return this.http.post(environment.api + '{{endpoint | get_path_for_methods}}' {{endpoint | get_path_parameters}}, value);
+        {% else %}
+        return this.http.post(environment.api + '{{endpoint | get_path_for_methods}}', value);
+        {% endif %}
+    {% elif endpoint.method == 'put' %}
+        {% if '{' in endpoint.path and '}' in endpoint.path %}
+        return this.http.put(environment.api + '{{endpoint | get_path_for_methods}}' {{endpoint | get_path_parameters}}, value);
+        {% else %}
+        return this.http.put(environment.api + '{{endpoint | get_path_for_methods}}', value);
+        {% endif %}
+    {% elif endpoint.method == 'delete' %}
+        return this.http.delete(environment.api + '{{endpoint | get_path_for_methods}}'{% if endpoint.parameters | length > 0 %} + {{endpoint.parameters[0]}} {% endif %});
+    {% endif %}
     }
-
     {% endfor %}
 
 }

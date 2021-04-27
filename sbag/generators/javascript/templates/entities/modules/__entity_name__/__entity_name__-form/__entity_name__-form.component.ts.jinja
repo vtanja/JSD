@@ -5,11 +5,11 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { I{{entity.name}} } from 'src/app/shared/model/{{entity.name|format_file_name}}.model';
+import { I{{entity.name}} } from 'src/app/shared/model/{{entity_name}}.model';
 {% for property in entity | get_unique_properties %}
-import { I{{ property }} } from 'src/app/shared/model/{{property | format_file_name}}.model';
+import { I{{ property }} } from 'src/app/shared/model/{{property | lower}}.model';
 {% endfor %}
-import { {{entity.name}}Service } from '../{{entity.name|format_file_name}}.service';
+import { {{entity.name}}Service } from '../{{entity_name}}.service';
 import { SharedService } from 'src/app/shared/shared.service';
 
 {% if entity | has_associations %}
@@ -23,9 +23,9 @@ interface ISelectLists {
 {% endif %}
 
 @Component({
-	selector: 'app-{{entity.name|format_file_name}}-form',
-	templateUrl: './{{entity.name|format_file_name}}-form.component.html',
-	styleUrls: ['./{{entity.name|format_file_name}}-form.component.css'],
+	selector: 'app-{{entity_name}}-form',
+	templateUrl: './{{entity_name}}-form.component.html',
+	styleUrls: ['./{{entity_name}}-form.component.css'],
 })
 
 export class {{entity.name}}FormComponent {

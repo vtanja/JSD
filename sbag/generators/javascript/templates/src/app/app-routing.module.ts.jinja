@@ -10,8 +10,8 @@ import {RegisterComponent} from './shared/auth/register/register.component';
 const routes: Routes = [
   {% for entity in entities %}
   {
-    path: '{{ entity.name | format_file_name }}',
-    loadChildren: () => import('./modules/{{ entity.name | format_file_name }}/{{ entity.name | format_file_name }}.module').then (
+    path: '{{ entity.name | lower }}',
+    loadChildren: () => import('./modules/{{ entity.name | lower }}/{{ entity.name | lower }}.module').then (
       module => module.{{ entity.name }}Module
     )
   },

@@ -9,7 +9,7 @@ import com.example.{{ app }}.model.{{ entity.name }};
 import java.util.List;
 
 @Repository
-public interface {{ entity.name }}Repository extends JpaRepository<{{entity.name}}, Long> {
+public interface {{ entity.name | capitalize }}Repository extends JpaRepository<{{entity.name | capitalize }}, Long> {
 
     {{entity.name}} find{{entity.name}}ById(Long id);
     List<{{entity.name}}> findAll();

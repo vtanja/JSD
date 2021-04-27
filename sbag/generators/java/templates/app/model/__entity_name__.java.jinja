@@ -7,7 +7,11 @@ import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
-
+{% for property in entity.properties %}
+{% if property | get_type != 'base' %}
+import com.example.{{ app }}.model.{{ property.ptype }};
+{% endif %}
+{% endfor %}
 import javax.persistence.*;
 import java.util.Set;
 
@@ -15,7 +19,7 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-public class {{ entity.name }} {
+public class {{ entity.name | capitalize }} {
 
     {% for property in entity.properties %}
     {% if property | get_type != 'base' %}

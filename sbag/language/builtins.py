@@ -85,21 +85,3 @@ class ManyToMany:
         """Many to many entity association type."""
         self.parent = parent
         self.owner = owner
-
-class Path:
-
-    def __init__(self, resource, content, parent):
-        """Create instance of path."""
-        self.resource = resource
-        self.content = content
-        self.parent = parent
-
-class Method:
-
-    def __init__(self, name, post_type, rtype, rtype_list, parent) -> None:
-        """Create instance of method."""
-        self.nme = name
-        self.post_type = post_type
-        self.rtype = rtype
-        self.rtype_list = rtype_list
-        self.parent = parent

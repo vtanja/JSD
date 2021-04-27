@@ -7,7 +7,7 @@ on {{ date }}
 	<div class="justify-content-center">
 		<div class="col justify-content-between">
 			<h1 class="h1">{{ entity.name }}</h1>
-            <a [routerLink]="['/{{ entity.name | format_file_name }}', obj?.id, 'update']" class="btn btn-info m-2">Edit</a>
+            <a [routerLink]="['/{{ entity.name | lower }}', obj?.id, 'update']" class="btn btn-info m-2">Edit</a>
             <a class="btn btn-danger m-2" (click)="open(mymodal)">Delete</a>
 		</div>
 		<div class="col">
@@ -18,12 +18,12 @@ on {{ date }}
             <p><strong>{{ prop.name }}</strong>:</p>
             <ul>
                 <li *ngFor="let item of obj?.{{ prop.name }}">
-                    <a [routerLink]="['/{{ prop.ptype.name | lower }}', item.id]">{{ prop.name + ' ({{ item.id }})' }}</a>
+                    <a [routerLink]="['/{{ prop.name }}', item.id]">{{ prop.name + ' {{ item.id }}' }}</a>
                 </li>
             </ul>
             {% else %}
             <p><strong>{{ prop.name }}</strong>:
-                <a [routerLink]="['/{{ prop.ptype.name | lower }}', {{ 'obj?.' + prop.name + '?.id' }}]">
+                <a [routerLink]="['/{{ prop.name }}', {{ 'obj?.' + prop.name + '?.id' }}]">
                     {{ prop.ptype.name + ' ({{obj?.' + prop.name + '?.id}})' }}</a></p>
             {% endif %}
             {% endfor %}

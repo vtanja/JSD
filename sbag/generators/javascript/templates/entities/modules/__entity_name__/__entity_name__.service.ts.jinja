@@ -12,11 +12,9 @@ import { environment } from 'src/environments/environment';
 {% set entity_plural = entity.name | plural %}
 {% set selectLists = 'ISelectLists' %}
 
-{% if entity not in model_imports[entity.name] %}
-import { {{interface_name}} } from 'src/app/shared/model/{{entity.name|format_file_name}}.model';
-{% endif %}
-{% for entity in model_imports[entity.name] %}
-import { I{{ entity.name }} } from 'src/app/shared/model/{{entity.name | format_file_name}}.model';
+import { {{interface_name}} } from 'src/app/shared/model/{{entity_name}}.model';
+{% for property in entity | get_unique_properties %}
+import { I{{ property }} } from 'src/app/shared/model/{{property | lower}}.model';
 {% endfor %}
 
 interface {{ selectLists }} {
@@ -35,52 +33,31 @@ export class {{service_name}} {
   constructor(private http: HttpClient) { }
 
   get{{entity_plural}}Count(){
-    return this.http.get<number>(environment.api + '/{{entity.name|format_file_name}}/count');
+    return this.http.get<number>(environment.api + '/{{entity_name}}/count');
   }
 
   get{{entity_plural}}(pageNo:number, pageSize:number){
-    return this.http.get<{{interface_name}}[]>(environment.api + '/{{entity.name|format_file_name}}/'+pageNo+'/'+pageSize);
+    return this.http.get<{{interface_name}}[]>(environment.api + '/{{entity_name}}/'+pageNo+'/'+pageSize);
   }
 
   get{{entity.name}}({{entity_id}}: number) {
-    return this.http.get<{{interface_name}}>(environment.api + '/{{entity.name|format_file_name}}/' + {{entity_id}});
+    return this.http.get<{{interface_name}}>(environment.api + '/{{entity_name}}/' + {{entity_id}});
   }
 
   update{{entity.name}}({{entity_id}}: number, {{entity_name}}: {{interface_name}}) {
-    return this.http.put<{{interface_name}}>(environment.api + '/{{entity.name|format_file_name}}/' + {{entity_id}}, {{entity_name}});
+    return this.http.put<{{interface_name}}>(environment.api + '/{{entity_name}}/' + {{entity_id}}, {{entity_name}});
   }
   
   create{{entity.name}}({{entity_name}}: {{interface_name}}) {
-    return this.http.post(environment.api + '/{{entity.name|format_file_name}}', {{entity_name}});
+    return this.http.post(environment.api + '/{{entity_name}}', {{entity_name}});
   }
 
   delete{{entity.name}}({{entity_id}}: number) {
-    return this.http.delete(environment.api + '/{{entity.name|format_file_name}}/' + {{entity_id}});
+    return this.http.delete(environment.api + '/{{entity_name}}/' + {{entity_id}});
   }
 
   getLists() {
-    return this.http.get<{{ selectLists }}>(environment.api + '/{{entity.name|format_file_name}}/lists');
+    return this.http.get<{{ selectLists }}>(environment.api + '/{{entity_name}}/lists');
   }
-  
-  {% for endpoint in controller_paths[entity.name] %}
-  {% set comma_separator = joiner() %}
-  {% if endpoint.method == 'get' or endpoint.method == 'delete' %}
-  {{ endpoint.function_name() }}({% for param in endpoint.parameters %}{{ comma_separator() }}{{param}}: any{% endfor %}) {
-    {% if endpoint.method == 'get' %}
-    return this.http.get(environment.api + '{{endpoint | get_path_for_methods}}' {{endpoint | get_path_parameters}});
-    {% elif endpoint.method == 'delete' %}
-    return this.http.delete(environment.api + '{{endpoint | get_path_for_methods}}' + {{endpoint.parameters[0]}});
-    {% endif %}
-  }
-  {% elif endpoint.method == 'post' or endpoint.method == 'put' %}
-  {{ endpoint.function_name() }}({% for param in endpoint.parameters %}{% if endpoint.parameters | length > 0 %}{{param}}: any, {% endif %}{% endfor %}{{endpoint.post_type | lower}}: I{{endpoint.post_type}}) {
-    {% if endpoint.method == 'put' %}
-    return this.http.put(environment.api + '{{endpoint | get_path_for_methods}}' {{endpoint | get_path_parameters}}, {{endpoint.post_type | lower}});
-    {% elif endpoint.method == 'post' %}
-    return this.http.post(environment.api + '{{endpoint | get_path_for_methods}}' {{endpoint | get_path_parameters}}, {{endpoint.post_type | lower}});
-    {% endif %}
-  }
-  {% endif %}
-  {% endfor %}
 
 }

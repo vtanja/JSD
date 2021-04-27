@@ -5,10 +5,10 @@ import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 {% set entity_name = entity.name | lower %}
-import { {{entity.name}}ListComponent } from './{{entity.name|format_file_name}}-list/{{entity.name|format_file_name}}-list.component';
-import { {{entity.name}}Component } from './{{entity.name|format_file_name}}/{{entity.name|format_file_name}}.component';
-import { {{entity.name}}FormComponent } from './{{entity.name|format_file_name}}-form/{{entity.name|format_file_name}}-form.component';
-import { {{entity.name}}RoutingModule } from './{{  entity.name | format_file_name}}-routing.module';
+import { {{entity.name}}ListComponent } from './{{entity_name}}-list/{{entity_name}}-list.component';
+import { {{entity.name}}Component } from './{{entity_name}}/{{entity_name}}.component';
+import { {{entity.name}}FormComponent } from './{{entity_name}}-form/{{entity_name}}-form.component';
+import { {{entity.name}}RoutingModule } from './{{  entity.name | lower}}-routing.module';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 

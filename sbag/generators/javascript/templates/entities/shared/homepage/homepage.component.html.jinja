@@ -11,7 +11,7 @@ on {{ date }}
 <div class="row" >
     {% for entity in entity_row %}
     {% if entity != '' %}
-        <div class="card" style="width:20%; height: 140px; margin-bottom: 5%; margin-left: 5%; cursor: pointer;" routerLink="/{{entity.name|lower}}">
+        <div class="card" style="width:20%; height: 140px; margin-bottom: 5%; margin-left: 5%; cursor: pointer;" routerLink="/{{entity.name|format_file_name}}">
             <div class="card-body mt-4" style="font-weight: bold; text-align: center;">
                 {{ entity }}
             </div>

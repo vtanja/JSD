@@ -3,9 +3,7 @@
 
 package com.example.{{ app }}.controller;
 
-import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import lombok.extern.slf4j.Slf4j;
@@ -14,18 +12,21 @@ import java.util.List;
 import com.example.{{ app }}.dto.{{entity.name}}DTO;
 import com.example.{{ app }}.dto.{{entity.name}}DetailDTO;
 import com.example.{{ app }}.service.{{entity.name}}Service;
+{% for ent in controller_imports[entity.name] %}
+import com.example.{{ app }}.model.{{ ent }};
+{% endfor %}
 
-{% set controllerName = (entity.name | capitalize) + 'Controller' %}
+{% set controllerName = (entity.name) + 'Controller' %}
 {% set DtoType = entity.name + 'DTO' %}
 {% set DtoDetailType = entity.name + 'DetailDTO' %}
-{% set entityDto = (entity.name | lower) + 'Dto' %}
-{% set entityService = (entity.name | lower) + 'Service' %}
+{% set entityDto = (entity.name | first_letter_lower) + 'Dto' %}
+{% set entityService = (entity.name | first_letter_lower) + 'Service' %}
 {% set entities = (entity.name | plural) %}
 
 @CrossOrigin
 @RestController
 @Slf4j
-@RequestMapping( path = "/{{ entity.name | lower }}")
+@RequestMapping( path = "/{{ entity.name | format_file_name }}")
 public class {{ controllerName }} {
     @Autowired
     private {{ entity.name }}Service {{ entityService }};
@@ -39,7 +40,7 @@ public class {{ controllerName }} {
 
     @PreAuthorize("hasAuthority('ADMIN')")
     @GetMapping(path="/{pageNo}/{pageSize}")
-    public ResponseEntity<List<{{ DtoType }}>> getAll{{ entities }}(@PathVariable int pageNo, @PathVariable int pageSize) {
+    public ResponseEntity<List<{{ DtoType }}>> getAll{{entities }}(@PathVariable int pageNo, @PathVariable int pageSize) {
 
         return {{ entityService }}.get{{entity.name | plural}}(pageNo, pageSize);
     }
@@ -74,5 +75,15 @@ public class {{ controllerName }} {
     public ResponseEntity<String> getLists() {
         return {{ entityService }}.getLists();
     }
+
+    {% for endpoint in controller_paths[entity.name] %}
+    {% set comma_separator = joiner() %}
+    @{{ endpoint.method | capitalize }}Mapping(path = "{{ endpoint.path }}")
+    public ResponseEntity<{{ endpoint.get_correct_type() }}> {{ endpoint.function_name() }}({% for param in endpoint.parameters %}{{ comma_separator() }}@PathVariable String {{ param }}{% endfor %}{% if endpoint.post_type is not none %}{% if endpoint.parameters | length > 0 %}, {% endif %}@RequestBody {{ endpoint.post_type }} requestObject{% endif %}) {
+    {% set comma_separator = joiner() %}
+        return {{ entityService }}.{{ endpoint.function_name() }}({% for param in endpoint.parameters %}{{ comma_separator() }}{{ param }}{% endfor %}{% if endpoint.post_type is not none %}{% if endpoint.parameters | length > 0 %}, {% endif %}requestObject{% endif %});
+    }
+
+    {% endfor %}
 
 }

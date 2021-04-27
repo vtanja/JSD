@@ -1,12 +1,20 @@
+"""Base module for generating java Spring boot application."""
+import datetime
 import os
+import re
 from os import mkdir, getcwd
 from os.path import dirname, exists, join
-
-from sbag.language import Config, BaseType, Entity, OneToMany, ManyToMany, ManyToOne, OneToOne
 from textx import generator
 from textxjinja import textx_jinja_generator
-import datetime
 
+from sbag.language import Config, BaseType, Entity, OneToMany, ManyToMany, ManyToOne, OneToOne
+from .custom_paths import add_import_to_controller, create_controller_if_doesnt_exist, setup_custom_paths_for_generation
+
+
+def format_file_name(entity_name):
+    s1 = re.sub('(.)([A-Z][a-z]+)', r'\1-\2', entity_name)
+    ret = re.sub('([a-z0-9])([A-Z])', r'\1-\2', s1).lower()
+    return ret
 
 def plural(entity: str):
     if entity[-2:] in ['ch', 'sh', 'ss', 'es']:
@@ -20,7 +28,7 @@ def plural(entity: str):
             entity = entity[: -1] + 'ies'
     else:
         entity += 's'
-    return entity.capitalize()
+    return capitalize_first_letter(entity)
 
 
 def get_type(prop):
@@ -37,8 +45,8 @@ def get_type(prop):
 
 def get_association_type(prop):
     """
-        Based on property returns string saying if its OneToMany, ManyToMany, OneToOne or ManyToOne association
-        """
+    Based on property returns string saying if its OneToMany, ManyToMany, OneToOne or ManyToOne association
+    """
     if isinstance(prop.atype, OneToMany):
         return 'OneToMany'
     elif isinstance(prop.atype, ManyToMany):
@@ -94,6 +102,8 @@ def sbag_generate_java(metamodel, model, output_path, overwrite, debug, **custom
     config['app'] = model.config.project.lower()
     config['date'] = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
+    setup_custom_paths_for_generation(config, model)
+
     # If output path is not specified take the current working directory
     if output_path is None:
         output_path = getcwd()
@@ -113,7 +123,8 @@ def sbag_generate_java(metamodel, model, output_path, overwrite, debug, **custom
         'first_letter_lower': first_letter_lower,
         'has_associations': has_associations,
         'get_unique_properties': get_unique_properties,
-        'get_template_name_from_path': get_template_name_from_path
+        'get_template_name_from_path': get_template_name_from_path,
+        'format_file_name': format_file_name
     }
 
     # Run Jinja generator
@@ -123,11 +134,27 @@ def sbag_generate_java(metamodel, model, output_path, overwrite, debug, **custom
     generate_entity_based_files(template_folder, output_path, config, model,
                                 overwrite, filters)
 
+    generate_custom_path_files(config, template_folder, output_path,
+                               overwrite, filters)
+
+
+def check_and_setup_config(model):
+    if model.config is None:
+        model.config = Config('demo', 'com.example', 'Describe your project here', model)
+    if model.config.project == '':
+        model.config.project = 'demo'
+    if model.config.group == '':
+        model.config.group = 'com.example'
+    if model.config.description == '':
+        model.config.description = 'Describe your project here'
+
+
 def generate_base_project_structure(template_folder, output_path, config, overwrite, filters):
     project_template = join(template_folder, '__project__', '')
     project_output = join(output_path, '__project__', '')
     textx_jinja_generator(project_template, project_output, config,
                           overwrite, filters)
+
 
 def generate_entity_based_files(template_folder, output_path, config, model,
                                 overwrite, filters):
@@ -140,12 +167,24 @@ def generate_entity_based_files(template_folder, output_path, config, model,
         textx_jinja_generator(entities_template, entities_output, config,
                               overwrite, filters)
 
-def check_and_setup_config(model):
-    if model.config is None:
-        model.config = Config('demo', 'com.example', 'Describe your project here', model)
-    if model.config.project == '':
-        model.config.project = 'demo'
-    if model.config.group == '':
-        model.config.group = 'com.example'
-    if model.config.description == '':
-        model.config.description = 'Describe your project here'
+
+def generate_custom_path_files(config, template_folder, output_path,
+                               overwrite, filters):
+    custom_paths_folder = join(template_folder, 'custom_paths')
+    custom_paths_output = join(output_path, '__project__', 'src', 'main', 'java', 'com', 'example', '__app__', '')
+    for path in config['new_controllers']:
+        config['path_name'] = path.capitalize()
+        textx_jinja_generator(custom_paths_folder, custom_paths_output, config,
+                              overwrite, filters)
+
+def create_imports_for_models(config, model):
+    imports_dictionary = config['controller_imports']
+    for ent in model.entities:
+        create_controller_if_doesnt_exist(ent.name, imports_dictionary)
+        add_imports_for_entity_properties(ent, imports_dictionary)
+    return imports_dictionary
+
+def add_imports_for_entity_properties(entity, imports_dictionary):
+    for prop in entity.properties:
+        if not isinstance(prop.ptype, BaseType) and prop.ptype.name != entity.name:
+            add_import_to_controller(prop.ptype, imports_dictionary[entity.name])

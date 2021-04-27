@@ -2,7 +2,7 @@
 /// on {{ date }}
 
 {% for property in entity | get_unique_properties %}
-import { I{{ property }} } from 'src/app/shared/model/{{property | lower}}.model';
+import { I{{ property }} } from 'src/app/shared/model/{{property | format_file_name}}.model';
 {% endfor %}
 
 export interface I{{ entity.name }} {

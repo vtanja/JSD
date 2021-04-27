@@ -17,8 +17,12 @@ import org.springframework.data.domain.Pageable;
 import com.example.{{ app }}.dto.{{ entity.name }}DetailDTO;
 import com.example.{{ app }}.dto.{{ entity.name }}DTO;
 import com.example.{{ app }}.model.{{ entity.name }};
-import com.example.{{ app }}.repository.{{ entity.name | capitalize }}Repository;
+import com.example.{{ app }}.repository.{{ entity.name }}Repository;
 import com.example.{{ app }}.exception.NotFoundException;
+{% for ent in controller_imports[entity.name] %}
+import com.example.{{ app }}.model.{{ ent }};
+{% endfor %}
+
 {% for property in entity | get_unique_properties %}
 import com.example.{{ app }}.model.{{ property }};
 import com.example.{{ app }}.dto.{{ property }}DTO;
@@ -36,7 +40,7 @@ import java.util.*;
 {% set dtoFieldList = (entity.name|lower) + 'DTOS' %}
 {% set serviceName = (entity.name) + 'Service' %}
 {% set repositoryName = (entity.name) + 'Repository' %}
-{% set repositoryFieldName = (entity.name | lower) + 'Repository' %}
+{% set repositoryFieldName = (entity.name | first_letter_lower) + 'Repository' %}
 
 @Service
 public class {{serviceName}} {
@@ -88,7 +92,7 @@ public class {{serviceName}} {
 
     public ResponseEntity<{{ dtoDetailType }}> update{{entity.name}}(Long id, {{ dtoDetailType }} {{ dtoField }}){
         ModelMapper modelMapper = new ModelMapper();
-        {{ entity.name }} {{ entity.name | lower }} = {{entity.name | lower}}Repository.find{{ entity.name }}ById(id);
+        {{ entity.name }} {{ entity.name | lower }} = {{repositoryFieldName}}.find{{ entity.name }}ById(id);
         if({{ entity.name | lower }} == null) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST); 
         }
@@ -151,7 +155,7 @@ public class {{serviceName}} {
         {% endif %}
         {% endif %}
     {% endfor %}
-            {{entity.name | lower}}Repository.save({{entity.name | lower}});
+            {{repositoryFieldName}}.save({{entity.name | lower}});
             {{ dtoDetailType }} retDto = modelMapper.map({{ entity.name | lower }}, {{ dtoDetailType }}.class);
             return new ResponseEntity<>(retDto, HttpStatus.OK); 
         }
@@ -186,7 +190,7 @@ public class {{serviceName}} {
     {% endif %}
 	{% endif %}
     {% endfor %}
-        {{entity.name | lower}}Repository.save({{entity.name | lower}});
+        {{repositoryFieldName}}.save({{entity.name | lower}});
 
     {% for property in entity.properties %}
     {% if property | get_type == 'list' %}
@@ -252,6 +256,15 @@ public class {{serviceName}} {
     }
 
     public void Save({{classType}} {{field}}){
-        {{entity.name | lower}}Repository.save({{field}});
+        {{repositoryFieldName}}.save({{field}});
     }
+
+    {% for endpoint in controller_paths[entity.name] %}
+    {% set comma_separator = joiner() %}
+    public ResponseEntity<{{ endpoint.get_correct_type() }}> {{ endpoint.function_name() }}({% for param in endpoint.parameters %}{{ comma_separator() }}String {{ param }}{% endfor %}{% if endpoint.post_type is not none %}{% if endpoint.parameters | length > 0 %}, {% endif %}{{ endpoint.post_type }} requestObject{% endif %}) {
+        throw new UnsupportedOperationException("Not implemented, yet.");
+    }
+
+    {% endfor %}
+
 }

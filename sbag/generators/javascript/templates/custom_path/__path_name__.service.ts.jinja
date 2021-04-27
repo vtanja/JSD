@@ -1,0 +1,27 @@
+/// Generated from {{ self._TemplateReference__context.name | get_template_name_from_path }} by SBAG (https://github.com/vtanja/JSD)
+/// on {{ date }}
+
+import { HttpClient } from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import { environment } from 'src/environments/environment';
+{% set path_lower = path_name | first_letter_lower %}
+{% set path_cap = path_name | capitalize %}
+{% set service_name = path_lower + 'Service' %}
+{% for entity in (new_controllers[path_cap] | get_custom_path_imports) %}
+import { I{{ entity.name }} } from 'src/app/shared/model/{{entity.name | format_file_name}}.model';
+{% endfor %}
+
+@Injectable({
+  providedIn: 'root'
+})
+export class {{service_name}} {
+ 
+    constructor(private http: HttpClient) { }
+    {% for endpoint in new_controllers[path_cap] %}
+    {% set comma_separator = joiner() %}
+
+    {{ endpoint.function_name() }}({% for param in endpoint.parameters %}{{ comma_separator() }}{{ param }}: String{% endfor %}{% if endpoint.post_type is not none %}{% if endpoint.parameters | length > 0 %}, {% endif %}value: {{ endpoint | get_correct_type_custom_paths }}{% endif %}) {
+        return this.http.{{ endpoint.method }}(environment.api + '{{endpoint | get_path_for_methods}}' {{endpoint | get_path_parameters}}{% if endpoint.method == "post" or endpoint.method == "put" %}, value{% endif %});
+    }
+    {% endfor %}
+}

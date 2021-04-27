@@ -1,0 +1,39 @@
+package com.example.{{ app }}.controller;
+
+import org.springframework.web.bind.annotation.*;
+import org.springframework.http.ResponseEntity;
+import org.springframework.beans.factory.annotation.Autowired;
+import lombok.extern.slf4j.Slf4j;
+import java.util.List;
+{% set path_lower = path_name | first_letter_lower %}
+import com.example.{{ app }}.service.{{ path_name }}Service;
+{% for ent in controller_imports[path_name] %}
+import com.example.{{ app }}.model.{{ ent }};
+{% endfor %}
+{% set path = new_controllers[path_name] %}
+
+@CrossOrigin
+@RestController
+@Slf4j
+@RequestMapping( path = "/{{ path_lower }}")
+public class {{ path_name | capitalize }}Controller {
+
+    private final {{ path_name }}Service {{ path_lower }}Service;
+
+    @Autowired
+    public {{ path_name | capitalize }}Controller({{ path_name }}Service {{ path_lower }}Service) {
+        this.{{ path_lower }}Service = {{ path_lower }}Service;
+    }
+
+    {% for endpoint in path %}
+    {% set comma_separator = joiner() %}
+    @{{ endpoint.method | capitalize }}Mapping{% if endpoint.path != '' %}(path = "/{{ endpoint.path }}"){% endif %}
+
+    public ResponseEntity<{{ endpoint.get_correct_type() }}> {{ endpoint.function_name() }}({% for param in endpoint.parameters %}{{ comma_separator() }}@PathVariable String {{ param }}{% endfor %}{% if endpoint.post_type is not none %}{% if endpoint.parameters | length > 0 %}, {% endif %}@RequestBody {{ endpoint.post_type }} requestObject{% endif %}) {
+        {% set comma_separator = joiner() %}
+        return {{ path_lower }}Service.{{ endpoint.function_name() }}({% for param in endpoint.parameters %}{{ comma_separator() }}{{ param }}{% endfor %}{% if endpoint.post_type is not none %}{% if endpoint.parameters | length > 0 %}, {% endif %}requestObject{%  endif %});
+    }
+
+    {% endfor %}
+
+}

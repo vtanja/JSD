@@ -1,8 +1,9 @@
 
 SbagModel:
     config=Config?
-    simple_types*=BaseType
+    simple_types*=BaseType?
     entities+=Entity
+    paths+=Path?
 ;
 
 Entity:
@@ -54,4 +55,26 @@ Config:
 
 Comment:
     /\/\/.*$/
+;
+
+Path:
+    '/' resource=Resource
+        content+=Content
+    ';'
+;
+
+Content:
+    Method | Path
+;
+
+Method:
+    name=ID ('(' post_type=[RType] ')')? ':' rtype=[RType] rtype_list='[]'?
+;
+
+RType:
+    BaseType | Entity
+;
+
+Resource:
+    '{'? ID '}'?
 ;

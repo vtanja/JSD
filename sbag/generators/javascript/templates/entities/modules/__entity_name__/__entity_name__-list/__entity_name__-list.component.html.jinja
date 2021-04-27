@@ -9,10 +9,10 @@ on {{ date }}
   <br>
   <div class="row">
       <div class="col">
-          <h4 style="text-align:center;">{{entity.name|plural}}</h4>
+          <h4 style="text-align:center;">{{entity.name|format_property|plural}}</h4>
       </div>
       <div class="col"  style="text-align:center;">
-          <button type="button" class="btn btn-success" [routerLink]="['/{{ entity_name }}/create']">Add new {{ entity_name }}</button>
+          <button type="button" class="btn btn-success" [routerLink]="['/{{ entity.name | format_file_name }}/create']">Add new {{ entity.name|format_property|lower }}</button>
       </div>
   </div>
   <br>
@@ -26,7 +26,7 @@ on {{ date }}
           <th>&nbsp;</th>
           <th>&nbsp;</th>
       </tr>
-      <tr *ngFor="let {{entity_name}} of {{ entity_name_plural }} | paginate: { itemsPerPage: elementsPerPage, currentPage: page, totalItems: totalLength }; let i = index" [routerLink]="!isDisabled ? ['/{{ entity_name }}', {{ entity_name }}.id] : []" >
+      <tr *ngFor="let {{entity_name}} of {{ entity_name_plural }} | paginate: { itemsPerPage: elementsPerPage, currentPage: page, totalItems: totalLength }; let i = index" [routerLink]="!isDisabled ? ['/{{ entity.name|format_file_name }}', {{ entity_name }}.id] : []" >
           {% for property in properties%}
           {% if property | get_property_type == 'base'%}
             {% set prop = '{{ ' + (entity.name|lower)+'.'+(property.name|first_letter_lower) + ' }}' %}
@@ -34,10 +34,10 @@ on {{ date }}
           {% endif %}
           {% endfor %}
           <td style="width: 20%;">
-              <button type="button" class="btn btn-warning" (click)="isDisabled=true;" [routerLink]="['/{{ entity_name }}', {{ entity_name }}.id, 'update']">Update {{ entity_name }}</button>
+              <button type="button" class="btn btn-warning" (click)="isDisabled=true;" [routerLink]="['/{{ entity.name|format_file_name }}', {{ entity_name }}.id, 'update']">Edit {{ entity.name|format_property|lower }}</button>
           </td>
           <td style="width: 20%;">
-              <button type="button" class="btn btn-danger" (click)="isDisabled=true;idToDelete={{entity_name}}.id;open(mymodal)">Delete {{ entity_name }}</button>
+              <button type="button" class="btn btn-danger" (click)="isDisabled=true;idToDelete={{entity_name}}.id;open(mymodal)">Delete {{ entity.name|format_property|lower }}</button>
           </td>
       </tr>
   </table>
@@ -59,7 +59,7 @@ on {{ date }}
     </div>
   </div>
   <div *ngIf="{{entity.name|plural|lower}}?.length == 0" class="alert alert-warning" role="alert" style="text-align:center;">
-    There are no {{ entity_name_plural }} added!
+    There are no {{ entity.name|format_property|plural|lower }} added!
   </div>
 </div>
 

@@ -87,6 +87,14 @@ def get_path_parameters2(endpoint):
         return ret
 
 
+def get_custom_path_imports(path):
+    ret = set()
+    for endpoint in path:
+        if isinstance(endpoint.post_type, Entity):
+            ret.add(endpoint.post_type.name)
+    return ret
+
+
 @generator('sbag', 'javascript')
 def sbag_generate_javascript(metamodel, model, output_path, overwrite, debug, **custom_args):
     "Generator for generating java from sbag descriptions"

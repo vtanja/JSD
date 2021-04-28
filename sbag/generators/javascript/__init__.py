@@ -108,7 +108,7 @@ def sbag_generate_javascript(metamodel, model, output_path, overwrite, debug, **
     if not exists(output_path):
         mkdir(output_path)
 
-    template_folder = join(this_folder, 'templates')
+    template_folder = "sbag\generators\javascript\\templates"
 
     filters = {
         'get_correct_type': get_correct_type,
@@ -146,8 +146,9 @@ def generate_base_angular_projct(template_folder, output_path, config):
 
 
 def generate_src_folder(template_folder, output_path, config, overwrite, filters):
-    src_template = join(template_folder, 'src', '')
-    src_output_path = join(output_path, 'app', 'src', '')
+    src_template = join(template_folder, 'src', 'app', '')
+    src_output_path = join(output_path, 'app', 'src', 'app', '')
+    print(src_template)
     textx_jinja_generator(src_template, src_output_path, config, overwrite, filters)
 
 

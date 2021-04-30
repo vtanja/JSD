@@ -88,7 +88,7 @@ def get_custom_path_imports(path):
 
 @generator('sbag', 'javascript')
 def sbag_generate_javascript(metamodel, model, output_path, overwrite, debug, **custom_args):
-    "Generator for generating java from sbag descriptions"
+    "Generator for generating javascript Angular project from sbag descriptions"
     this_folder = dirname(__file__)
 
     config = {}

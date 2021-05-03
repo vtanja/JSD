@@ -34,14 +34,4 @@ if sys.argv[-1].startswith('publish'):
     sys.exit()
 
 
-setup(version=VERSION,
-      entry_points={
-          'textx_languages': [
-              'sbag = sbag.language:sbag_language'
-          ],
-          'textx_generators': [
-
-              'java = sbag.generators.java:sbag_generate_java',
-              'javascript = sbag.generators.javascript:sbag_generate_javascript'
-          ]
-      })
+setup(version=VERSION)

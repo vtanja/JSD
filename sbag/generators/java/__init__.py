@@ -60,7 +60,7 @@ def get_template_name_from_path(path: str):
 
 @generator('sbag', 'java')
 def sbag_generate_java(metamodel, model, output_path, overwrite, debug, **custom_args):
-    "Generator for generating java from sbag descriptions"
+    "Generator for generating java Spring Boot project from sbag descriptions"
 
     this_folder = dirname(__file__)
 

@@ -1,5 +1,5 @@
 from sbag.language import Entity, Path
-from sbag.generators import capitalize_first_letter, first_letter_lower
+from sbag.generators.filters import capitalize_first_letter, first_letter_lower
 
 class EndPoint():
 

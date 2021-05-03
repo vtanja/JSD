@@ -1,16 +1,15 @@
 """Base module for generating javascript Angular application."""
 import datetime
 import re
-from os import mkdir, getcwd
-from os.path import dirname, exists, join
 from textx import generator
 from textxjinja import textx_jinja_generator
-
-from sbag.generators.java import get_type as get_property_type
-from sbag.generators.java import plural, first_letter_lower, has_associations, capitalize_first_letter, \
-    get_unique_properties, get_template_name_from_path, format_file_name, create_imports_for_models, \
-    setup_custom_paths_for_generation
+from os import mkdir, getcwd
+from os.path import dirname, exists, join
 from sbag.language import Entity, BaseType
+from sbag.generators.java import get_type as get_property_type
+from sbag.generators.java import has_associations, get_unique_properties, get_template_name_from_path, create_imports_for_models, \
+    setup_custom_paths_for_generation
+from sbag.generators.filters import capitalize_first_letter, first_letter_lower, format_file_name, plural
 
 
 def get_correct_type(prop):
@@ -88,7 +87,7 @@ def get_custom_path_imports(path):
 
 @generator('sbag', 'javascript')
 def sbag_generate_javascript(metamodel, model, output_path, overwrite, debug, **custom_args):
-    "Generator for generating java from sbag descriptions"
+    "Generator for generating javascript Angular project from sbag descriptions"
     this_folder = dirname(__file__)
 
     config = {}

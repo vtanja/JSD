@@ -1,14 +1,13 @@
 """Base module for generating java Spring boot application."""
 import datetime
 import os
-import re
 from os import mkdir, getcwd
 from os.path import dirname, exists, join
 from textx import generator
 from textxjinja import textx_jinja_generator
 from sbag.language import Config, BaseType, Entity, OneToMany, ManyToMany, ManyToOne, OneToOne
 from .custom_paths import add_import_to_controller, create_controller_if_doesnt_exist, setup_custom_paths_for_generation
-from sbag.generators.filters import *
+from sbag.generators.filters import capitalize_first_letter, first_letter_lower, format_file_name, plural
 
 def get_type(prop):
     """

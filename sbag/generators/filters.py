@@ -1,4 +1,4 @@
-import re; 
+import re;
 
 def capitalize_first_letter(prop: str):
     return prop[0].upper() + prop[1:]

@@ -1,5 +1,5 @@
 from sbag.language import Entity, Path
-
+from sbag.generators.filters import capitalize_first_letter, first_letter_lower
 
 class EndPoint():
 
@@ -28,7 +28,7 @@ class EndPoint():
 
 
 def setup_custom_paths_for_generation(config, model):
-    entity_names = [ent.name.lower() for ent in model.entities]
+    entity_names = [first_letter_lower(ent.name) for ent in model.entities]
     config['new_controllers'] = new_controllers(entity_names, model.paths)
     config['controller_paths'] = new_paths_for_existing_controllers(entity_names, model.paths)
     config['controller_imports'] = generate_imports_for_controllers(config)
@@ -39,8 +39,8 @@ def new_controllers(entity_names, paths):
     for path in paths:
         if path.resource not in entity_names:
             if path not in new_controllers:
-                new_controllers[path.resource.capitalize()] = []
-            new_controllers[path.resource.capitalize()].extend(endpoints_from_path(path))
+                new_controllers[capitalize_first_letter(path.resource)] = []
+            new_controllers[capitalize_first_letter(path.resource)].extend(endpoints_from_path(path))
     return new_controllers
 
 
@@ -53,8 +53,8 @@ def new_paths_for_existing_controllers(entity_names, paths):
 
 def add_paths_to_appropriate_controller(path, entity_names, controller_paths):
     if path.resource in entity_names:
-        create_controller_if_doesnt_exist(path.resource.capitalize(), controller_paths)
-        controller_paths[path.resource.capitalize()].extend(endpoints_from_path(path))
+        create_controller_if_doesnt_exist(capitalize_first_letter(path.resource), controller_paths)
+        controller_paths[capitalize_first_letter(path.resource)].extend(endpoints_from_path(path))
 
 def create_controller_if_doesnt_exist(controller, controller_paths):
     if controller not in controller_paths:

@@ -1,35 +1,13 @@
 """Base module for generating java Spring boot application."""
 import datetime
 import os
-import re
 from os import mkdir, getcwd
 from os.path import dirname, exists, join
 from textx import generator
 from textxjinja import textx_jinja_generator
-
 from sbag.language import Config, BaseType, Entity, OneToMany, ManyToMany, ManyToOne, OneToOne
 from .custom_paths import add_import_to_controller, create_controller_if_doesnt_exist, setup_custom_paths_for_generation
-
-
-def format_file_name(entity_name):
-    s1 = re.sub('(.)([A-Z][a-z]+)', r'\1-\2', entity_name)
-    ret = re.sub('([a-z0-9])([A-Z])', r'\1-\2', s1).lower()
-    return ret
-
-def plural(entity: str):
-    if entity[-2:] in ['ch', 'sh', 'ss', 'es']:
-        entity += 'es'
-    elif entity[-1] in ['s', 'x', 'z', 'o']:
-        entity += 'es'
-    elif entity[-1] == 'y':
-        if entity[-2] in ['a', 'e', 'i', 'o', 'u']:
-            entity += 's'
-        else:
-            entity = entity[: -1] + 'ies'
-    else:
-        entity += 's'
-    return capitalize_first_letter(entity)
-
+from sbag.generators.filters import capitalize_first_letter, first_letter_lower, format_file_name, plural
 
 def get_type(prop):
     """
@@ -55,14 +33,6 @@ def get_association_type(prop):
         return 'OneToOne'
     elif isinstance(prop.atype, ManyToOne):
         return 'ManyToOne'
-
-
-def capitalize_first_letter(prop: str):
-    return prop[0].upper() + prop[1:]
-
-
-def first_letter_lower(string: str):
-    return string[0].lower() + string[1:]
 
 
 def has_associations(entity: Entity):
@@ -173,7 +143,7 @@ def generate_custom_path_files(config, template_folder, output_path,
     custom_paths_folder = join(template_folder, 'custom_paths')
     custom_paths_output = join(output_path, '__project__', 'src', 'main', 'java', 'com', 'example', '__app__', '')
     for path in config['new_controllers']:
-        config['path_name'] = path.capitalize()
+        config['path_name'] = capitalize_first_letter(path)
         textx_jinja_generator(custom_paths_folder, custom_paths_output, config,
                               overwrite, filters)
 

@@ -4,9 +4,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-{% set path_lower = path_name | lower %}
+{% set path_lower = path_name | first_letter_lower %}
 
-{% for ent in controller_imports[path_lower] %}
+{% for ent in controller_imports[path_name] %}
 import com.example.{{ app }}.model.{{ ent }};
 {% endfor %}
 
@@ -15,7 +15,7 @@ import com.example.{{ app }}.model.{{ ent }};
 @Service
 public class {{ serviceName }} {
 
-    {% for endpoint in new_controllers[path_lower] %}
+    {% for endpoint in new_controllers[path_name] %}
     {% set comma_separator = joiner() %}
     public ResponseEntity<{{ endpoint.get_correct_type() }}> {{ endpoint.function_name() }}({% for param in endpoint.parameters %}{{ comma_separator() }}String {{ param }}{% endfor %}{% if endpoint.post_type is not none %}{% if endpoint.parameters | length > 0 %}, {% endif %}{{ endpoint.post_type }} requestObject{% endif %}) {
         throw new UnsupportedOperationException("Not implemented, yet.");

@@ -56,24 +56,21 @@ def add_paths_to_appropriate_controller(path, entity_names, controller_paths):
         create_controller_if_doesnt_exist(capitalize_first_letter(path.resource), controller_paths)
         controller_paths[capitalize_first_letter(path.resource)].extend(endpoints_from_path(path))
 
-
-def create_controller_if_doesnt_exist(path, controller_paths):
-    if path.resource.capitalize() not in controller_paths:
-        controller_paths[path.resource.capitalize()] = []
-
+def create_controller_if_doesnt_exist(controller, controller_paths):
+    if controller not in controller_paths:
+        controller_paths[controller] = []
 
 def generate_imports_for_controllers(config):
     controller_paths = {**config['controller_paths'], **config['new_controllers']}
-    controller_imports = {controller:generate_imports_for_controller(controller_paths[controller]) \
+    controller_imports = {controller:generate_imports_for_controller(controller, controller_paths[controller]) \
                           for controller in controller_paths}
     extend_imports_with_request_object_types(controller_paths, controller_imports)
     return controller_imports
 
-
-def generate_imports_for_controller(controller_paths):
+def generate_imports_for_controller(controller, controller_paths):
     controller_imports = []
     for path in controller_paths:
-        if isinstance(path.rtype, Entity):
+        if isinstance(path.rtype, Entity) and path.rtype.name != controller:
             add_import_to_controller(path.rtype, controller_imports)
     return controller_imports
 

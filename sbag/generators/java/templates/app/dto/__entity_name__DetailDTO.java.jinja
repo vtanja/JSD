@@ -7,11 +7,6 @@ import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
-{% for property in entity.properties %}
-{% if property | get_type != 'base' %}
-import com.example.{{ app }}.dto.{{ property.ptype }}DTO;
-{% endif %}
-{% endfor %}
 
 import java.util.List;
 

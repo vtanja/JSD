@@ -18,12 +18,12 @@ on {{ date }}
             <p><strong>{{ prop.name }}</strong>:</p>
             <ul>
                 <li *ngFor="let item of obj?.{{ prop.name }}">
-                    <a [routerLink]="['/{{ prop.ptype.name | lower }}', item.id]">{{ prop.name + ' ({{ item.id }})' }}</a>
+                    <a [routerLink]="['/{{ prop.ptype.name | format_file_name }}', item.id]">{{ prop.name + ' ({{ item.id }})' }}</a>
                 </li>
             </ul>
             {% else %}
             <p><strong>{{ prop.name }}</strong>:
-                <a [routerLink]="['/{{ prop.ptype.name | lower }}', {{ 'obj?.' + prop.name + '?.id' }}]">
+                <a [routerLink]="['/{{ prop.ptype.name | format_file_name }}', {{ 'obj?.' + prop.name + '?.id' }}]">
                     {{ prop.ptype.name + ' ({{obj?.' + prop.name + '?.id}})' }}</a></p>
             {% endif %}
             {% endfor %}

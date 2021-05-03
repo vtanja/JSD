@@ -1,0 +1,27 @@
+project: Faculty
+
+entity Faculty:
+    name: String;
+    address: Address[1..1];
+    employees: Employee[1..*faculty];
+    studyPrograms: StudyProgram[1..*faculty];
+
+entity StudyProgram:
+    name: String;
+    faculty: Faculty[*..1];
+
+entity Employee:
+    homeAddress: Address[1..1];
+    faculty: Faculty[*..1];
+
+entity Address:
+    street: String;
+    number: int;
+    city: String;
+
+/studyProgram
+    /enroll
+        post(StudyProgram): StudyProgram;;
+
+/about
+    get: String;
